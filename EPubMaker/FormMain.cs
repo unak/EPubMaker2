@@ -24,8 +24,11 @@ namespace EPubMaker
             editWidth.Value = 480;
             editHeight.Value = 800;
 
+            splitContainer_Panel1_ClientSizeChanged(null, null);
+            splitContainer_Panel2_ClientSizeChanged(null, null);
+
             menuItemClose.Enabled = false;
-            menuItemCreate.Enabled = false;
+            menuItemGenerate.Enabled = false;
         }
 
         private void menuItemOpen_Click(object sender, EventArgs e)
@@ -73,7 +76,7 @@ namespace EPubMaker
             }
 
             menuItemClose.Enabled = true;
-            menuItemCreate.Enabled = true;
+            menuItemGenerate.Enabled = true;
         }
 
         private void menuItemClose_Click(object sender, EventArgs e)
@@ -81,8 +84,13 @@ namespace EPubMaker
             pages.Clear();
             pagesGrid.Rows.Clear();
 
+            srcPicture.Image = null;
+            previewPicture.Image = null;
+            srcLabel.Text = "";
+            previewLabel.Text = "";
+
             menuItemClose.Enabled = false;
-            menuItemCreate.Enabled = false;
+            menuItemGenerate.Enabled = false;
         }
 
         private void menuItemExit_Click(object sender, EventArgs e)
@@ -90,7 +98,7 @@ namespace EPubMaker
             this.Close();
         }
 
-        private void MenuItemCreate_Click(object sender, EventArgs e)
+        private void MenuItemGenerate_Click(object sender, EventArgs e)
         {
             saveFileDialog.FileName = Path.GetFileName(folderBrowserDialog.SelectedPath);
             saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
@@ -262,27 +270,59 @@ namespace EPubMaker
             gridChanging = false;
         }
 
+        private void splitContainer_Panel1_ClientSizeChanged(object sender, EventArgs e)
+        {
+            srcPicture.Width = splitContainer.Panel1.ClientSize.Width;
+            srcPicture.Height = splitContainer.Panel1.ClientSize.Height - srcLabel.Height;
+        }
+
+        private void splitContainer_Panel2_ClientSizeChanged(object sender, EventArgs e)
+        {
+            previewPicture.Width = splitContainer.Panel2.ClientSize.Width;
+            previewPicture.Height = splitContainer.Panel2.ClientSize.Height - previewLabel.Height;
+        }
+
         private void srcPicture_ClientSizeChanged(object sender, EventArgs e)
         {
-            if (srcPicture.ClientRectangle.Width < srcPicture.Image.Width || srcPicture.ClientRectangle.Height < srcPicture.Image.Height)
+            if (srcPicture.Image != null)
             {
-                srcPicture.SizeMode = PictureBoxSizeMode.Zoom;
-            }
-            else
-            {
-                srcPicture.SizeMode = PictureBoxSizeMode.CenterImage;
+                int zoom;
+                if (srcPicture.ClientRectangle.Width < srcPicture.Image.Width || srcPicture.ClientRectangle.Height < srcPicture.Image.Height)
+                {
+                    srcPicture.SizeMode = PictureBoxSizeMode.Zoom;
+                    double dw = (double)srcPicture.ClientRectangle.Width / srcPicture.Image.Width;
+                    double dh = (double)srcPicture.ClientRectangle.Height / srcPicture.Image.Height;
+                    zoom = (int)((dw < dh ? dw : dh) * 100);
+                }
+                else
+                {
+                    srcPicture.SizeMode = PictureBoxSizeMode.CenterImage;
+                    zoom = 100;
+                }
+
+                srcLabel.Text = String.Format("{0}x{1} ({2}%)", srcPicture.Image.Width, srcPicture.Image.Height, zoom);
             }
         }
 
         private void previewPicture_ClientSizeChanged(object sender, EventArgs e)
         {
-            if (previewPicture.ClientRectangle.Width < previewPicture.Image.Width || previewPicture.ClientRectangle.Height < previewPicture.Image.Height)
+            if (previewPicture.Image != null)
             {
-                previewPicture.SizeMode = PictureBoxSizeMode.Zoom;
-            }
-            else
-            {
-                previewPicture.SizeMode = PictureBoxSizeMode.CenterImage;
+                int zoom;
+                if (previewPicture.ClientRectangle.Width < previewPicture.Image.Width || previewPicture.ClientRectangle.Height < previewPicture.Image.Height)
+                {
+                    previewPicture.SizeMode = PictureBoxSizeMode.Zoom;
+                    double dw = (double)previewPicture.ClientRectangle.Width / previewPicture.Image.Width;
+                    double dh = (double)previewPicture.ClientRectangle.Height / previewPicture.Image.Height;
+                    zoom = (int)((dw < dh ? dw : dh) * 100);
+                }
+                else
+                {
+                    previewPicture.SizeMode = PictureBoxSizeMode.CenterImage;
+                    zoom = 100;
+                }
+
+                previewLabel.Text = String.Format("{0}x{1} ({2}%)", previewPicture.Image.Width, previewPicture.Image.Height, zoom);
             }
         }
 
@@ -307,25 +347,11 @@ namespace EPubMaker
             Image preview;
             page.GenerateImages(out src, (int)editWidth.Value, (int)editHeight.Value, out preview);
 
-            if (srcPicture.ClientRectangle.Width < src.Width || srcPicture.ClientRectangle.Height < src.Height)
-            {
-                srcPicture.SizeMode = PictureBoxSizeMode.Zoom;
-            }
-            else
-            {
-                srcPicture.SizeMode = PictureBoxSizeMode.CenterImage;
-            }
             srcPicture.Image = src;
+            srcPicture_ClientSizeChanged(null, null);
 
-            if (previewPicture.ClientRectangle.Width < preview.Width || previewPicture.ClientRectangle.Height < preview.Height)
-            {
-                previewPicture.SizeMode = PictureBoxSizeMode.Zoom;
-            }
-            else
-            {
-                previewPicture.SizeMode = PictureBoxSizeMode.CenterImage;
-            }
             previewPicture.Image = preview;
+            previewPicture_ClientSizeChanged(null, null);
 
             formatCombo.SelectedIndex = (int)page.Format;
         }

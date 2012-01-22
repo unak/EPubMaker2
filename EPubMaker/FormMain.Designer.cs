@@ -40,14 +40,18 @@
             this.btnSelectOdd = new System.Windows.Forms.ToolStripButton();
             this.btnSelectEven = new System.Windows.Forms.ToolStripButton();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.ファイルFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItemFile = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemOpen = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.menuItemClose = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.menuItemExit = new System.Windows.Forms.ToolStripMenuItem();
-            this.ePubEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuItemCreate = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItemEdit = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItemSelectAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItemOdd = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItemEven = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItemEPub = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItemGenerate = new System.Windows.Forms.ToolStripMenuItem();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label9 = new System.Windows.Forms.Label();
@@ -65,8 +69,10 @@
             this.label2 = new System.Windows.Forms.Label();
             this.rotateCombo = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.splitContainer = new System.Windows.Forms.SplitContainer();
+            this.srcLabel = new System.Windows.Forms.Label();
             this.srcPicture = new System.Windows.Forms.PictureBox();
+            this.previewLabel = new System.Windows.Forms.Label();
             this.previewPicture = new System.Windows.Forms.PictureBox();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.pagesPanel.SuspendLayout();
@@ -78,10 +84,10 @@
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.editHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.editWidth)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
+            this.splitContainer.Panel1.SuspendLayout();
+            this.splitContainer.Panel2.SuspendLayout();
+            this.splitContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.srcPicture)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.previewPicture)).BeginInit();
             this.SuspendLayout();
@@ -203,71 +209,110 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ファイルFToolStripMenuItem,
-            this.ePubEToolStripMenuItem});
+            this.menuItemFile,
+            this.menuItemEdit,
+            this.menuItemEPub});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(902, 26);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
-            // ファイルFToolStripMenuItem
+            // menuItemFile
             // 
-            this.ファイルFToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuItemFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuItemOpen,
             this.toolStripSeparator1,
             this.menuItemClose,
             this.toolStripSeparator2,
             this.menuItemExit});
-            this.ファイルFToolStripMenuItem.Name = "ファイルFToolStripMenuItem";
-            this.ファイルFToolStripMenuItem.Size = new System.Drawing.Size(85, 22);
-            this.ファイルFToolStripMenuItem.Text = "ファイル(&F)";
+            this.menuItemFile.Name = "menuItemFile";
+            this.menuItemFile.Size = new System.Drawing.Size(85, 22);
+            this.menuItemFile.Text = "ファイル(&F)";
             // 
             // menuItemOpen
             // 
             this.menuItemOpen.Name = "menuItemOpen";
-            this.menuItemOpen.Size = new System.Drawing.Size(239, 22);
+            this.menuItemOpen.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            this.menuItemOpen.Size = new System.Drawing.Size(287, 22);
             this.menuItemOpen.Text = "元データフォルダを開く...(&O)";
             this.menuItemOpen.Click += new System.EventHandler(this.menuItemOpen_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(236, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(284, 6);
             // 
             // menuItemClose
             // 
             this.menuItemClose.Name = "menuItemClose";
-            this.menuItemClose.Size = new System.Drawing.Size(239, 22);
+            this.menuItemClose.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F4)));
+            this.menuItemClose.Size = new System.Drawing.Size(287, 22);
             this.menuItemClose.Text = "閉じる(&C)";
             this.menuItemClose.Click += new System.EventHandler(this.menuItemClose_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(236, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(284, 6);
             // 
             // menuItemExit
             // 
             this.menuItemExit.Name = "menuItemExit";
-            this.menuItemExit.Size = new System.Drawing.Size(239, 22);
+            this.menuItemExit.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
+            this.menuItemExit.Size = new System.Drawing.Size(287, 22);
             this.menuItemExit.Text = "終了(&X)";
             this.menuItemExit.Click += new System.EventHandler(this.menuItemExit_Click);
             // 
-            // ePubEToolStripMenuItem
+            // menuItemEdit
             // 
-            this.ePubEToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuItemCreate});
-            this.ePubEToolStripMenuItem.Name = "ePubEToolStripMenuItem";
-            this.ePubEToolStripMenuItem.Size = new System.Drawing.Size(65, 22);
-            this.ePubEToolStripMenuItem.Text = "ePub(&E)";
+            this.menuItemEdit.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuItemSelectAll,
+            this.menuItemOdd,
+            this.menuItemEven});
+            this.menuItemEdit.Name = "menuItemEdit";
+            this.menuItemEdit.Size = new System.Drawing.Size(61, 22);
+            this.menuItemEdit.Text = "編集(&E)";
             // 
-            // menuItemCreate
+            // menuItemSelectAll
             // 
-            this.menuItemCreate.Name = "menuItemCreate";
-            this.menuItemCreate.Size = new System.Drawing.Size(130, 22);
-            this.menuItemCreate.Text = "生成...(&C)";
-            this.menuItemCreate.Click += new System.EventHandler(this.MenuItemCreate_Click);
+            this.menuItemSelectAll.Name = "menuItemSelectAll";
+            this.menuItemSelectAll.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
+            this.menuItemSelectAll.Size = new System.Drawing.Size(239, 22);
+            this.menuItemSelectAll.Text = "全ページを選択(&A)";
+            this.menuItemSelectAll.Click += new System.EventHandler(this.btnSelectAll_Click);
+            // 
+            // menuItemOdd
+            // 
+            this.menuItemOdd.Name = "menuItemOdd";
+            this.menuItemOdd.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D)));
+            this.menuItemOdd.Size = new System.Drawing.Size(239, 22);
+            this.menuItemOdd.Text = "奇数ページを選択(&D)";
+            this.menuItemOdd.Click += new System.EventHandler(this.btnSelectOdd_Click);
+            // 
+            // menuItemEven
+            // 
+            this.menuItemEven.Name = "menuItemEven";
+            this.menuItemEven.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
+            this.menuItemEven.Size = new System.Drawing.Size(239, 22);
+            this.menuItemEven.Text = "偶数ページを選択(&N)";
+            this.menuItemEven.Click += new System.EventHandler(this.btnSelectEven_Click);
+            // 
+            // menuItemEPub
+            // 
+            this.menuItemEPub.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuItemGenerate});
+            this.menuItemEPub.Name = "menuItemEPub";
+            this.menuItemEPub.Size = new System.Drawing.Size(65, 22);
+            this.menuItemEPub.Text = "ePub(&P)";
+            // 
+            // menuItemGenerate
+            // 
+            this.menuItemGenerate.Name = "menuItemGenerate";
+            this.menuItemGenerate.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G)));
+            this.menuItemGenerate.Size = new System.Drawing.Size(179, 22);
+            this.menuItemGenerate.Text = "生成...(&G)";
+            this.menuItemGenerate.Click += new System.EventHandler(this.MenuItemGenerate_Click);
             // 
             // folderBrowserDialog
             // 
@@ -446,42 +491,62 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "ソース画像";
             // 
-            // splitContainer1
+            // splitContainer
             // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(251, 26);
-            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.splitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer.Location = new System.Drawing.Point(251, 26);
+            this.splitContainer.Name = "splitContainer";
             // 
-            // splitContainer1.Panel1
+            // splitContainer.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.srcPicture);
+            this.splitContainer.Panel1.Controls.Add(this.srcLabel);
+            this.splitContainer.Panel1.Controls.Add(this.srcPicture);
+            this.splitContainer.Panel1.ClientSizeChanged += new System.EventHandler(this.splitContainer_Panel1_ClientSizeChanged);
             // 
-            // splitContainer1.Panel2
+            // splitContainer.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.previewPicture);
-            this.splitContainer1.Size = new System.Drawing.Size(500, 479);
-            this.splitContainer1.SplitterDistance = 262;
-            this.splitContainer1.TabIndex = 3;
+            this.splitContainer.Panel2.Controls.Add(this.previewLabel);
+            this.splitContainer.Panel2.Controls.Add(this.previewPicture);
+            this.splitContainer.Panel2.ClientSizeChanged += new System.EventHandler(this.splitContainer_Panel2_ClientSizeChanged);
+            this.splitContainer.Size = new System.Drawing.Size(500, 479);
+            this.splitContainer.SplitterDistance = 259;
+            this.splitContainer.TabIndex = 3;
+            // 
+            // srcLabel
+            // 
+            this.srcLabel.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.srcLabel.Location = new System.Drawing.Point(0, 461);
+            this.srcLabel.Name = "srcLabel";
+            this.srcLabel.Size = new System.Drawing.Size(257, 16);
+            this.srcLabel.TabIndex = 1;
+            this.srcLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // srcPicture
             // 
-            this.srcPicture.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.srcPicture.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.srcPicture.Dock = System.Windows.Forms.DockStyle.Top;
             this.srcPicture.Location = new System.Drawing.Point(0, 0);
             this.srcPicture.Name = "srcPicture";
-            this.srcPicture.Size = new System.Drawing.Size(262, 479);
+            this.srcPicture.Size = new System.Drawing.Size(257, 382);
             this.srcPicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.srcPicture.TabIndex = 0;
             this.srcPicture.TabStop = false;
             this.srcPicture.ClientSizeChanged += new System.EventHandler(this.srcPicture_ClientSizeChanged);
             // 
+            // previewLabel
+            // 
+            this.previewLabel.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.previewLabel.Location = new System.Drawing.Point(0, 461);
+            this.previewLabel.Name = "previewLabel";
+            this.previewLabel.Size = new System.Drawing.Size(235, 16);
+            this.previewLabel.TabIndex = 2;
+            this.previewLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // previewPicture
             // 
-            this.previewPicture.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.previewPicture.Dock = System.Windows.Forms.DockStyle.Fill;
             this.previewPicture.Location = new System.Drawing.Point(0, 0);
             this.previewPicture.Name = "previewPicture";
-            this.previewPicture.Size = new System.Drawing.Size(234, 479);
+            this.previewPicture.Size = new System.Drawing.Size(234, 382);
             this.previewPicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.previewPicture.TabIndex = 0;
             this.previewPicture.TabStop = false;
@@ -497,7 +562,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(902, 505);
-            this.Controls.Add(this.splitContainer1);
+            this.Controls.Add(this.splitContainer);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.pagesPanel);
             this.Controls.Add(this.menuStrip1);
@@ -518,10 +583,10 @@
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.editHeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.editWidth)).EndInit();
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
+            this.splitContainer.Panel1.ResumeLayout(false);
+            this.splitContainer.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).EndInit();
+            this.splitContainer.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.srcPicture)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.previewPicture)).EndInit();
             this.ResumeLayout(false);
@@ -538,7 +603,7 @@
         private System.Windows.Forms.ToolStripButton btnSelectOdd;
         private System.Windows.Forms.ToolStripButton btnSelectEven;
         private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem ファイルFToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem menuItemFile;
         private System.Windows.Forms.ToolStripMenuItem menuItemOpen;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem menuItemClose;
@@ -550,7 +615,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn index;
         private System.Windows.Forms.DataGridViewCheckBoxColumn locked;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.SplitContainer splitContainer;
         private System.Windows.Forms.PictureBox srcPicture;
         private System.Windows.Forms.PictureBox previewPicture;
         private System.Windows.Forms.Label label2;
@@ -568,9 +633,15 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.ComboBox formatCombo;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.ToolStripMenuItem ePubEToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem menuItemCreate;
+        private System.Windows.Forms.ToolStripMenuItem menuItemEPub;
+        private System.Windows.Forms.ToolStripMenuItem menuItemGenerate;
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
+        private System.Windows.Forms.ToolStripMenuItem menuItemEdit;
+        private System.Windows.Forms.ToolStripMenuItem menuItemSelectAll;
+        private System.Windows.Forms.ToolStripMenuItem menuItemOdd;
+        private System.Windows.Forms.ToolStripMenuItem menuItemEven;
+        private System.Windows.Forms.Label srcLabel;
+        private System.Windows.Forms.Label previewLabel;
     }
 }
 
