@@ -240,6 +240,7 @@
             this.menuItemClose.Name = "menuItemClose";
             this.menuItemClose.Size = new System.Drawing.Size(239, 22);
             this.menuItemClose.Text = "閉じる(&C)";
+            this.menuItemClose.Click += new System.EventHandler(this.menuItemClose_Click);
             // 
             // toolStripSeparator2
             // 

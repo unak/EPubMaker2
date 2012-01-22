@@ -5,7 +5,6 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Windows.Forms;
 
 namespace EPubMaker
@@ -24,11 +23,9 @@ namespace EPubMaker
 
             editWidth.Value = 480;
             editHeight.Value = 800;
-        }
 
-        private void menuItemExit_Click(object sender, EventArgs e)
-        {
-            this.Close();
+            menuItemClose.Enabled = false;
+            menuItemCreate.Enabled = false;
         }
 
         private void menuItemOpen_Click(object sender, EventArgs e)
@@ -56,6 +53,10 @@ namespace EPubMaker
                     pages.Add(page);
                 }
             }
+            pages.Sort(delegate(Page a, Page b)
+            {
+                return String.Compare(a.Name, b.Name, true);
+            });
 
             UpdatePageList();
 
@@ -70,6 +71,23 @@ namespace EPubMaker
             {
                 editTitle.Text = name;
             }
+
+            menuItemClose.Enabled = true;
+            menuItemCreate.Enabled = true;
+        }
+
+        private void menuItemClose_Click(object sender, EventArgs e)
+        {
+            pages.Clear();
+            pagesGrid.Rows.Clear();
+
+            menuItemClose.Enabled = false;
+            menuItemCreate.Enabled = false;
+        }
+
+        private void menuItemExit_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
 
         private void MenuItemCreate_Click(object sender, EventArgs e)
@@ -83,14 +101,6 @@ namespace EPubMaker
 
             Cursor prev = this.Cursor;
             this.Cursor = Cursors.WaitCursor;
-
-            Scripting.FileSystemObject fso = new Scripting.FileSystemObject();
-            string zip = Path.ChangeExtension(saveFileDialog.FileName, ".zip");
-            Scripting.TextStream ts = fso.CreateTextFile(zip, true, false);
-            ts.Write("PK\x05\x06\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00");
-            ts.Close();
-            Shell32.Shell sh = new Shell32.Shell();
-            Shell32.Folder dir = sh.NameSpace(zip);
 
             string tmpdir = Path.Combine(Path.GetTempPath(), "EPubMaker");
             if (Directory.Exists(tmpdir))
@@ -135,7 +145,7 @@ namespace EPubMaker
             {
                 Image src;
                 Image dst;
-                GenerateImages(pages[i], out src, out dst);
+                pages[i].GenerateImages(out src, (int)editWidth.Value, (int)editHeight.Value, out dst);
                 src.Dispose();
 
                 string id = i.ToString("d4");
@@ -183,13 +193,11 @@ namespace EPubMaker
             WriteText(fs, "</navMap>\n</ncx>\n");
             fs.Close();
 
-            Shell32.FolderItem fi = sh.NameSpace(tmpdir).ParseName(Path.GetFileName(mime));
-            dir.MoveHere(fi, 0);
-            WaitZip(zip);
-
-            fi = sh.NameSpace(tmpdir).ParseName(Path.GetFileName(contents));
-            dir.MoveHere(fi, 0);
-            WaitZip(zip);
+            Zip zip = new Zip(saveFileDialog.FileName);
+            zip.CopyFrom(mime);
+            zip.CopyFrom(meta);
+            zip.CopyFrom(contents);
+            zip.Close();
 
             try
             {
@@ -199,35 +207,9 @@ namespace EPubMaker
             {
             }
 
-            if (File.Exists(saveFileDialog.FileName))
-            {
-                File.Delete(saveFileDialog.FileName);
-            }
-            WaitZip(zip);   // 念のため
-            File.Move(zip, saveFileDialog.FileName);
-
             this.Cursor = prev;
 
             MessageBox.Show("ePubファイル生成完了", "EPubMaker", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        private static void WaitZip(string zip)
-        {
-            // 非同期処理が行われているので、ファイルがオープンできるかどうかで処理終了を判断する
-            while (true)
-            {
-                Thread.Sleep(500);
-                try
-                {
-                    FileStream fs = File.Open(zip, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                    fs.Close();
-                    break;
-                }
-                catch
-                {
-                    Thread.Yield();
-                }
-            }
         }
 
         private static void WriteText(Stream st, string text)
@@ -437,7 +419,7 @@ namespace EPubMaker
         {
             Image src;
             Image preview;
-            GenerateImages(page, out src, out preview);
+            page.GenerateImages(out src, (int)editWidth.Value, (int)editHeight.Value, out preview);
 
             if (srcPicture.ClientRectangle.Width < src.Width || srcPicture.ClientRectangle.Height < src.Height)
             {
@@ -460,112 +442,6 @@ namespace EPubMaker
             previewPicture.Image = preview;
 
             formatCombo.SelectedIndex = (int)page.Format;
-        }
-
-        private void GenerateImages(Page page, out Image src, out Image preview)
-        {
-            src = Image.FromFile(page.Path);
-            switch (page.Rotate)
-            {
-                case 0:
-                    src.RotateFlip(RotateFlipType.RotateNoneFlipNone);
-                    break;
-                case 1:
-                    src.RotateFlip(RotateFlipType.Rotate90FlipNone);
-                    break;
-                case 2:
-                    src.RotateFlip(RotateFlipType.Rotate180FlipNone);
-                    break;
-                case 3:
-                    src.RotateFlip(RotateFlipType.Rotate270FlipNone);
-                    break;
-            }
-            if (page.Format < 0)
-            {
-                switch (src.PixelFormat)
-                {
-                    default:    
-                        /* フルカラー */
-                        page.Format = Page.PageFormat.FullColor;
-                        break;
-                    case PixelFormat.Format8bppIndexed:
-                        /* 8bitグレイスケール */
-                        page.Format = Page.PageFormat.Gray8bit;
-                        break;
-                    case PixelFormat.Format16bppGrayScale:
-                        /* 8bitグレイスケール */
-                        page.Format = Page.PageFormat.Gray8bit;
-                        break;
-                    case PixelFormat.Format4bppIndexed:
-                        /* 4bitグレイスケール */
-                        page.Format = Page.PageFormat.Gray4bit;
-                        break;
-                    case PixelFormat.Format1bppIndexed:
-                        /* 白黒 */
-                        page.Format = Page.PageFormat.Mono;
-                        break;
-                }
-            }
-
-            int w = (int)editWidth.Value;
-            int h = (int)editHeight.Value;
-            if (src.Width / (double)w < src.Height / (double)h)
-            {
-                double d = src.Height / (double)h;
-                w = (int)(src.Width / d);
-            }
-            else
-            {
-                double d = src.Width / (double)w;
-                h = (int)(src.Height / d);
-            }
-
-            preview = new Bitmap(w, h);
-            Graphics g = Graphics.FromImage(preview);
-            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-            g.DrawImage(src, new Rectangle(0, 0, w, h), 0, 0, src.Width, src.Height, GraphicsUnit.Pixel);
-            g.Dispose();
-
-            if (page.Format > Page.PageFormat.FullColor)
-            {
-                preview = ConvertFormat((Bitmap)preview, page.Format);
-            }
-        }
-
-        private static unsafe Bitmap ConvertFormat(Bitmap src, Page.PageFormat format)
-        {
-            PixelFormat pf;
-            switch (format)
-            {
-                case Page.PageFormat.Gray8bit:
-                    pf = PixelFormat.Format8bppIndexed;
-                    break;
-                case Page.PageFormat.Gray4bit:
-                    pf = PixelFormat.Format4bppIndexed;
-                    break;
-                case Page.PageFormat.Mono:
-                    pf = PixelFormat.Format1bppIndexed;
-                    break;
-                default:
-                    return src;
-            }
-
-            Bitmap dst = new Bitmap(src.Width, src.Height, pf);
-            BitmapData srcData = src.LockBits(new Rectangle(0, 0, src.Width, src.Height), ImageLockMode.ReadOnly, pf);
-            BitmapData dstData = dst.LockBits(new Rectangle(0, 0, dst.Width, dst.Height), ImageLockMode.WriteOnly, pf);
-            for (int y = 0; y < srcData.Height; ++y)
-            {
-                byte* srcRow = (byte*)srcData.Scan0 + (y * srcData.Stride);
-                byte* dstRow = (byte*)dstData.Scan0 + (y * dstData.Stride);
-                for (int i = 0; i < srcData.Stride; ++i)
-                {
-                    dstRow[i] = srcRow[i];
-                }
-            }
-            dst.UnlockBits(dstData);
-            src.UnlockBits(srcData);
-
-            return dst;
         }
     }
 }
