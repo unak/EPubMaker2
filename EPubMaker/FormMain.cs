@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace EPubMaker
@@ -14,15 +12,19 @@ namespace EPubMaker
         private List<Page> pages;
         private bool gridChanging;
 
+        private Setting setting;
+
         public FormMain()
         {
             InitializeComponent();
 
+            setting = Setting.Load();
+
             pages = null;
             gridChanging = false;
 
-            editWidth.Value = 480;
-            editHeight.Value = 800;
+            editWidth.Value = setting.PageWidth;
+            editHeight.Value = setting.PageHeight;
 
             splitContainer_Panel1_ClientSizeChanged(null, null);
             splitContainer_Panel2_ClientSizeChanged(null, null);
@@ -41,10 +43,20 @@ namespace EPubMaker
 
         private void menuItemOpen_Click(object sender, EventArgs e)
         {
+            if (!String.IsNullOrEmpty(setting.PrevSrc) && Directory.Exists(setting.PrevSrc))
+            {
+                folderBrowserDialog.SelectedPath = setting.PrevSrc;
+            }
+            else
+            {
+                folderBrowserDialog.SelectedPath = null;
+            }
             if (folderBrowserDialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
+            setting.PrevSrc = folderBrowserDialog.SelectedPath;
+            setting.Save();
 
             if (pages != null)
             {
@@ -110,11 +122,22 @@ namespace EPubMaker
         private void MenuItemGenerate_Click(object sender, EventArgs e)
         {
             saveFileDialog.FileName = Path.GetFileName(folderBrowserDialog.SelectedPath);
-            saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            if (!String.IsNullOrEmpty(setting.OutPath) && Directory.Exists(setting.OutPath))
+            {
+                saveFileDialog.InitialDirectory = setting.OutPath;
+            }
+            else
+            {
+                saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            }
             if (saveFileDialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
+            setting.OutPath = Path.GetDirectoryName(saveFileDialog.FileName);
+            setting.PageWidth = (int)editWidth.Value;
+            setting.PageHeight = (int)editHeight.Value;
+            setting.Save();
 
             FormProgress formProgress = new FormProgress(pages, editTitle.Text, editAuthor.Text, (int)editWidth.Value, (int)editHeight.Value, saveFileDialog.FileName);
             formProgress.ShowDialog(this);

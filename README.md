@@ -4,7 +4,7 @@ ePubMaker
 はじめに
 --------
 ePubMakerは自炊データからePubファイルを生成するアプリケーションです。
-XP以降のWindows上で動作します(.NET Framework Runtime 3.5が必要です)。
+XP以降のWindows上で動作します(.NET Framework 4が必要です)。
 
 なお、現状、ソース形式でのみ配布されているわけですが、実際に実行ファイルを
 生成するにはVisual C# 2010が必要となります。
@@ -78,7 +78,6 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 TODO
 ----
-* グローバルな設定の保存
 * ページ分割
 * ページ並べ替え
 * 切り抜き
