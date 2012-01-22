@@ -47,7 +47,7 @@ namespace EPubMaker
             DirectoryInfo dir = new DirectoryInfo(folderBrowserDialog.SelectedPath);
             foreach (FileInfo file in dir.GetFiles())
             {
-                if (String.Compare(file.Extension, ".jpg", true) == 0 || String.Compare(file.Extension, ".png", true) == 0)
+                if (String.Compare(file.Extension, ".jpg", true) == 0 || String.Compare(file.Extension, ".png", true) == 0 || String.Compare(file.Extension, ".bmp", true) == 0)
                 {
                     Page page = new Page(file.FullName);
                     pages.Add(page);
