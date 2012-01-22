@@ -39,7 +39,7 @@ namespace EPubMaker
         {
             set
             {
-                index = value;
+                index = value.Trim();
             }
             get
             {

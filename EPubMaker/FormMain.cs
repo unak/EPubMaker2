@@ -103,26 +103,20 @@ namespace EPubMaker
             FileStream fs = File.OpenWrite(mime);
             WriteText(fs, "application/epub+zip");
             fs.Close();
-            Shell32.FolderItem fi = sh.NameSpace(tmpdir).ParseName(Path.GetFileName(mime));
-            dir.MoveHere(fi, 0);
-            WaitZip(zip);
 
             string meta = Path.Combine(tmpdir, "META-INF");
             Directory.CreateDirectory(meta);
             fs = File.OpenWrite(Path.Combine(meta, "container.xml"));
             WriteText(fs, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<container version=\"1.0\" xmlns=\"urn:oasis:names:tc:opendocument:xmlns:container\">\n<rootfiles>\n<rootfile media-type=\"application/oebps-package+xml\" full-path=\"OEBPS/package.opf\" />\n</rootfiles>\n</container>\n");
             fs.Close();
-            fi = sh.NameSpace(tmpdir).ParseName(Path.GetFileName(meta));
-            dir.MoveHere(fi, 0);
-            WaitZip(zip);
 
             string contents = Path.Combine(tmpdir, "OEBPS");
-            Directory.CreateDirectory(contents);
             Directory.CreateDirectory(Path.Combine(contents, "data"));
 
             fs = File.OpenWrite(Path.Combine(contents, "package.opf"));
             WriteText(fs, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<package xmlns=\"http://www.idpf.org/2007/opf\" version=\"3.0\" unique-identifier=\"BookId\" xml:lang=\"ja\">\n<metadata xmlns:dc=\"http://purl.org/dc/elements/1.1/\">\n<dc:identifier id=\"BookId\">");
-            WriteText(fs, Guid.NewGuid().ToString());
+            string bookid = Guid.NewGuid().ToString();
+            WriteText(fs, bookid);
             WriteText(fs, "</dc:identifier>\n<dc:title>");
             WriteText(fs, editTitle.Text.Trim());
             WriteText(fs, "</dc:title>\n");
@@ -135,9 +129,7 @@ namespace EPubMaker
                 WriteText(fs, "</dc:creator>\n");
             }
             WriteText(fs, "<dc:language>ja</dc:language>\n</metadata>\n<manifest>\n");
-            /*
             WriteText(fs, "<item id=\"ncx\" href=\"toc.ncx\" media-type=\"application/x-dtbncx+xml\" />\n");
-             */
 
             for (int i = 0; i < pages.Count; ++i)
             {
@@ -170,6 +162,30 @@ namespace EPubMaker
             }
             WriteText(fs, "</spine>\n</package>\n");
             fs.Close();
+
+            fs = File.OpenWrite(Path.Combine(contents, "toc.ncx"));
+            WriteText(fs, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE ncx PUBLIC \"-//NISO//DTD ncx 2005-1//EN\" \"http://www.daisy.org/z3986/2005/ncx-2005-1.dtd\">\n<ncx version=\"2005-1\" xmlns=\"http://www.daisy.org/z3986/2005/ncx/\" xml:lang=\"ja\">\n<head>\n<meta name=\"dtb:uid\" content=\"");
+            WriteText(fs, bookid);
+            WriteText(fs, "\"/>\n<meta name=\"dtb:depth\" content=\"1\"/>\n<meta name=\"dtb:totalPageCount\" content=\"0\"/>\n<meta name=\"dtb:maxPageNumber\" content=\"0\"/>\n</head>\n<docTitle><text>");
+            WriteText(fs, editTitle.Text);
+            WriteText(fs, "</text></docTitle>\n<navMap>\n");
+            for (int i = 0, idx = 0; i < pages.Count; ++i)
+            {
+                string id = i.ToString("d4");
+                if (!String.IsNullOrEmpty(pages[i].Index))
+                {
+                    WriteText(fs, "<navPoint id=\"" + id + "f\" playOrder=\"" + (++idx).ToString() + "\">\n");
+                    WriteText(fs, "<navLabel><text>" + pages[i].Index + "</text></navLabel>\n");
+                    WriteText(fs, "<content src=\"data/" + id + "f.xhtml\"/>\n");
+                    WriteText(fs, "</navPoint>\n");
+                }
+            }
+            WriteText(fs, "</navMap>\n</ncx>\n");
+            fs.Close();
+
+            Shell32.FolderItem fi = sh.NameSpace(tmpdir).ParseName(Path.GetFileName(mime));
+            dir.MoveHere(fi, 0);
+            WaitZip(zip);
 
             fi = sh.NameSpace(tmpdir).ParseName(Path.GetFileName(contents));
             dir.MoveHere(fi, 0);
@@ -400,6 +416,21 @@ namespace EPubMaker
             {
                 previewPicture.SizeMode = PictureBoxSizeMode.CenterImage;
             }
+        }
+
+        private void pagesGrid_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            // 「目次」のみ扱う
+            if (gridChanging || e.ColumnIndex != 1 || pages == null || e.RowIndex >= pages.Count)
+            {
+                return;
+            }
+
+            gridChanging = true;
+
+            pages[e.RowIndex].Index = pagesGrid.Rows[e.RowIndex].Cells[1].Value.ToString();
+
+            gridChanging = false;
         }
 
         private void RedrawImages(Page page)

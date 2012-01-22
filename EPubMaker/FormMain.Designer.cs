@@ -114,6 +114,7 @@
             this.pagesGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.pagesGrid.Size = new System.Drawing.Size(251, 433);
             this.pagesGrid.TabIndex = 1;
+            this.pagesGrid.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.pagesGrid_CellValueChanged);
             this.pagesGrid.SelectionChanged += new System.EventHandler(this.pagesGrid_SelectionChanged);
             // 
             // file
@@ -263,7 +264,7 @@
             // menuItemCreate
             // 
             this.menuItemCreate.Name = "menuItemCreate";
-            this.menuItemCreate.Size = new System.Drawing.Size(152, 22);
+            this.menuItemCreate.Size = new System.Drawing.Size(130, 22);
             this.menuItemCreate.Text = "生成...(&C)";
             this.menuItemCreate.Click += new System.EventHandler(this.MenuItemCreate_Click);
             // 
