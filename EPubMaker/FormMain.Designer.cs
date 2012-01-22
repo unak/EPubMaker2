@@ -260,7 +260,7 @@
             this.menuItemCreate});
             this.ePubEToolStripMenuItem.Name = "ePubEToolStripMenuItem";
             this.ePubEToolStripMenuItem.Size = new System.Drawing.Size(65, 22);
-            this.ePubEToolStripMenuItem.Text = "EPub(&E)";
+            this.ePubEToolStripMenuItem.Text = "ePub(&E)";
             // 
             // menuItemCreate
             // 
