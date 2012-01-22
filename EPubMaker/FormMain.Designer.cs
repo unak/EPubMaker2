@@ -1,6 +1,6 @@
 ﻿namespace EPubMaker
 {
-    partial class formMain
+    partial class FormMain
     {
         /// <summary>
         /// 必要なデザイナー変数です。
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(formMain));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.pagesPanel = new System.Windows.Forms.Panel();
             this.pagesGrid = new System.Windows.Forms.DataGridView();
             this.file = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -492,7 +492,7 @@
             this.saveFileDialog.DefaultExt = "epub";
             this.saveFileDialog.Filter = "ePub|*.epub|すべてのファイル|*";
             // 
-            // formMain
+            // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -502,8 +502,8 @@
             this.Controls.Add(this.pagesPanel);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Name = "formMain";
-            this.Text = "EPubMaker";
+            this.Name = "FormMain";
+            this.Text = "ePubMaker";
             this.pagesPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pagesGrid)).EndInit();
             this.toolStripContainer1.ContentPanel.ResumeLayout(false);
