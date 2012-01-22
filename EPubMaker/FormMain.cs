@@ -31,6 +31,14 @@ namespace EPubMaker
             menuItemGenerate.Enabled = false;
         }
 
+        private void FormMain_ClientSizeChanged(object sender, EventArgs e)
+        {
+            splitContainer.Left = pageLabel.Left;
+            splitContainer.Width = pageLabel.Width;
+            splitContainer.Top = pageLabel.Bottom;
+            splitContainer.Height = ClientRectangle.Bottom - splitContainer.Top;
+        }
+
         private void menuItemOpen_Click(object sender, EventArgs e)
         {
             if (folderBrowserDialog.ShowDialog() != DialogResult.OK)
@@ -84,6 +92,7 @@ namespace EPubMaker
             pages.Clear();
             pagesGrid.Rows.Clear();
 
+            pageLabel.Text = "";
             srcPicture.Image = null;
             previewPicture.Image = null;
             srcLabel.Text = "";
@@ -115,9 +124,9 @@ namespace EPubMaker
         private void UpdatePageList()
         {
             pagesGrid.Rows.Clear();
-            foreach (Page page in pages)
+            for (int i = 0; i < pages.Count; ++i)
             {
-                int idx = pagesGrid.Rows.Add(page.Name, page.Index, false);
+                int idx = pagesGrid.Rows.Add(i + 1, pages[i].Name, pages[i].Index, false);
             }
         }
 
@@ -131,7 +140,7 @@ namespace EPubMaker
             gridChanging = true;
             for (int i = pagesGrid.Rows.Count - 1; i >= 0; --i)
             {
-                if ((bool)pagesGrid.Rows[i].Cells[2].Value)
+                if ((bool)pagesGrid.Rows[i].Cells[3].Value)
                 {
                     pagesGrid.Rows[i].Selected = false;
                 }
@@ -154,7 +163,7 @@ namespace EPubMaker
             gridChanging = true;
             for (int i = pagesGrid.Rows.Count - 1; i >= 0; --i)
             {
-                if ((bool)pagesGrid.Rows[i].Cells[2].Value)
+                if ((bool)pagesGrid.Rows[i].Cells[3].Value)
                 {
                     pagesGrid.Rows[i].Selected = false;
                 }
@@ -177,7 +186,7 @@ namespace EPubMaker
             gridChanging = true;
             for (int i = pagesGrid.Rows.Count - 1; i >= 0; --i)
             {
-                if ((bool)pagesGrid.Rows[i].Cells[2].Value)
+                if ((bool)pagesGrid.Rows[i].Cells[3].Value)
                 {
                     pagesGrid.Rows[i].Selected = false;
                 }
@@ -209,7 +218,7 @@ namespace EPubMaker
             if (idx >= 0 && idx < pages.Count)
             {
                 rotateCombo.SelectedIndex = pages[idx].Rotate;
-                RedrawImages(pages[idx]);
+                RedrawImages(idx);
             }
             gridChanging = false;
         }
@@ -237,7 +246,7 @@ namespace EPubMaker
 
             if (idx >= 0)
             {
-                RedrawImages(pages[idx]);
+                RedrawImages(idx);
             }
             gridChanging = false;
         }
@@ -265,7 +274,7 @@ namespace EPubMaker
 
             if (idx >= 0)
             {
-                RedrawImages(pages[idx]);
+                RedrawImages(idx);
             }
             gridChanging = false;
         }
@@ -329,23 +338,23 @@ namespace EPubMaker
         private void pagesGrid_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             // 「目次」のみ扱う
-            if (gridChanging || e.ColumnIndex != 1 || pages == null || e.RowIndex >= pages.Count)
+            if (gridChanging || e.ColumnIndex != 2 || pages == null || e.RowIndex >= pages.Count)
             {
                 return;
             }
 
             gridChanging = true;
 
-            pages[e.RowIndex].Index = pagesGrid.Rows[e.RowIndex].Cells[1].Value.ToString();
+            pages[e.RowIndex].Index = pagesGrid.Rows[e.RowIndex].Cells[2].Value.ToString();
 
             gridChanging = false;
         }
 
-        private void RedrawImages(Page page)
+        private void RedrawImages(int idx)
         {
             Image src;
             Image preview;
-            page.GenerateImages(out src, (int)editWidth.Value, (int)editHeight.Value, out preview);
+            pages[idx].GenerateImages(out src, (int)editWidth.Value, (int)editHeight.Value, out preview);
 
             srcPicture.Image = src;
             srcPicture_ClientSizeChanged(null, null);
@@ -353,7 +362,13 @@ namespace EPubMaker
             previewPicture.Image = preview;
             previewPicture_ClientSizeChanged(null, null);
 
-            formatCombo.SelectedIndex = (int)page.Format;
+            pageLabel.Text = String.Format("{0} ({1}ページ)", pages[idx].Name, idx + 1);
+            if (!String.IsNullOrEmpty(pages[idx].Index))
+            {
+                pageLabel.Text += " " + pages[idx].Index;
+            }
+
+            formatCombo.SelectedIndex = (int)pages[idx].Format;
         }
     }
 }

@@ -29,11 +29,9 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pagesPanel = new System.Windows.Forms.Panel();
             this.pagesGrid = new System.Windows.Forms.DataGridView();
-            this.file = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.index = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.locked = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
             this.pageSelectButtons = new System.Windows.Forms.ToolStrip();
             this.btnSelectAll = new System.Windows.Forms.ToolStripButton();
@@ -75,6 +73,11 @@
             this.previewLabel = new System.Windows.Forms.Label();
             this.previewPicture = new System.Windows.Forms.PictureBox();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.pageLabel = new System.Windows.Forms.Label();
+            this.page = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.file = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.index = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.locked = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.pagesPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pagesGrid)).BeginInit();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
@@ -99,7 +102,7 @@
             this.pagesPanel.Dock = System.Windows.Forms.DockStyle.Left;
             this.pagesPanel.Location = new System.Drawing.Point(0, 26);
             this.pagesPanel.Name = "pagesPanel";
-            this.pagesPanel.Size = new System.Drawing.Size(251, 479);
+            this.pagesPanel.Size = new System.Drawing.Size(291, 479);
             this.pagesPanel.TabIndex = 0;
             // 
             // pagesGrid
@@ -109,6 +112,7 @@
             this.pagesGrid.AllowUserToResizeRows = false;
             this.pagesGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.pagesGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.page,
             this.file,
             this.index,
             this.locked});
@@ -118,28 +122,10 @@
             this.pagesGrid.RowHeadersVisible = false;
             this.pagesGrid.RowTemplate.Height = 21;
             this.pagesGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.pagesGrid.Size = new System.Drawing.Size(251, 433);
+            this.pagesGrid.Size = new System.Drawing.Size(291, 433);
             this.pagesGrid.TabIndex = 1;
             this.pagesGrid.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.pagesGrid_CellValueChanged);
             this.pagesGrid.SelectionChanged += new System.EventHandler(this.pagesGrid_SelectionChanged);
-            // 
-            // file
-            // 
-            this.file.HeaderText = "ファイル";
-            this.file.Name = "file";
-            this.file.ReadOnly = true;
-            // 
-            // index
-            // 
-            this.index.HeaderText = "目次";
-            this.index.Name = "index";
-            // 
-            // locked
-            // 
-            this.locked.HeaderText = "ﾛｯｸ";
-            this.locked.MinimumWidth = 36;
-            this.locked.Name = "locked";
-            this.locked.Width = 36;
             // 
             // toolStripContainer1
             // 
@@ -148,13 +134,13 @@
             // toolStripContainer1.ContentPanel
             // 
             this.toolStripContainer1.ContentPanel.Controls.Add(this.pageSelectButtons);
-            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(251, 46);
+            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(291, 46);
             this.toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Top;
             this.toolStripContainer1.LeftToolStripPanelVisible = false;
             this.toolStripContainer1.Location = new System.Drawing.Point(0, 0);
             this.toolStripContainer1.Name = "toolStripContainer1";
             this.toolStripContainer1.RightToolStripPanelVisible = false;
-            this.toolStripContainer1.Size = new System.Drawing.Size(251, 46);
+            this.toolStripContainer1.Size = new System.Drawing.Size(291, 46);
             this.toolStripContainer1.TabIndex = 0;
             this.toolStripContainer1.Text = "toolStripContainer1";
             this.toolStripContainer1.TopToolStripPanelVisible = false;
@@ -493,9 +479,9 @@
             // 
             // splitContainer
             // 
+            this.splitContainer.BackColor = System.Drawing.SystemColors.Control;
             this.splitContainer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.splitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer.Location = new System.Drawing.Point(251, 26);
+            this.splitContainer.Location = new System.Drawing.Point(293, 45);
             this.splitContainer.Name = "splitContainer";
             // 
             // splitContainer.Panel1
@@ -509,16 +495,16 @@
             this.splitContainer.Panel2.Controls.Add(this.previewLabel);
             this.splitContainer.Panel2.Controls.Add(this.previewPicture);
             this.splitContainer.Panel2.ClientSizeChanged += new System.EventHandler(this.splitContainer_Panel2_ClientSizeChanged);
-            this.splitContainer.Size = new System.Drawing.Size(500, 479);
-            this.splitContainer.SplitterDistance = 259;
-            this.splitContainer.TabIndex = 3;
+            this.splitContainer.Size = new System.Drawing.Size(458, 460);
+            this.splitContainer.SplitterDistance = 237;
+            this.splitContainer.TabIndex = 4;
             // 
             // srcLabel
             // 
             this.srcLabel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.srcLabel.Location = new System.Drawing.Point(0, 461);
+            this.srcLabel.Location = new System.Drawing.Point(0, 442);
             this.srcLabel.Name = "srcLabel";
-            this.srcLabel.Size = new System.Drawing.Size(257, 16);
+            this.srcLabel.Size = new System.Drawing.Size(235, 16);
             this.srcLabel.TabIndex = 1;
             this.srcLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
@@ -527,7 +513,7 @@
             this.srcPicture.Dock = System.Windows.Forms.DockStyle.Top;
             this.srcPicture.Location = new System.Drawing.Point(0, 0);
             this.srcPicture.Name = "srcPicture";
-            this.srcPicture.Size = new System.Drawing.Size(257, 382);
+            this.srcPicture.Size = new System.Drawing.Size(235, 382);
             this.srcPicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.srcPicture.TabIndex = 0;
             this.srcPicture.TabStop = false;
@@ -536,9 +522,9 @@
             // previewLabel
             // 
             this.previewLabel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.previewLabel.Location = new System.Drawing.Point(0, 461);
+            this.previewLabel.Location = new System.Drawing.Point(0, 442);
             this.previewLabel.Name = "previewLabel";
-            this.previewLabel.Size = new System.Drawing.Size(235, 16);
+            this.previewLabel.Size = new System.Drawing.Size(215, 16);
             this.previewLabel.TabIndex = 2;
             this.previewLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
@@ -557,11 +543,47 @@
             this.saveFileDialog.DefaultExt = "epub";
             this.saveFileDialog.Filter = "ePub|*.epub|すべてのファイル|*";
             // 
+            // pageLabel
+            // 
+            this.pageLabel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pageLabel.Location = new System.Drawing.Point(291, 26);
+            this.pageLabel.Name = "pageLabel";
+            this.pageLabel.Size = new System.Drawing.Size(460, 16);
+            this.pageLabel.TabIndex = 3;
+            // 
+            // page
+            // 
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            this.page.DefaultCellStyle = dataGridViewCellStyle1;
+            this.page.HeaderText = "頁";
+            this.page.Name = "page";
+            this.page.ReadOnly = true;
+            this.page.Width = 36;
+            // 
+            // file
+            // 
+            this.file.HeaderText = "ファイル";
+            this.file.Name = "file";
+            this.file.ReadOnly = true;
+            // 
+            // index
+            // 
+            this.index.HeaderText = "目次";
+            this.index.Name = "index";
+            // 
+            // locked
+            // 
+            this.locked.HeaderText = "ﾛｯｸ";
+            this.locked.MinimumWidth = 36;
+            this.locked.Name = "locked";
+            this.locked.Width = 36;
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(902, 505);
+            this.Controls.Add(this.pageLabel);
             this.Controls.Add(this.splitContainer);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.pagesPanel);
@@ -569,6 +591,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "FormMain";
             this.Text = "ePubMaker";
+            this.ClientSizeChanged += new System.EventHandler(this.FormMain_ClientSizeChanged);
             this.pagesPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pagesGrid)).EndInit();
             this.toolStripContainer1.ContentPanel.ResumeLayout(false);
@@ -611,9 +634,6 @@
         private System.Windows.Forms.ToolStripMenuItem menuItemExit;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
         private System.Windows.Forms.DataGridView pagesGrid;
-        private System.Windows.Forms.DataGridViewTextBoxColumn file;
-        private System.Windows.Forms.DataGridViewTextBoxColumn index;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn locked;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.SplitContainer splitContainer;
         private System.Windows.Forms.PictureBox srcPicture;
@@ -642,6 +662,11 @@
         private System.Windows.Forms.ToolStripMenuItem menuItemEven;
         private System.Windows.Forms.Label srcLabel;
         private System.Windows.Forms.Label previewLabel;
+        private System.Windows.Forms.Label pageLabel;
+        private System.Windows.Forms.DataGridViewTextBoxColumn page;
+        private System.Windows.Forms.DataGridViewTextBoxColumn file;
+        private System.Windows.Forms.DataGridViewTextBoxColumn index;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn locked;
     }
 }
 
