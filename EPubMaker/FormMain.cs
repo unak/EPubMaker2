@@ -12,6 +12,8 @@ namespace EPubMaker
         private List<Page> pages;
         private bool gridChanging;
         private Page copy;
+        private MouseEventArgs start;
+        private MouseEventArgs end;
 
         private Setting setting;
 
@@ -24,6 +26,8 @@ namespace EPubMaker
             pages = null;
             gridChanging = false;
             copy = null;
+            start = null;
+            end = null;
 
             splitContainer_Panel1_ClientSizeChanged(null, null);
             splitContainer_Panel2_ClientSizeChanged(null, null);
@@ -196,6 +200,10 @@ namespace EPubMaker
                 {
                     pages[i].Rotate = copy.Rotate;
                     pages[i].Format = copy.Format;
+                    pages[i].ClipLeft = copy.ClipLeft;
+                    pages[i].ClipTop = copy.ClipTop;
+                    pages[i].ClipRight = copy.ClipRight;
+                    pages[i].ClipBottom = copy.ClipBottom;
                 }
             }
             RedrawImages(pagesGrid.SelectedRows[0].Index);
@@ -311,7 +319,7 @@ namespace EPubMaker
             {
                 if (row.Index < pages.Count)
                 {
-                    pages[row.Index].Rotate = rotateCombo.SelectedIndex;
+                    pages[row.Index].Rotate = (Page.PageRotate)rotateCombo.SelectedIndex;
                     if (row.Index < idx || idx < 0)
                     {
                         idx = row.Index;
@@ -340,6 +348,118 @@ namespace EPubMaker
                 if (row.Index < pages.Count)
                 {
                     pages[row.Index].Format = (Page.PageFormat)formatCombo.SelectedIndex;
+                    if (row.Index < idx || idx < 0)
+                    {
+                        idx = row.Index;
+                    }
+                }
+            }
+
+            if (idx >= 0)
+            {
+                RedrawImages(idx);
+            }
+            gridChanging = false;
+        }
+
+        private void editClipLeft_ValueChanged(object sender, EventArgs e)
+        {
+            if (gridChanging)
+            {
+                return;
+            }
+
+            gridChanging = true;
+            int idx = -1;
+            foreach (DataGridViewRow row in pagesGrid.SelectedRows)
+            {
+                if (row.Index < pages.Count)
+                {
+                    pages[row.Index].ClipLeft = (int)editClipLeft.Value;
+                    if (row.Index < idx || idx < 0)
+                    {
+                        idx = row.Index;
+                    }
+                }
+            }
+
+            if (idx >= 0)
+            {
+                RedrawImages(idx);
+            }
+            gridChanging = false;
+        }
+
+        private void editClipTop_ValueChanged(object sender, EventArgs e)
+        {
+            if (gridChanging)
+            {
+                return;
+            }
+
+            gridChanging = true;
+            int idx = -1;
+            foreach (DataGridViewRow row in pagesGrid.SelectedRows)
+            {
+                if (row.Index < pages.Count)
+                {
+                    pages[row.Index].ClipTop = (int)editClipTop.Value;
+                    if (row.Index < idx || idx < 0)
+                    {
+                        idx = row.Index;
+                    }
+                }
+            }
+
+            if (idx >= 0)
+            {
+                RedrawImages(idx);
+            }
+            gridChanging = false;
+        }
+
+        private void editClipRight_ValueChanged(object sender, EventArgs e)
+        {
+            if (gridChanging)
+            {
+                return;
+            }
+
+            gridChanging = true;
+            int idx = -1;
+            foreach (DataGridViewRow row in pagesGrid.SelectedRows)
+            {
+                if (row.Index < pages.Count)
+                {
+                    pages[row.Index].ClipRight = (int)editClipRight.Value;
+                    if (row.Index < idx || idx < 0)
+                    {
+                        idx = row.Index;
+                    }
+                }
+            }
+
+            if (idx >= 0)
+            {
+                RedrawImages(idx);
+            }
+            gridChanging = false;
+        }
+
+        private void editClipBottom_ValueChanged(object sender, EventArgs e)
+        {
+            if (gridChanging)
+            {
+                return;
+            }
+
+            gridChanging = true;
+            int idx = -1;
+            foreach (DataGridViewRow row in pagesGrid.SelectedRows)
+            {
+                if (row.Index < pages.Count)
+                {
+                    pages[row.Index].ClipBottom = (int)editClipBottom.Value;
                     if (row.Index < idx || idx < 0)
                     {
                         idx = row.Index;
@@ -425,6 +545,39 @@ namespace EPubMaker
             gridChanging = false;
         }
 
+        private void srcPicture_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                start = e;
+                end = e;
+            }
+        }
+
+        private void srcPicture_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left && start != null)
+            {
+                Graphics g = srcPicture.CreateGraphics();
+                Pen pen = new Pen(Color.Red, 2);
+                pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
+                srcPicture.Refresh();
+                end = e;
+                g.DrawRectangle(pen, Math.Min(start.X, end.X), Math.Min(start.Y, end.Y), Math.Abs(end.X - start.X), Math.Abs(end.Y - start.Y));
+                g.Dispose();
+            }
+        }
+
+        private void srcPicture_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left && start != null)
+            {
+                srcPicture_MouseMove(null, e);
+                start = null;
+                end = null;
+            }
+        }
+
         private void RedrawImages(int idx)
         {
             Image src;
@@ -443,8 +596,13 @@ namespace EPubMaker
                 pageLabel.Text += " " + pages[idx].Index;
             }
 
-            rotateCombo.SelectedIndex = pages[idx].Rotate;
+            rotateCombo.SelectedIndex = (int)pages[idx].Rotate;
             formatCombo.SelectedIndex = (int)pages[idx].Format;
+
+            editClipLeft.Value = pages[idx].ClipLeft;
+            editClipTop.Value = pages[idx].ClipTop;
+            editClipRight.Value = pages[idx].ClipRight;
+            editClipBottom.Value = pages[idx].ClipBottom;
         }
 
         private void EnabledButtonsAndMenuItems(bool opened, bool selected)

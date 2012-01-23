@@ -6,6 +6,14 @@ namespace EPubMaker
 {
     public class Page
     {
+        public enum PageRotate
+        {
+            Rotate0 = 0,
+            Rotate90 = 1,
+            Rotate180 = 2,
+            Rotate270 = 3
+        }
+
         public enum PageFormat
         {
             Undefined = -1,
@@ -17,8 +25,12 @@ namespace EPubMaker
 
         private string path;
         private string index;
-        private int rotate;
+        private PageRotate rotate;
         private PageFormat format;
+        private int clipLeft;
+        private int clipTop;
+        private int clipRight;
+        private int clipBottom;
 
         public string Path
         {
@@ -49,7 +61,7 @@ namespace EPubMaker
             }
         }
 
-        public int Rotate
+        public PageRotate Rotate
         {
             set
             {
@@ -73,12 +85,64 @@ namespace EPubMaker
             }
         }
 
+        public int ClipLeft
+        {
+            set
+            {
+                clipLeft = value;
+            }
+            get
+            {
+                return clipLeft;
+            }
+        }
+
+        public int ClipTop
+        {
+            set
+            {
+                clipTop = value;
+            }
+            get
+            {
+                return clipTop;
+            }
+        }
+
+        public int ClipRight
+        {
+            set
+            {
+                clipRight = value;
+            }
+            get
+            {
+                return clipRight;
+            }
+        }
+
+        public int ClipBottom
+        {
+            set
+            {
+                clipBottom = value;
+            }
+            get
+            {
+                return clipBottom;
+            }
+        }
+
         public Page(string path)
         {
             this.path = path;
-            this.index = "";
-            this.rotate = 0;
-            this.format = PageFormat.Undefined;
+            index = "";
+            rotate = PageRotate.Rotate0;
+            format = PageFormat.Undefined;
+            clipLeft = 0;
+            clipTop = 0;
+            clipRight = 100;
+            clipBottom = 100;
         }
 
         public override string ToString()
@@ -91,16 +155,16 @@ namespace EPubMaker
             src = Image.FromFile(Path);
             switch (Rotate)
             {
-                case 0:
+                case PageRotate.Rotate0:
                     src.RotateFlip(RotateFlipType.RotateNoneFlipNone);
                     break;
-                case 1:
+                case PageRotate.Rotate90:
                     src.RotateFlip(RotateFlipType.Rotate90FlipNone);
                     break;
-                case 2:
+                case PageRotate.Rotate180:
                     src.RotateFlip(RotateFlipType.Rotate180FlipNone);
                     break;
-                case 3:
+                case PageRotate.Rotate270:
                     src.RotateFlip(RotateFlipType.Rotate270FlipNone);
                     break;
             }
@@ -131,21 +195,23 @@ namespace EPubMaker
                 }
             }
 
-            if (src.Width / (double)width < src.Height / (double)height)
+            int srcWidth = src.Width * (100 - clipLeft - (100 - clipRight)) / 100;
+            int srcHeight = src.Height * (100 - clipTop - (100 - clipBottom)) / 100;
+            if (srcWidth / (double)width < srcHeight / (double)height)
             {
-                double d = src.Height / (double)height;
-                width = (int)(src.Width / d);
+                double d = srcHeight / (double)height;
+                width = (int)(srcWidth / d);
             }
             else
             {
-                double d = src.Width / (double)width;
-                height = (int)(src.Height / d);
+                double d = srcWidth / (double)width;
+                height = (int)(srcHeight / d);
             }
 
             preview = new Bitmap(width, height);
             Graphics g = Graphics.FromImage(preview);
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-            g.DrawImage(src, new Rectangle(0, 0, width, height), 0, 0, src.Width, src.Height, GraphicsUnit.Pixel);
+            g.DrawImage(src, new Rectangle(0, 0, width, height), src.Width * clipLeft / 100, src.Height * clipTop / 100, srcWidth, srcHeight, GraphicsUnit.Pixel);
             g.Dispose();
 
             if (Format > Page.PageFormat.FullColor)

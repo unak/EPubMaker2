@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pagesPanel = new System.Windows.Forms.Panel();
             this.pagesGrid = new System.Windows.Forms.DataGridView();
             this.toolStripContainer = new System.Windows.Forms.ToolStripContainer();
@@ -60,7 +60,6 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.label9 = new System.Windows.Forms.Label();
             this.formatCombo = new System.Windows.Forms.ComboBox();
-            this.label8 = new System.Windows.Forms.Label();
             this.editHeight = new System.Windows.Forms.NumericUpDown();
             this.editWidth = new System.Windows.Forms.NumericUpDown();
             this.editAuthor = new System.Windows.Forms.TextBox();
@@ -84,6 +83,11 @@
             this.file = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.index = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.locked = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.label8 = new System.Windows.Forms.Label();
+            this.editClipTop = new System.Windows.Forms.NumericUpDown();
+            this.editClipBottom = new System.Windows.Forms.NumericUpDown();
+            this.editClipLeft = new System.Windows.Forms.NumericUpDown();
+            this.editClipRight = new System.Windows.Forms.NumericUpDown();
             this.pagesPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pagesGrid)).BeginInit();
             this.toolStripContainer.ContentPanel.SuspendLayout();
@@ -99,6 +103,10 @@
             this.splitContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.srcPicture)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.previewPicture)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.editClipTop)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.editClipBottom)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.editClipLeft)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.editClipRight)).BeginInit();
             this.SuspendLayout();
             // 
             // pagesPanel
@@ -363,9 +371,13 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.editClipRight);
+            this.panel1.Controls.Add(this.editClipLeft);
+            this.panel1.Controls.Add(this.editClipBottom);
+            this.panel1.Controls.Add(this.editClipTop);
+            this.panel1.Controls.Add(this.label8);
             this.panel1.Controls.Add(this.label9);
             this.panel1.Controls.Add(this.formatCombo);
-            this.panel1.Controls.Add(this.label8);
             this.panel1.Controls.Add(this.editHeight);
             this.panel1.Controls.Add(this.editWidth);
             this.panel1.Controls.Add(this.editAuthor);
@@ -387,7 +399,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(9, 191);
+            this.label9.Location = new System.Drawing.Point(9, 158);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(29, 12);
             this.label9.TabIndex = 14;
@@ -401,21 +413,11 @@
             "8bitグレイスケール",
             "4bitグレイスケール",
             "白黒"});
-            this.formatCombo.Location = new System.Drawing.Point(48, 188);
+            this.formatCombo.Location = new System.Drawing.Point(48, 155);
             this.formatCombo.Name = "formatCombo";
             this.formatCombo.Size = new System.Drawing.Size(95, 20);
-            this.formatCombo.TabIndex = 13;
+            this.formatCombo.TabIndex = 7;
             this.formatCombo.SelectedIndexChanged += new System.EventHandler(this.formatCombo_SelectedIndexChanged);
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label8.Location = new System.Drawing.Point(4, 172);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(57, 12);
-            this.label8.TabIndex = 12;
-            this.label8.Text = "出力画像";
             // 
             // editHeight
             // 
@@ -427,7 +429,7 @@
             0});
             this.editHeight.Name = "editHeight";
             this.editHeight.Size = new System.Drawing.Size(92, 19);
-            this.editHeight.TabIndex = 11;
+            this.editHeight.TabIndex = 5;
             // 
             // editWidth
             // 
@@ -439,21 +441,21 @@
             0});
             this.editWidth.Name = "editWidth";
             this.editWidth.Size = new System.Drawing.Size(92, 19);
-            this.editWidth.TabIndex = 10;
+            this.editWidth.TabIndex = 4;
             // 
             // editAuthor
             // 
             this.editAuthor.Location = new System.Drawing.Point(50, 42);
             this.editAuthor.Name = "editAuthor";
             this.editAuthor.Size = new System.Drawing.Size(92, 19);
-            this.editAuthor.TabIndex = 9;
+            this.editAuthor.TabIndex = 3;
             // 
             // editTitle
             // 
             this.editTitle.Location = new System.Drawing.Point(50, 21);
             this.editTitle.Name = "editTitle";
             this.editTitle.Size = new System.Drawing.Size(92, 19);
-            this.editTitle.TabIndex = 8;
+            this.editTitle.TabIndex = 2;
             // 
             // label7
             // 
@@ -521,7 +523,7 @@
             this.rotateCombo.Location = new System.Drawing.Point(48, 135);
             this.rotateCombo.Name = "rotateCombo";
             this.rotateCombo.Size = new System.Drawing.Size(95, 20);
-            this.rotateCombo.TabIndex = 1;
+            this.rotateCombo.TabIndex = 6;
             this.rotateCombo.SelectedIndexChanged += new System.EventHandler(this.rotateCombo_SelectedIndexChanged);
             // 
             // label1
@@ -530,9 +532,9 @@
             this.label1.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.label1.Location = new System.Drawing.Point(4, 118);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(62, 12);
+            this.label1.Size = new System.Drawing.Size(57, 12);
             this.label1.TabIndex = 0;
-            this.label1.Text = "ソース画像";
+            this.label1.Text = "画像設定";
             // 
             // splitContainer
             // 
@@ -575,6 +577,9 @@
             this.srcPicture.TabIndex = 0;
             this.srcPicture.TabStop = false;
             this.srcPicture.ClientSizeChanged += new System.EventHandler(this.srcPicture_ClientSizeChanged);
+            this.srcPicture.MouseDown += new System.Windows.Forms.MouseEventHandler(this.srcPicture_MouseDown);
+            this.srcPicture.MouseMove += new System.Windows.Forms.MouseEventHandler(this.srcPicture_MouseMove);
+            this.srcPicture.MouseUp += new System.Windows.Forms.MouseEventHandler(this.srcPicture_MouseUp);
             // 
             // previewLabel
             // 
@@ -610,8 +615,8 @@
             // 
             // page
             // 
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
-            this.page.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            this.page.DefaultCellStyle = dataGridViewCellStyle9;
             this.page.HeaderText = "頁";
             this.page.Name = "page";
             this.page.ReadOnly = true;
@@ -637,6 +642,57 @@
             this.locked.MinimumWidth = 36;
             this.locked.Name = "locked";
             this.locked.Width = 36;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(8, 191);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(60, 12);
+            this.label8.TabIndex = 15;
+            this.label8.Text = "切り抜き(%)";
+            // 
+            // editClipTop
+            // 
+            this.editClipTop.Location = new System.Drawing.Point(73, 189);
+            this.editClipTop.Name = "editClipTop";
+            this.editClipTop.Size = new System.Drawing.Size(47, 19);
+            this.editClipTop.TabIndex = 9;
+            this.editClipTop.ValueChanged += new System.EventHandler(this.editClipTop_ValueChanged);
+            // 
+            // editClipBottom
+            // 
+            this.editClipBottom.Location = new System.Drawing.Point(73, 239);
+            this.editClipBottom.Name = "editClipBottom";
+            this.editClipBottom.Size = new System.Drawing.Size(47, 19);
+            this.editClipBottom.TabIndex = 11;
+            this.editClipBottom.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.editClipBottom.ValueChanged += new System.EventHandler(this.editClipBottom_ValueChanged);
+            // 
+            // editClipLeft
+            // 
+            this.editClipLeft.Location = new System.Drawing.Point(43, 214);
+            this.editClipLeft.Name = "editClipLeft";
+            this.editClipLeft.Size = new System.Drawing.Size(47, 19);
+            this.editClipLeft.TabIndex = 8;
+            this.editClipLeft.ValueChanged += new System.EventHandler(this.editClipLeft_ValueChanged);
+            // 
+            // editClipRight
+            // 
+            this.editClipRight.Location = new System.Drawing.Point(95, 214);
+            this.editClipRight.Name = "editClipRight";
+            this.editClipRight.Size = new System.Drawing.Size(47, 19);
+            this.editClipRight.TabIndex = 10;
+            this.editClipRight.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.editClipRight.ValueChanged += new System.EventHandler(this.editClipRight_ValueChanged);
             // 
             // FormMain
             // 
@@ -673,6 +729,10 @@
             this.splitContainer.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.srcPicture)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.previewPicture)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.editClipTop)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.editClipBottom)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.editClipLeft)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.editClipRight)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -713,7 +773,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.ComboBox formatCombo;
-        private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ToolStripMenuItem menuItemEPub;
         private System.Windows.Forms.ToolStripMenuItem menuItemGenerate;
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
@@ -734,6 +793,11 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn file;
         private System.Windows.Forms.DataGridViewTextBoxColumn index;
         private System.Windows.Forms.DataGridViewCheckBoxColumn locked;
+        private System.Windows.Forms.NumericUpDown editClipRight;
+        private System.Windows.Forms.NumericUpDown editClipLeft;
+        private System.Windows.Forms.NumericUpDown editClipBottom;
+        private System.Windows.Forms.NumericUpDown editClipTop;
+        private System.Windows.Forms.Label label8;
     }
 }
 
