@@ -344,7 +344,36 @@ namespace EPubMaker
 
         private void btnMove_Click(object sender, EventArgs e)
         {
+            if (gridChanging || selectedIndex < 0)
+            {
+                return;
+            }
 
+            FormMove form = new FormMove();
+            form.MaxValue = pages.Count;
+            form.Page = selectedIndex + 1;
+            if (form.ShowDialog() == DialogResult.OK && form.Page != selectedIndex + 1)
+            {
+                gridChanging = true;
+
+                int move = form.Page - 1;
+                if (move < selectedIndex)
+                {
+                    pages.Insert(move, pages[selectedIndex]);
+                    pages.RemoveAt(selectedIndex + 1);
+                }
+                else
+                {
+                    pages.Insert(move + 1, pages[selectedIndex]);
+                    pages.RemoveAt(selectedIndex);
+                }
+                selectedIndex = move;
+
+                UpdatePageList();
+                RedrawImages(selectedIndex);
+
+                gridChanging = false;
+            }
         }
 
         private void pagesGrid_SelectionChanged(object sender, EventArgs e)
