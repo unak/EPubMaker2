@@ -85,16 +85,16 @@ namespace EPubMaker
             fs = File.OpenWrite(Path.Combine(contents, "package.opf"));
             WriteText(fs, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<package xmlns=\"http://www.idpf.org/2007/opf\" version=\"3.0\" unique-identifier=\"BookId\" xml:lang=\"ja\">\n<metadata xmlns:dc=\"http://purl.org/dc/elements/1.1/\">\n<dc:identifier id=\"BookId\">");
             string bookid = Guid.NewGuid().ToString();
-            WriteText(fs, bookid);
+            WriteText(fs, Escape(bookid));
             WriteText(fs, "</dc:identifier>\n<dc:title>");
-            WriteText(fs, arg.title);
+            WriteText(fs, Escape(arg.title));
             WriteText(fs, "</dc:title>\n");
             if (arg.author.Length > 0)
             {
                 WriteText(fs, "<dc:creator opf:file-as=\"");
-                WriteText(fs, arg.author);
+                WriteText(fs, Escape(arg.author));
                 WriteText(fs, "\" opf:role=\"aut\">");
-                WriteText(fs, arg.author);
+                WriteText(fs, Escape(arg.author));
                 WriteText(fs, "</dc:creator>\n");
             }
             WriteText(fs, "<dc:language>ja</dc:language>\n</metadata>\n<manifest>\n");
@@ -155,9 +155,9 @@ namespace EPubMaker
 
             fs = File.OpenWrite(Path.Combine(contents, "toc.ncx"));
             WriteText(fs, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE ncx PUBLIC \"-//NISO//DTD ncx 2005-1//EN\" \"http://www.daisy.org/z3986/2005/ncx-2005-1.dtd\">\n<ncx version=\"2005-1\" xmlns=\"http://www.daisy.org/z3986/2005/ncx/\" xml:lang=\"ja\">\n<head>\n<meta name=\"dtb:uid\" content=\"");
-            WriteText(fs, bookid);
+            WriteText(fs, Escape(bookid));
             WriteText(fs, "\"/>\n<meta name=\"dtb:depth\" content=\"1\"/>\n<meta name=\"dtb:totalPageCount\" content=\"0\"/>\n<meta name=\"dtb:maxPageNumber\" content=\"0\"/>\n</head>\n<docTitle><text>");
-            WriteText(fs, arg.title);
+            WriteText(fs, Escape(arg.title));
             WriteText(fs, "</text></docTitle>\n<navMap>\n");
             for (int i = 0, idx = 0; i < arg.pages.Count; ++i)
             {
@@ -172,7 +172,7 @@ namespace EPubMaker
                 if (!String.IsNullOrEmpty(arg.pages[i].Index))
                 {
                     WriteText(fs, "<navPoint id=\"" + id + "f\" playOrder=\"" + (++idx).ToString() + "\">\n");
-                    WriteText(fs, "<navLabel><text>" + arg.pages[i].Index + "</text></navLabel>\n");
+                    WriteText(fs, "<navLabel><text>" + Escape(arg.pages[i].Index) + "</text></navLabel>\n");
                     WriteText(fs, "<content src=\"data/" + id + "f.xhtml\"/>\n");
                     WriteText(fs, "</navPoint>\n");
                 }
@@ -253,6 +253,11 @@ namespace EPubMaker
                 this.DialogResult = DialogResult.OK;
             }
             this.Close();
+        }
+
+        public static string Escape(string str)
+        {
+            return str.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;").Replace("\"", "&quot;");
         }
     }
 }

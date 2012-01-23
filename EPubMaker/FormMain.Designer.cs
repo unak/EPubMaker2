@@ -29,18 +29,18 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pagesPanel = new System.Windows.Forms.Panel();
             this.pagesGrid = new System.Windows.Forms.DataGridView();
             this.toolStripContainer = new System.Windows.Forms.ToolStripContainer();
-            this.pageSelectButtons = new System.Windows.Forms.ToolStrip();
+            this.toolButtons = new System.Windows.Forms.ToolStrip();
             this.btnCopy = new System.Windows.Forms.ToolStripButton();
             this.btnPaste = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.btnSelectAll = new System.Windows.Forms.ToolStripButton();
             this.btnSelectOdd = new System.Windows.Forms.ToolStripButton();
             this.btnSelectEven = new System.Windows.Forms.ToolStripButton();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.menuItemFile = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemOpen = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -92,8 +92,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pagesGrid)).BeginInit();
             this.toolStripContainer.ContentPanel.SuspendLayout();
             this.toolStripContainer.SuspendLayout();
-            this.pageSelectButtons.SuspendLayout();
-            this.menuStrip1.SuspendLayout();
+            this.toolButtons.SuspendLayout();
+            this.menuStrip.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.editHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.editWidth)).BeginInit();
@@ -147,7 +147,7 @@
             // 
             // toolStripContainer.ContentPanel
             // 
-            this.toolStripContainer.ContentPanel.Controls.Add(this.pageSelectButtons);
+            this.toolStripContainer.ContentPanel.Controls.Add(this.toolButtons);
             this.toolStripContainer.ContentPanel.Size = new System.Drawing.Size(291, 30);
             this.toolStripContainer.Dock = System.Windows.Forms.DockStyle.Top;
             this.toolStripContainer.LeftToolStripPanelVisible = false;
@@ -159,24 +159,24 @@
             this.toolStripContainer.Text = "toolStripContainer1";
             this.toolStripContainer.TopToolStripPanelVisible = false;
             // 
-            // pageSelectButtons
+            // toolButtons
             // 
-            this.pageSelectButtons.AllowMerge = false;
-            this.pageSelectButtons.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pageSelectButtons.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.pageSelectButtons.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolButtons.AllowMerge = false;
+            this.toolButtons.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.toolButtons.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.toolButtons.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnCopy,
             this.btnPaste,
             this.toolStripSeparator3,
             this.btnSelectAll,
             this.btnSelectOdd,
             this.btnSelectEven});
-            this.pageSelectButtons.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-            this.pageSelectButtons.Location = new System.Drawing.Point(0, 0);
-            this.pageSelectButtons.Name = "pageSelectButtons";
-            this.pageSelectButtons.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.pageSelectButtons.Size = new System.Drawing.Size(291, 30);
-            this.pageSelectButtons.TabIndex = 0;
+            this.toolButtons.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
+            this.toolButtons.Location = new System.Drawing.Point(0, 0);
+            this.toolButtons.Name = "toolButtons";
+            this.toolButtons.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
+            this.toolButtons.Size = new System.Drawing.Size(291, 30);
+            this.toolButtons.TabIndex = 0;
             // 
             // btnCopy
             // 
@@ -233,17 +233,17 @@
             this.btnSelectEven.Text = "偶数ページを選択";
             this.btnSelectEven.Click += new System.EventHandler(this.btnSelectEven_Click);
             // 
-            // menuStrip1
+            // menuStrip
             // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuItemFile,
             this.menuItemEdit,
             this.menuItemEPub});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(902, 26);
-            this.menuStrip1.TabIndex = 1;
-            this.menuStrip1.Text = "menuStrip1";
+            this.menuStrip.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip.Name = "menuStrip";
+            this.menuStrip.Size = new System.Drawing.Size(902, 26);
+            this.menuStrip.TabIndex = 1;
+            this.menuStrip.Text = "menuStrip1";
             // 
             // menuItemFile
             // 
@@ -615,8 +615,8 @@
             // 
             // page
             // 
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
-            this.page.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            this.page.DefaultCellStyle = dataGridViewCellStyle2;
             this.page.HeaderText = "頁";
             this.page.Name = "page";
             this.page.ReadOnly = true;
@@ -703,8 +703,8 @@
             this.Controls.Add(this.splitContainer);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.pagesPanel);
-            this.Controls.Add(this.menuStrip1);
-            this.MainMenuStrip = this.menuStrip1;
+            this.Controls.Add(this.menuStrip);
+            this.MainMenuStrip = this.menuStrip;
             this.Name = "FormMain";
             this.Text = "ePubMaker";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
@@ -715,10 +715,10 @@
             this.toolStripContainer.ContentPanel.PerformLayout();
             this.toolStripContainer.ResumeLayout(false);
             this.toolStripContainer.PerformLayout();
-            this.pageSelectButtons.ResumeLayout(false);
-            this.pageSelectButtons.PerformLayout();
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
+            this.toolButtons.ResumeLayout(false);
+            this.toolButtons.PerformLayout();
+            this.menuStrip.ResumeLayout(false);
+            this.menuStrip.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.editHeight)).EndInit();
@@ -742,11 +742,11 @@
 
         private System.Windows.Forms.Panel pagesPanel;
         private System.Windows.Forms.ToolStripContainer toolStripContainer;
-        private System.Windows.Forms.ToolStrip pageSelectButtons;
+        private System.Windows.Forms.ToolStrip toolButtons;
         private System.Windows.Forms.ToolStripButton btnSelectAll;
         private System.Windows.Forms.ToolStripButton btnSelectOdd;
         private System.Windows.Forms.ToolStripButton btnSelectEven;
-        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.MenuStrip menuStrip;
         private System.Windows.Forms.ToolStripMenuItem menuItemFile;
         private System.Windows.Forms.ToolStripMenuItem menuItemOpen;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
