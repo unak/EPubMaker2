@@ -323,7 +323,23 @@ namespace EPubMaker
 
         private void btnInsert_Click(object sender, EventArgs e)
         {
+            if (gridChanging || selectedIndex < 0)
+            {
+                return;
+            }
 
+            openFileDialog.InitialDirectory = setting.PrevSrc;
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                setting.PrevSrc = Path.GetDirectoryName(openFileDialog.FileName);
+                setting.Save();
+
+                gridChanging = true;
+                pages.Insert(selectedIndex + 1, new Page(openFileDialog.FileName));
+                UpdatePageList();
+                RedrawImages(selectedIndex);
+                gridChanging = false;
+            }
         }
 
         private void btnMove_Click(object sender, EventArgs e)

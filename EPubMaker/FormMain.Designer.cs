@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.pagesPanel = new System.Windows.Forms.Panel();
             this.pagesGrid = new System.Windows.Forms.DataGridView();
@@ -98,6 +98,7 @@
             this.btnErase = new System.Windows.Forms.ToolStripButton();
             this.btnInsert = new System.Windows.Forms.ToolStripButton();
             this.btnMove = new System.Windows.Forms.ToolStripButton();
+            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.pagesPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pagesGrid)).BeginInit();
             this.toolStripContainer.ContentPanel.SuspendLayout();
@@ -153,8 +154,8 @@
             // 
             // page
             // 
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
-            this.page.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            this.page.DefaultCellStyle = dataGridViewCellStyle2;
             this.page.HeaderText = "頁";
             this.page.Name = "page";
             this.page.ReadOnly = true;
@@ -797,6 +798,10 @@
             this.btnMove.Text = "ページの移動...";
             this.btnMove.Click += new System.EventHandler(this.btnMove_Click);
             // 
+            // openFileDialog
+            // 
+            this.openFileDialog.Filter = "画像ファイル|*.jpg;*.png;*.bmp|すべてのファイル|*";
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -911,6 +916,7 @@
         private System.Windows.Forms.ToolStripButton btnErase;
         private System.Windows.Forms.ToolStripButton btnInsert;
         private System.Windows.Forms.ToolStripButton btnMove;
+        private System.Windows.Forms.OpenFileDialog openFileDialog;
     }
 }
 
