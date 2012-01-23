@@ -11,6 +11,7 @@ namespace EPubMaker
     {
         private List<Page> pages;
         private bool gridChanging;
+        private Page copy;
 
         private Setting setting;
 
@@ -22,15 +23,37 @@ namespace EPubMaker
 
             pages = null;
             gridChanging = false;
-
-            editWidth.Value = setting.PageWidth;
-            editHeight.Value = setting.PageHeight;
+            copy = null;
 
             splitContainer_Panel1_ClientSizeChanged(null, null);
             splitContainer_Panel2_ClientSizeChanged(null, null);
 
-            menuItemClose.Enabled = false;
-            menuItemGenerate.Enabled = false;
+            if (setting.Width > 0)
+            {
+                this.Left = setting.Left;
+                this.Top = setting.Top;
+                this.Width = setting.Width;
+                this.Height = setting.Height;
+                splitContainer.SplitterDistance = setting.SrcWidth;
+            }
+
+            editWidth.Value = setting.PageWidth;
+            editHeight.Value = setting.PageHeight;
+
+            EnabledButtonsAndMenuItems(false, false);
+        }
+
+        private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (setting != null)
+            {
+                setting.Left = this.Left;
+                setting.Top = this.Top;
+                setting.Width = this.Width;
+                setting.Height = this.Height;
+                setting.SrcWidth = splitContainer.SplitterDistance;
+                setting.Save();
+            }
         }
 
         private void FormMain_ClientSizeChanged(object sender, EventArgs e)
@@ -95,8 +118,7 @@ namespace EPubMaker
                 editTitle.Text = name;
             }
 
-            menuItemClose.Enabled = true;
-            menuItemGenerate.Enabled = true;
+            EnabledButtonsAndMenuItems(true, pages.Count > 0);
         }
 
         private void menuItemClose_Click(object sender, EventArgs e)
@@ -110,8 +132,7 @@ namespace EPubMaker
             srcLabel.Text = "";
             previewLabel.Text = "";
 
-            menuItemClose.Enabled = false;
-            menuItemGenerate.Enabled = false;
+            EnabledButtonsAndMenuItems(false, false);
         }
 
         private void menuItemExit_Click(object sender, EventArgs e)
@@ -151,6 +172,33 @@ namespace EPubMaker
             {
                 int idx = pagesGrid.Rows.Add(i + 1, pages[i].Name, pages[i].Index, false);
             }
+        }
+
+        private void btnCopy_Click(object sender, EventArgs e)
+        {
+            if (pagesGrid.SelectedRows.Count > 0)
+            {
+                copy = pages[pagesGrid.SelectedRows[0].Index];
+                EnabledButtonsAndMenuItems(true, true);
+            }
+        }
+
+        private void btnPaste_Click(object sender, EventArgs e)
+        {
+            if (copy == null || pagesGrid.SelectedRows.Count <= 0)
+            {
+                return;
+            }
+
+            for (int i = pagesGrid.Rows.Count - 1; i >= 0; --i)
+            {
+                if (pagesGrid.Rows[i].Selected)
+                {
+                    pages[i].Rotate = copy.Rotate;
+                    pages[i].Format = copy.Format;
+                }
+            }
+            RedrawImages(pagesGrid.SelectedRows[0].Index);
         }
 
         private void btnSelectAll_Click(object sender, EventArgs e)
@@ -240,8 +288,12 @@ namespace EPubMaker
             }
             if (idx >= 0 && idx < pages.Count)
             {
-                rotateCombo.SelectedIndex = pages[idx].Rotate;
+                EnabledButtonsAndMenuItems(true, true);
                 RedrawImages(idx);
+            }
+            else
+            {
+                EnabledButtonsAndMenuItems(true, false);
             }
             gridChanging = false;
         }
@@ -391,7 +443,29 @@ namespace EPubMaker
                 pageLabel.Text += " " + pages[idx].Index;
             }
 
+            rotateCombo.SelectedIndex = pages[idx].Rotate;
             formatCombo.SelectedIndex = (int)pages[idx].Format;
+        }
+
+        private void EnabledButtonsAndMenuItems(bool opened, bool selected)
+        {
+            menuItemClose.Enabled = opened;
+
+            menuItemCopy.Enabled = selected;
+            menuItemPaste.Enabled = copy != null;
+
+            menuItemSelectAll.Enabled = opened;
+            menuItemSelectOdd.Enabled = opened;
+            menuItemSelectEven.Enabled = opened;
+
+            menuItemGenerate.Enabled = opened;
+
+            btnCopy.Enabled = selected;
+            btnPaste.Enabled = copy != null;
+
+            btnSelectAll.Enabled = opened;
+            btnSelectOdd.Enabled = opened;
+            btnSelectEven.Enabled = opened;
         }
     }
 }

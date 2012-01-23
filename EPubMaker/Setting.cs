@@ -18,6 +18,7 @@ namespace EPubMaker
         private int y;
         private int width;
         private int height;
+        private int srcWidth;
         public int Top
         {
             set
@@ -64,6 +65,18 @@ namespace EPubMaker
             get
             {
                 return height;
+            }
+        }
+        public int SrcWidth
+        {
+            set
+            {
+                srcWidth = value;
+                changed = true;
+            }
+            get
+            {
+                return srcWidth;
             }
         }
 
@@ -158,12 +171,13 @@ namespace EPubMaker
                 instance = new Setting();
             }
 
-            RegistryKey reg = Application.UserAppDataRegistry;
+            RegistryKey reg = GetRegKey();
 
             instance.x = (int)reg.GetValue("x", -1);
             instance.y = (int)reg.GetValue("y", -1);
             instance.width = (int)reg.GetValue("width", -1);
             instance.height = (int)reg.GetValue("height", -1);
+            instance.srcWidth = (int)reg.GetValue("srcWidth", -1);
 
             instance.pageWidth = (int)reg.GetValue("pageWidth", 480);
             instance.pageHeight = (int)reg.GetValue("pageHeight", 800);
@@ -180,12 +194,13 @@ namespace EPubMaker
         {
             if (changed)
             {
-                RegistryKey reg = Application.UserAppDataRegistry;
+                RegistryKey reg = GetRegKey();
 
                 reg.SetValue("x", x, RegistryValueKind.DWord);
                 reg.SetValue("y", y, RegistryValueKind.DWord);
                 reg.SetValue("width", width, RegistryValueKind.DWord);
                 reg.SetValue("height", height, RegistryValueKind.DWord);
+                reg.SetValue("srcWidth", srcWidth, RegistryValueKind.DWord);
 
                 reg.SetValue("pageWidth", pageWidth, RegistryValueKind.DWord);
                 reg.SetValue("pageHeight", pageHeight, RegistryValueKind.DWord);
@@ -203,6 +218,11 @@ namespace EPubMaker
 
                 changed = false;
             }
+        }
+
+        private static RegistryKey GetRegKey()
+        {
+            return Registry.CurrentUser.CreateSubKey(String.Format(@"Software\{0}\{1}", Application.CompanyName, Application.ProductName));
         }
     }
 }

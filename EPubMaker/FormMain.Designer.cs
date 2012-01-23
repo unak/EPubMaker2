@@ -29,11 +29,14 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pagesPanel = new System.Windows.Forms.Panel();
             this.pagesGrid = new System.Windows.Forms.DataGridView();
-            this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
+            this.toolStripContainer = new System.Windows.Forms.ToolStripContainer();
             this.pageSelectButtons = new System.Windows.Forms.ToolStrip();
+            this.btnCopy = new System.Windows.Forms.ToolStripButton();
+            this.btnPaste = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.btnSelectAll = new System.Windows.Forms.ToolStripButton();
             this.btnSelectOdd = new System.Windows.Forms.ToolStripButton();
             this.btnSelectEven = new System.Windows.Forms.ToolStripButton();
@@ -45,9 +48,12 @@
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.menuItemExit = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemEdit = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItemCopy = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItemPaste = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.menuItemSelectAll = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuItemOdd = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuItemEven = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItemSelectOdd = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItemSelectEven = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemEPub = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemGenerate = new System.Windows.Forms.ToolStripMenuItem();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
@@ -80,8 +86,8 @@
             this.locked = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.pagesPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pagesGrid)).BeginInit();
-            this.toolStripContainer1.ContentPanel.SuspendLayout();
-            this.toolStripContainer1.SuspendLayout();
+            this.toolStripContainer.ContentPanel.SuspendLayout();
+            this.toolStripContainer.SuspendLayout();
             this.pageSelectButtons.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -98,7 +104,7 @@
             // pagesPanel
             // 
             this.pagesPanel.Controls.Add(this.pagesGrid);
-            this.pagesPanel.Controls.Add(this.toolStripContainer1);
+            this.pagesPanel.Controls.Add(this.toolStripContainer);
             this.pagesPanel.Dock = System.Windows.Forms.DockStyle.Left;
             this.pagesPanel.Location = new System.Drawing.Point(0, 26);
             this.pagesPanel.Name = "pagesPanel";
@@ -117,41 +123,43 @@
             this.index,
             this.locked});
             this.pagesGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pagesGrid.Location = new System.Drawing.Point(0, 46);
+            this.pagesGrid.Location = new System.Drawing.Point(0, 30);
             this.pagesGrid.Name = "pagesGrid";
             this.pagesGrid.RowHeadersVisible = false;
             this.pagesGrid.RowTemplate.Height = 21;
             this.pagesGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.pagesGrid.Size = new System.Drawing.Size(291, 433);
+            this.pagesGrid.Size = new System.Drawing.Size(291, 449);
             this.pagesGrid.TabIndex = 1;
             this.pagesGrid.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.pagesGrid_CellValueChanged);
             this.pagesGrid.SelectionChanged += new System.EventHandler(this.pagesGrid_SelectionChanged);
             // 
-            // toolStripContainer1
+            // toolStripContainer
             // 
-            this.toolStripContainer1.BottomToolStripPanelVisible = false;
+            this.toolStripContainer.BottomToolStripPanelVisible = false;
             // 
-            // toolStripContainer1.ContentPanel
+            // toolStripContainer.ContentPanel
             // 
-            this.toolStripContainer1.ContentPanel.Controls.Add(this.pageSelectButtons);
-            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(291, 46);
-            this.toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.toolStripContainer1.LeftToolStripPanelVisible = false;
-            this.toolStripContainer1.Location = new System.Drawing.Point(0, 0);
-            this.toolStripContainer1.Name = "toolStripContainer1";
-            this.toolStripContainer1.RightToolStripPanelVisible = false;
-            this.toolStripContainer1.Size = new System.Drawing.Size(291, 46);
-            this.toolStripContainer1.TabIndex = 0;
-            this.toolStripContainer1.Text = "toolStripContainer1";
-            this.toolStripContainer1.TopToolStripPanelVisible = false;
+            this.toolStripContainer.ContentPanel.Controls.Add(this.pageSelectButtons);
+            this.toolStripContainer.ContentPanel.Size = new System.Drawing.Size(291, 30);
+            this.toolStripContainer.Dock = System.Windows.Forms.DockStyle.Top;
+            this.toolStripContainer.LeftToolStripPanelVisible = false;
+            this.toolStripContainer.Location = new System.Drawing.Point(0, 0);
+            this.toolStripContainer.Name = "toolStripContainer";
+            this.toolStripContainer.RightToolStripPanelVisible = false;
+            this.toolStripContainer.Size = new System.Drawing.Size(291, 30);
+            this.toolStripContainer.TabIndex = 0;
+            this.toolStripContainer.Text = "toolStripContainer1";
+            this.toolStripContainer.TopToolStripPanelVisible = false;
             // 
             // pageSelectButtons
             // 
             this.pageSelectButtons.AllowMerge = false;
-            this.pageSelectButtons.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.pageSelectButtons.Dock = System.Windows.Forms.DockStyle.None;
+            this.pageSelectButtons.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pageSelectButtons.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.pageSelectButtons.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnCopy,
+            this.btnPaste,
+            this.toolStripSeparator3,
             this.btnSelectAll,
             this.btnSelectOdd,
             this.btnSelectEven});
@@ -159,8 +167,33 @@
             this.pageSelectButtons.Location = new System.Drawing.Point(0, 0);
             this.pageSelectButtons.Name = "pageSelectButtons";
             this.pageSelectButtons.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.pageSelectButtons.Size = new System.Drawing.Size(81, 25);
+            this.pageSelectButtons.Size = new System.Drawing.Size(291, 30);
             this.pageSelectButtons.TabIndex = 0;
+            // 
+            // btnCopy
+            // 
+            this.btnCopy.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnCopy.Image = ((System.Drawing.Image)(resources.GetObject("btnCopy.Image")));
+            this.btnCopy.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnCopy.Name = "btnCopy";
+            this.btnCopy.Size = new System.Drawing.Size(23, 27);
+            this.btnCopy.Text = "設定をコピー";
+            this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
+            // 
+            // btnPaste
+            // 
+            this.btnPaste.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnPaste.Image = ((System.Drawing.Image)(resources.GetObject("btnPaste.Image")));
+            this.btnPaste.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnPaste.Name = "btnPaste";
+            this.btnPaste.Size = new System.Drawing.Size(23, 27);
+            this.btnPaste.Text = "設定を貼り付け";
+            this.btnPaste.Click += new System.EventHandler(this.btnPaste_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 30);
             // 
             // btnSelectAll
             // 
@@ -168,7 +201,7 @@
             this.btnSelectAll.Image = ((System.Drawing.Image)(resources.GetObject("btnSelectAll.Image")));
             this.btnSelectAll.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnSelectAll.Name = "btnSelectAll";
-            this.btnSelectAll.Size = new System.Drawing.Size(23, 22);
+            this.btnSelectAll.Size = new System.Drawing.Size(23, 27);
             this.btnSelectAll.Text = "全ページを選択";
             this.btnSelectAll.Click += new System.EventHandler(this.btnSelectAll_Click);
             // 
@@ -178,7 +211,7 @@
             this.btnSelectOdd.Image = ((System.Drawing.Image)(resources.GetObject("btnSelectOdd.Image")));
             this.btnSelectOdd.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnSelectOdd.Name = "btnSelectOdd";
-            this.btnSelectOdd.Size = new System.Drawing.Size(23, 22);
+            this.btnSelectOdd.Size = new System.Drawing.Size(23, 27);
             this.btnSelectOdd.Text = "奇数ページを選択";
             this.btnSelectOdd.Click += new System.EventHandler(this.btnSelectOdd_Click);
             // 
@@ -188,7 +221,7 @@
             this.btnSelectEven.Image = ((System.Drawing.Image)(resources.GetObject("btnSelectEven.Image")));
             this.btnSelectEven.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnSelectEven.Name = "btnSelectEven";
-            this.btnSelectEven.Size = new System.Drawing.Size(23, 22);
+            this.btnSelectEven.Size = new System.Drawing.Size(23, 27);
             this.btnSelectEven.Text = "偶数ページを選択";
             this.btnSelectEven.Click += new System.EventHandler(this.btnSelectEven_Click);
             // 
@@ -253,12 +286,36 @@
             // menuItemEdit
             // 
             this.menuItemEdit.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuItemCopy,
+            this.menuItemPaste,
+            this.toolStripSeparator4,
             this.menuItemSelectAll,
-            this.menuItemOdd,
-            this.menuItemEven});
+            this.menuItemSelectOdd,
+            this.menuItemSelectEven});
             this.menuItemEdit.Name = "menuItemEdit";
             this.menuItemEdit.Size = new System.Drawing.Size(61, 22);
             this.menuItemEdit.Text = "編集(&E)";
+            // 
+            // menuItemCopy
+            // 
+            this.menuItemCopy.Name = "menuItemCopy";
+            this.menuItemCopy.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
+            this.menuItemCopy.Size = new System.Drawing.Size(239, 22);
+            this.menuItemCopy.Text = "設定をコピー(&C)";
+            this.menuItemCopy.Click += new System.EventHandler(this.btnCopy_Click);
+            // 
+            // menuItemPaste
+            // 
+            this.menuItemPaste.Name = "menuItemPaste";
+            this.menuItemPaste.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
+            this.menuItemPaste.Size = new System.Drawing.Size(239, 22);
+            this.menuItemPaste.Text = "設定を貼り付け(&P)";
+            this.menuItemPaste.Click += new System.EventHandler(this.btnPaste_Click);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(236, 6);
             // 
             // menuItemSelectAll
             // 
@@ -268,21 +325,21 @@
             this.menuItemSelectAll.Text = "全ページを選択(&A)";
             this.menuItemSelectAll.Click += new System.EventHandler(this.btnSelectAll_Click);
             // 
-            // menuItemOdd
+            // menuItemSelectOdd
             // 
-            this.menuItemOdd.Name = "menuItemOdd";
-            this.menuItemOdd.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D)));
-            this.menuItemOdd.Size = new System.Drawing.Size(239, 22);
-            this.menuItemOdd.Text = "奇数ページを選択(&D)";
-            this.menuItemOdd.Click += new System.EventHandler(this.btnSelectOdd_Click);
+            this.menuItemSelectOdd.Name = "menuItemSelectOdd";
+            this.menuItemSelectOdd.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D)));
+            this.menuItemSelectOdd.Size = new System.Drawing.Size(239, 22);
+            this.menuItemSelectOdd.Text = "奇数ページを選択(&D)";
+            this.menuItemSelectOdd.Click += new System.EventHandler(this.btnSelectOdd_Click);
             // 
-            // menuItemEven
+            // menuItemSelectEven
             // 
-            this.menuItemEven.Name = "menuItemEven";
-            this.menuItemEven.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.menuItemEven.Size = new System.Drawing.Size(239, 22);
-            this.menuItemEven.Text = "偶数ページを選択(&N)";
-            this.menuItemEven.Click += new System.EventHandler(this.btnSelectEven_Click);
+            this.menuItemSelectEven.Name = "menuItemSelectEven";
+            this.menuItemSelectEven.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
+            this.menuItemSelectEven.Size = new System.Drawing.Size(239, 22);
+            this.menuItemSelectEven.Text = "偶数ページを選択(&N)";
+            this.menuItemSelectEven.Click += new System.EventHandler(this.btnSelectEven_Click);
             // 
             // menuItemEPub
             // 
@@ -553,11 +610,12 @@
             // 
             // page
             // 
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
-            this.page.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            this.page.DefaultCellStyle = dataGridViewCellStyle2;
             this.page.HeaderText = "頁";
             this.page.Name = "page";
             this.page.ReadOnly = true;
+            this.page.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.page.Width = 36;
             // 
             // file
@@ -565,11 +623,13 @@
             this.file.HeaderText = "ファイル";
             this.file.Name = "file";
             this.file.ReadOnly = true;
+            this.file.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // index
             // 
             this.index.HeaderText = "目次";
             this.index.Name = "index";
+            this.index.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // locked
             // 
@@ -591,13 +651,14 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "FormMain";
             this.Text = "ePubMaker";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
             this.ClientSizeChanged += new System.EventHandler(this.FormMain_ClientSizeChanged);
             this.pagesPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pagesGrid)).EndInit();
-            this.toolStripContainer1.ContentPanel.ResumeLayout(false);
-            this.toolStripContainer1.ContentPanel.PerformLayout();
-            this.toolStripContainer1.ResumeLayout(false);
-            this.toolStripContainer1.PerformLayout();
+            this.toolStripContainer.ContentPanel.ResumeLayout(false);
+            this.toolStripContainer.ContentPanel.PerformLayout();
+            this.toolStripContainer.ResumeLayout(false);
+            this.toolStripContainer.PerformLayout();
             this.pageSelectButtons.ResumeLayout(false);
             this.pageSelectButtons.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
@@ -620,7 +681,7 @@
         #endregion
 
         private System.Windows.Forms.Panel pagesPanel;
-        private System.Windows.Forms.ToolStripContainer toolStripContainer1;
+        private System.Windows.Forms.ToolStripContainer toolStripContainer;
         private System.Windows.Forms.ToolStrip pageSelectButtons;
         private System.Windows.Forms.ToolStripButton btnSelectAll;
         private System.Windows.Forms.ToolStripButton btnSelectOdd;
@@ -658,11 +719,17 @@
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
         private System.Windows.Forms.ToolStripMenuItem menuItemEdit;
         private System.Windows.Forms.ToolStripMenuItem menuItemSelectAll;
-        private System.Windows.Forms.ToolStripMenuItem menuItemOdd;
-        private System.Windows.Forms.ToolStripMenuItem menuItemEven;
+        private System.Windows.Forms.ToolStripMenuItem menuItemSelectOdd;
+        private System.Windows.Forms.ToolStripMenuItem menuItemSelectEven;
         private System.Windows.Forms.Label srcLabel;
         private System.Windows.Forms.Label previewLabel;
         private System.Windows.Forms.Label pageLabel;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripButton btnCopy;
+        private System.Windows.Forms.ToolStripButton btnPaste;
+        private System.Windows.Forms.ToolStripMenuItem menuItemCopy;
+        private System.Windows.Forms.ToolStripMenuItem menuItemPaste;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.DataGridViewTextBoxColumn page;
         private System.Windows.Forms.DataGridViewTextBoxColumn file;
         private System.Windows.Forms.DataGridViewTextBoxColumn index;
