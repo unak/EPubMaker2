@@ -26,6 +26,7 @@ namespace EPubMaker
 
         private string path;
         private string index;
+        private bool locked;
         private PageRotate rotate;
         private PageFormat format;
         private int clipLeft;
@@ -59,6 +60,18 @@ namespace EPubMaker
             get
             {
                 return index;
+            }
+        }
+
+        public bool Locked
+        {
+            set
+            {
+                locked = value;
+            }
+            get
+            {
+                return locked;
             }
         }
 
@@ -138,6 +151,7 @@ namespace EPubMaker
         {
             this.path = path;
             index = "";
+            locked = false;
             rotate = PageRotate.Rotate0;
             format = PageFormat.Undefined;
             clipLeft = 0;
@@ -155,6 +169,7 @@ namespace EPubMaker
         {
             Page newPage = new Page(path);
             newPage.index = index;
+            newPage.locked = locked;
             newPage.rotate = rotate;
             newPage.format = format;
             newPage.clipLeft = clipLeft;

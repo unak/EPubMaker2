@@ -185,7 +185,7 @@ namespace EPubMaker
         {
             if (pagesGrid.SelectedRows.Count > 0)
             {
-                copy = pages[pagesGrid.SelectedRows[0].Index];
+                copy = (Page)pages[pagesGrid.SelectedRows[0].Index].Clone();
                 EnabledButtonsAndMenuItems(true, true);
             }
         }
@@ -201,6 +201,7 @@ namespace EPubMaker
             {
                 if (pagesGrid.Rows[i].Selected)
                 {
+                    pages[i].Locked = copy.Locked;
                     pages[i].Rotate = copy.Rotate;
                     pages[i].Format = copy.Format;
                     pages[i].ClipLeft = copy.ClipLeft;
@@ -588,15 +589,22 @@ namespace EPubMaker
 
         private void pagesGrid_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            // 「目次」のみ扱う
-            if (gridChanging || e.ColumnIndex != 2 || pages == null || e.RowIndex >= pages.Count)
+            // 「目次」「ロック」のみ扱う
+            if (gridChanging || (e.ColumnIndex != 2 && e.ColumnIndex != 3) || pages == null || e.RowIndex >= pages.Count)
             {
                 return;
             }
 
             gridChanging = true;
 
-            pages[e.RowIndex].Index = pagesGrid.Rows[e.RowIndex].Cells[2].Value.ToString();
+            if (e.ColumnIndex == 2)
+            {
+                pages[e.RowIndex].Index = pagesGrid.Rows[e.RowIndex].Cells[2].Value.ToString();
+            }
+            else if (e.ColumnIndex == 3)
+            {
+                pages[e.RowIndex].Locked = (bool)pagesGrid.Rows[e.RowIndex].Cells[3].Value;
+            }
 
             gridChanging = false;
         }
@@ -714,7 +722,7 @@ namespace EPubMaker
             pagesGrid.Rows.Clear();
             for (int i = 0; i < pages.Count; ++i)
             {
-                int idx = pagesGrid.Rows.Add(i + 1, pages[i].Name, pages[i].Index, false);
+                int idx = pagesGrid.Rows.Add(i + 1, pages[i].Name, pages[i].Index, pages[i].Locked);
             }
         }
 
