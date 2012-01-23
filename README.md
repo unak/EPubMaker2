@@ -77,7 +77,6 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 TODO
 ----
-* ページ分割
 * ページ並べ替え
 * 濃度調整
 * 傾き補正

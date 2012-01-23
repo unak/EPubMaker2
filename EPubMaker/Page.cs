@@ -1,10 +1,11 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 
 namespace EPubMaker
 {
-    public class Page
+    public class Page : ICloneable
     {
         public enum PageRotate
         {
@@ -148,6 +149,19 @@ namespace EPubMaker
         public override string ToString()
         {
             return Name;
+        }
+
+        public object Clone()
+        {
+            Page newPage = new Page(path);
+            newPage.index = index;
+            newPage.rotate = rotate;
+            newPage.format = format;
+            newPage.clipLeft = clipLeft;
+            newPage.clipTop = clipTop;
+            newPage.clipRight = clipRight;
+            newPage.clipBottom = clipBottom;
+            return newPage;
         }
 
         public void GenerateImages(out Image src, int width, int height, out Image preview)

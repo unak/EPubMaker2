@@ -87,14 +87,11 @@ namespace EPubMaker
             setting.PrevSrc = folderBrowserDialog.SelectedPath;
             setting.Save();
 
-            if (pages != null)
-            {
-                pages.Clear();
-            }
-            else
+            if (pages == null)
             {
                 pages = new List<Page>();
             }
+            menuItemClose_Click(null, null);
 
             DirectoryInfo dir = new DirectoryInfo(folderBrowserDialog.SelectedPath);
             foreach (FileInfo file in dir.GetFiles())
@@ -108,6 +105,7 @@ namespace EPubMaker
             if (pages.Count <= 0)
             {
                 EnabledButtonsAndMenuItems(false, false);
+                return;
             }
             pages.Sort(delegate(Page a, Page b)
             {
@@ -131,6 +129,10 @@ namespace EPubMaker
             EnabledButtonsAndMenuItems(true, pages.Count > 0);
 
             selectedIndex = pages.Count > 0 ? 0 : -1;
+            if (selectedIndex >= 0)
+            {
+                RedrawImages(selectedIndex);
+            }
         }
 
         private void menuItemClose_Click(object sender, EventArgs e)
@@ -177,15 +179,6 @@ namespace EPubMaker
             FormProgress formProgress = new FormProgress(pages, editTitle.Text, editAuthor.Text, (int)editWidth.Value, (int)editHeight.Value, saveFileDialog.FileName);
             formProgress.ShowDialog(this);
             formProgress.Dispose();
-        }
-
-        private void UpdatePageList()
-        {
-            pagesGrid.Rows.Clear();
-            for (int i = 0; i < pages.Count; ++i)
-            {
-                int idx = pagesGrid.Rows.Add(i + 1, pages[i].Name, pages[i].Index, false);
-            }
         }
 
         private void btnCopy_Click(object sender, EventArgs e)
@@ -286,6 +279,55 @@ namespace EPubMaker
             }
             gridChanging = false;
             pagesGrid_SelectionChanged(sender, e);
+        }
+
+        private void btnDuplicate_Click(object sender, EventArgs e)
+        {
+            if (gridChanging || selectedIndex < 0)
+            {
+                return;
+            }
+
+            gridChanging = true;
+            pages.Insert(selectedIndex + 1, (Page)pages[selectedIndex].Clone());
+            UpdatePageList();
+            RedrawImages(selectedIndex);
+            gridChanging = false;
+        }
+
+        private void btnErase_Click(object sender, EventArgs e)
+        {
+            if (gridChanging || selectedIndex < 0)
+            {
+                return;
+            }
+
+            gridChanging = true;
+            pages.RemoveAt(selectedIndex);
+            if (pages.Count <= 0)
+            {
+                menuItemClose_Click(null, null);
+            }
+            else
+            {
+                UpdatePageList();
+                if (selectedIndex >= pages.Count)
+                {
+                    selectedIndex = pages.Count - 1;
+                }
+                RedrawImages(selectedIndex);
+            }
+            gridChanging = false;
+        }
+
+        private void btnInsert_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnMove_Click(object sender, EventArgs e)
+        {
+
         }
 
         private void pagesGrid_SelectionChanged(object sender, EventArgs e)
@@ -667,6 +709,15 @@ namespace EPubMaker
             e.Graphics.DrawRectangle(pen, left, top, width, height);
         }
 
+        private void UpdatePageList()
+        {
+            pagesGrid.Rows.Clear();
+            for (int i = 0; i < pages.Count; ++i)
+            {
+                int idx = pagesGrid.Rows.Add(i + 1, pages[i].Name, pages[i].Index, false);
+            }
+        }
+
         private void RedrawImages(int idx)
         {
             Image src;
@@ -708,6 +759,11 @@ namespace EPubMaker
             menuItemSelectOdd.Enabled = opened;
             menuItemSelectEven.Enabled = opened;
 
+            menuItemDuplicate.Enabled = selected;
+            menuItemErase.Enabled = selected;
+            menuItemInsert.Enabled = selected;
+            menuItemMove.Enabled = selected;
+
             menuItemGenerate.Enabled = opened;
 
             btnCopy.Enabled = selected;
@@ -716,6 +772,11 @@ namespace EPubMaker
             btnSelectAll.Enabled = opened;
             btnSelectOdd.Enabled = opened;
             btnSelectEven.Enabled = opened;
+
+            btnDuplicate.Enabled = selected;
+            btnErase.Enabled = selected;
+            btnInsert.Enabled = selected;
+            btnMove.Enabled = selected;
 
             rotateCombo.Enabled = selected;
             formatCombo.Enabled = selected;
