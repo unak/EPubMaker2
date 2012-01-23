@@ -603,6 +603,9 @@ namespace EPubMaker
             editClipTop.Value = pages[idx].ClipTop;
             editClipRight.Value = pages[idx].ClipRight;
             editClipBottom.Value = pages[idx].ClipBottom;
+
+            start = null;
+            end = null;
         }
 
         private void EnabledButtonsAndMenuItems(bool opened, bool selected)
