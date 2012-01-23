@@ -14,6 +14,7 @@ namespace EPubMaker
         private Page copy;
         private MouseEventArgs start;
         private MouseEventArgs end;
+        private int selectedIndex;
 
         private Setting setting;
 
@@ -21,13 +22,14 @@ namespace EPubMaker
         {
             InitializeComponent();
 
-            setting = Setting.Load();
-
             pages = null;
             gridChanging = false;
             copy = null;
             start = null;
             end = null;
+            selectedIndex = -1;
+
+            setting = Setting.Load();
 
             splitContainer_Panel1_ClientSizeChanged(null, null);
             splitContainer_Panel2_ClientSizeChanged(null, null);
@@ -103,6 +105,10 @@ namespace EPubMaker
                     pages.Add(page);
                 }
             }
+            if (pages.Count <= 0)
+            {
+                EnabledButtonsAndMenuItems(false, false);
+            }
             pages.Sort(delegate(Page a, Page b)
             {
                 return String.Compare(a.Name, b.Name, true);
@@ -114,8 +120,8 @@ namespace EPubMaker
             if (name.Contains('-'))
             {
                 string[] ary = name.Split("-".ToCharArray(), 2);
-                editTitle.Text = ary[0];
-                editAuthor.Text = ary[1];
+                editTitle.Text = ary[0].Replace('_', ' ');
+                editAuthor.Text = ary[1].Replace('_', ' ');
             }
             else
             {
@@ -123,6 +129,8 @@ namespace EPubMaker
             }
 
             EnabledButtonsAndMenuItems(true, pages.Count > 0);
+
+            selectedIndex = pages.Count > 0 ? 0 : -1;
         }
 
         private void menuItemClose_Click(object sender, EventArgs e)
@@ -137,6 +145,8 @@ namespace EPubMaker
             previewLabel.Text = "";
 
             EnabledButtonsAndMenuItems(false, false);
+
+            selectedIndex = -1;
         }
 
         private void menuItemExit_Click(object sender, EventArgs e)
@@ -298,10 +308,14 @@ namespace EPubMaker
             {
                 EnabledButtonsAndMenuItems(true, true);
                 RedrawImages(idx);
+
+                selectedIndex = idx;
             }
             else
             {
                 EnabledButtonsAndMenuItems(true, false);
+
+                selectedIndex = -1;
             }
             gridChanging = false;
         }
@@ -547,7 +561,7 @@ namespace EPubMaker
 
         private void srcPicture_MouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
+            if (e.Button == MouseButtons.Left && srcPicture.Image != null)
             {
                 start = e;
                 end = e;
@@ -556,7 +570,7 @@ namespace EPubMaker
 
         private void srcPicture_MouseMove(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left && start != null)
+            if (e.Button == MouseButtons.Left && start != null && srcPicture.Image != null)
             {
                 Graphics g = srcPicture.CreateGraphics();
                 Pen pen = new Pen(Color.Red, 2);
@@ -570,12 +584,87 @@ namespace EPubMaker
 
         private void srcPicture_MouseUp(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left && start != null)
+            if (e.Button == MouseButtons.Left && start != null && srcPicture.Image != null)
             {
                 srcPicture_MouseMove(null, e);
+
+                int left = Math.Min(start.X, end.X);
+                int top = Math.Min(start.Y, end.Y);
+                int width = Math.Abs(end.X - start.X);
+                int height = Math.Abs(end.Y - start.Y);
+                if (srcPicture.SizeMode == PictureBoxSizeMode.Zoom)
+                {
+                    double d = Math.Max((double)srcPicture.Image.Width / srcPicture.ClientSize.Width, (double)srcPicture.Image.Height / srcPicture.ClientSize.Height);
+                    left = (int)(left * d - (srcPicture.ClientSize.Width * d - srcPicture.Image.Width) / 2);
+                    top = (int)(top * d - (srcPicture.ClientSize.Height * d - srcPicture.Image.Height) / 2);
+                    width = (int)(width * d);
+                    height = (int)(height * d);
+                }
+                else
+                {
+                    left -= (srcPicture.ClientSize.Width - srcPicture.Image.Width) / 2;
+                    top -= (srcPicture.ClientSize.Height - srcPicture.Image.Height) / 2;
+                }
+                if (left < 0)
+                {
+                    width += left;
+                    left = 0;
+                }
+                width = Math.Min(width, srcPicture.Image.Width);
+                if (top < 0)
+                {
+                    height += top;
+                    top = 0;
+                }
+                height = Math.Min(height, srcPicture.Image.Height);
+
                 start = null;
                 end = null;
+
+                gridChanging = true;
+                foreach (DataGridViewRow row in pagesGrid.SelectedRows)
+                {
+                    if (row.Index < pages.Count)
+                    {
+                        pages[row.Index].ClipLeft = left * 100 / srcPicture.Image.Width;
+                        pages[row.Index].ClipTop = top * 100 / srcPicture.Image.Height;
+                        pages[row.Index].ClipRight = (left + width) * 100 / srcPicture.Image.Width;
+                        pages[row.Index].ClipBottom = (top + height) * 100 / srcPicture.Image.Height;
+                    }
+                }
+                RedrawImages(selectedIndex);
+                gridChanging = false;
             }
+        }
+
+        private void srcPicture_Paint(object sender, PaintEventArgs e)
+        {
+            if (selectedIndex < 0 || srcPicture.Image == null || start != null)
+            {
+                return;
+            }
+
+            Page page = pages[selectedIndex];
+            Pen pen = new Pen(Color.Red, 2);
+            pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
+            int left = srcPicture.Image.Width * page.ClipLeft / 100 - 1;
+            int top = srcPicture.Image.Height * page.ClipTop / 100 - 1;
+            int width = srcPicture.Image.Width * (page.ClipRight - page.ClipLeft) / 100 - 1;
+            int height = srcPicture.Image.Height * (page.ClipBottom - page.ClipTop) / 100 - 1;
+            if (srcPicture.SizeMode == PictureBoxSizeMode.Zoom)
+            {
+                double d = Math.Max((double)srcPicture.Image.Width / srcPicture.ClientSize.Width, (double)srcPicture.Image.Height / srcPicture.ClientSize.Height);
+                left = (int)(left / d + (srcPicture.ClientSize.Width - srcPicture.Image.Width / d) / 2);
+                top = (int)(top / d + (srcPicture.ClientSize.Height - srcPicture.Image.Height / d) / 2);
+                width = (int)(width / d);
+                height = (int)(height / d);
+            }
+            else
+            {
+                left += (srcPicture.ClientSize.Width - srcPicture.Image.Width) / 2;
+                top += (srcPicture.ClientSize.Height - srcPicture.Image.Height) / 2;
+            }
+            e.Graphics.DrawRectangle(pen, left, top, width, height);
         }
 
         private void RedrawImages(int idx)
@@ -627,6 +716,14 @@ namespace EPubMaker
             btnSelectAll.Enabled = opened;
             btnSelectOdd.Enabled = opened;
             btnSelectEven.Enabled = opened;
+
+            rotateCombo.Enabled = selected;
+            formatCombo.Enabled = selected;
+
+            editClipLeft.Enabled = selected;
+            editClipTop.Enabled = selected;
+            editClipRight.Enabled = selected;
+            editClipBottom.Enabled = selected;
         }
     }
 }

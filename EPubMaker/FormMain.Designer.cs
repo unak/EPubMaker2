@@ -28,10 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pagesPanel = new System.Windows.Forms.Panel();
             this.pagesGrid = new System.Windows.Forms.DataGridView();
+            this.page = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.file = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.index = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.locked = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.toolStripContainer = new System.Windows.Forms.ToolStripContainer();
             this.toolButtons = new System.Windows.Forms.ToolStrip();
             this.btnCopy = new System.Windows.Forms.ToolStripButton();
@@ -58,6 +62,11 @@
             this.menuItemGenerate = new System.Windows.Forms.ToolStripMenuItem();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.editClipRight = new System.Windows.Forms.NumericUpDown();
+            this.editClipLeft = new System.Windows.Forms.NumericUpDown();
+            this.editClipBottom = new System.Windows.Forms.NumericUpDown();
+            this.editClipTop = new System.Windows.Forms.NumericUpDown();
+            this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.formatCombo = new System.Windows.Forms.ComboBox();
             this.editHeight = new System.Windows.Forms.NumericUpDown();
@@ -79,15 +88,6 @@
             this.previewPicture = new System.Windows.Forms.PictureBox();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.pageLabel = new System.Windows.Forms.Label();
-            this.page = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.file = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.index = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.locked = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.label8 = new System.Windows.Forms.Label();
-            this.editClipTop = new System.Windows.Forms.NumericUpDown();
-            this.editClipBottom = new System.Windows.Forms.NumericUpDown();
-            this.editClipLeft = new System.Windows.Forms.NumericUpDown();
-            this.editClipRight = new System.Windows.Forms.NumericUpDown();
             this.pagesPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pagesGrid)).BeginInit();
             this.toolStripContainer.ContentPanel.SuspendLayout();
@@ -95,6 +95,10 @@
             this.toolButtons.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.editClipRight)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.editClipLeft)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.editClipBottom)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.editClipTop)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.editHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.editWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
@@ -103,10 +107,6 @@
             this.splitContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.srcPicture)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.previewPicture)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.editClipTop)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.editClipBottom)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.editClipLeft)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.editClipRight)).BeginInit();
             this.SuspendLayout();
             // 
             // pagesPanel
@@ -140,6 +140,36 @@
             this.pagesGrid.TabIndex = 1;
             this.pagesGrid.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.pagesGrid_CellValueChanged);
             this.pagesGrid.SelectionChanged += new System.EventHandler(this.pagesGrid_SelectionChanged);
+            // 
+            // page
+            // 
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            this.page.DefaultCellStyle = dataGridViewCellStyle1;
+            this.page.HeaderText = "頁";
+            this.page.Name = "page";
+            this.page.ReadOnly = true;
+            this.page.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.page.Width = 36;
+            // 
+            // file
+            // 
+            this.file.HeaderText = "ファイル";
+            this.file.Name = "file";
+            this.file.ReadOnly = true;
+            this.file.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // index
+            // 
+            this.index.HeaderText = "目次";
+            this.index.Name = "index";
+            this.index.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // locked
+            // 
+            this.locked.HeaderText = "ﾛｯｸ";
+            this.locked.MinimumWidth = 36;
+            this.locked.Name = "locked";
+            this.locked.Width = 36;
             // 
             // toolStripContainer
             // 
@@ -396,6 +426,57 @@
             this.panel1.Size = new System.Drawing.Size(151, 479);
             this.panel1.TabIndex = 2;
             // 
+            // editClipRight
+            // 
+            this.editClipRight.Location = new System.Drawing.Point(95, 214);
+            this.editClipRight.Name = "editClipRight";
+            this.editClipRight.Size = new System.Drawing.Size(47, 19);
+            this.editClipRight.TabIndex = 10;
+            this.editClipRight.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.editClipRight.ValueChanged += new System.EventHandler(this.editClipRight_ValueChanged);
+            // 
+            // editClipLeft
+            // 
+            this.editClipLeft.Location = new System.Drawing.Point(43, 214);
+            this.editClipLeft.Name = "editClipLeft";
+            this.editClipLeft.Size = new System.Drawing.Size(47, 19);
+            this.editClipLeft.TabIndex = 8;
+            this.editClipLeft.ValueChanged += new System.EventHandler(this.editClipLeft_ValueChanged);
+            // 
+            // editClipBottom
+            // 
+            this.editClipBottom.Location = new System.Drawing.Point(73, 239);
+            this.editClipBottom.Name = "editClipBottom";
+            this.editClipBottom.Size = new System.Drawing.Size(47, 19);
+            this.editClipBottom.TabIndex = 11;
+            this.editClipBottom.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.editClipBottom.ValueChanged += new System.EventHandler(this.editClipBottom_ValueChanged);
+            // 
+            // editClipTop
+            // 
+            this.editClipTop.Location = new System.Drawing.Point(73, 189);
+            this.editClipTop.Name = "editClipTop";
+            this.editClipTop.Size = new System.Drawing.Size(47, 19);
+            this.editClipTop.TabIndex = 9;
+            this.editClipTop.ValueChanged += new System.EventHandler(this.editClipTop_ValueChanged);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(8, 191);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(60, 12);
+            this.label8.TabIndex = 15;
+            this.label8.Text = "切り抜き(%)";
+            // 
             // label9
             // 
             this.label9.AutoSize = true;
@@ -577,6 +658,7 @@
             this.srcPicture.TabIndex = 0;
             this.srcPicture.TabStop = false;
             this.srcPicture.ClientSizeChanged += new System.EventHandler(this.srcPicture_ClientSizeChanged);
+            this.srcPicture.Paint += new System.Windows.Forms.PaintEventHandler(this.srcPicture_Paint);
             this.srcPicture.MouseDown += new System.Windows.Forms.MouseEventHandler(this.srcPicture_MouseDown);
             this.srcPicture.MouseMove += new System.Windows.Forms.MouseEventHandler(this.srcPicture_MouseMove);
             this.srcPicture.MouseUp += new System.Windows.Forms.MouseEventHandler(this.srcPicture_MouseUp);
@@ -613,87 +695,6 @@
             this.pageLabel.Size = new System.Drawing.Size(460, 16);
             this.pageLabel.TabIndex = 3;
             // 
-            // page
-            // 
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
-            this.page.DefaultCellStyle = dataGridViewCellStyle2;
-            this.page.HeaderText = "頁";
-            this.page.Name = "page";
-            this.page.ReadOnly = true;
-            this.page.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.page.Width = 36;
-            // 
-            // file
-            // 
-            this.file.HeaderText = "ファイル";
-            this.file.Name = "file";
-            this.file.ReadOnly = true;
-            this.file.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // index
-            // 
-            this.index.HeaderText = "目次";
-            this.index.Name = "index";
-            this.index.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // locked
-            // 
-            this.locked.HeaderText = "ﾛｯｸ";
-            this.locked.MinimumWidth = 36;
-            this.locked.Name = "locked";
-            this.locked.Width = 36;
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(8, 191);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(60, 12);
-            this.label8.TabIndex = 15;
-            this.label8.Text = "切り抜き(%)";
-            // 
-            // editClipTop
-            // 
-            this.editClipTop.Location = new System.Drawing.Point(73, 189);
-            this.editClipTop.Name = "editClipTop";
-            this.editClipTop.Size = new System.Drawing.Size(47, 19);
-            this.editClipTop.TabIndex = 9;
-            this.editClipTop.ValueChanged += new System.EventHandler(this.editClipTop_ValueChanged);
-            // 
-            // editClipBottom
-            // 
-            this.editClipBottom.Location = new System.Drawing.Point(73, 239);
-            this.editClipBottom.Name = "editClipBottom";
-            this.editClipBottom.Size = new System.Drawing.Size(47, 19);
-            this.editClipBottom.TabIndex = 11;
-            this.editClipBottom.Value = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-            this.editClipBottom.ValueChanged += new System.EventHandler(this.editClipBottom_ValueChanged);
-            // 
-            // editClipLeft
-            // 
-            this.editClipLeft.Location = new System.Drawing.Point(43, 214);
-            this.editClipLeft.Name = "editClipLeft";
-            this.editClipLeft.Size = new System.Drawing.Size(47, 19);
-            this.editClipLeft.TabIndex = 8;
-            this.editClipLeft.ValueChanged += new System.EventHandler(this.editClipLeft_ValueChanged);
-            // 
-            // editClipRight
-            // 
-            this.editClipRight.Location = new System.Drawing.Point(95, 214);
-            this.editClipRight.Name = "editClipRight";
-            this.editClipRight.Size = new System.Drawing.Size(47, 19);
-            this.editClipRight.TabIndex = 10;
-            this.editClipRight.Value = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-            this.editClipRight.ValueChanged += new System.EventHandler(this.editClipRight_ValueChanged);
-            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -721,6 +722,10 @@
             this.menuStrip.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.editClipRight)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.editClipLeft)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.editClipBottom)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.editClipTop)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.editHeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.editWidth)).EndInit();
             this.splitContainer.Panel1.ResumeLayout(false);
@@ -729,10 +734,6 @@
             this.splitContainer.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.srcPicture)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.previewPicture)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.editClipTop)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.editClipBottom)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.editClipLeft)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.editClipRight)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
