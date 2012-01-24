@@ -4,13 +4,22 @@ using System.Threading;
 
 namespace EPubMaker
 {
+    /// <summary>
+    /// zipファイル操作
+    /// とりあえず生成のみサポート
+    /// Windows自体のzipフォルダ機能(zipfldr.dll)を使用しているので、そいつが無効だと実は動かない
+    /// </summary>
     public class Zip
     {
-        private string path;
-        private string zip;
-        private Shell32.Shell sh;
-        private Shell32.Folder dir;
+        private string path;        /// 出力ファイルパス
+        private string zip;         /// 拡張子がzipじゃない場合の一時ファイルパス
+        private Shell32.Shell sh;   /// シェルオブジェクト
+        private Shell32.Folder dir; /// フォルダオブジェクト
 
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="path">出力先パス</param>
         public Zip(string path)
         {
             this.path = path;
@@ -32,6 +41,10 @@ namespace EPubMaker
             dir = sh.NameSpace(this.zip);
         }
 
+        /// <summary>
+        /// ファイル・フォルダ格納
+        /// </summary>
+        /// <param name="src">コピー元パス</param>
         public void CopyFrom(string src)
         {
             Shell32.FolderItem fi = sh.NameSpace(Path.GetDirectoryName(src)).ParseName(Path.GetFileName(src));
@@ -39,6 +52,9 @@ namespace EPubMaker
             Sync();
         }
 
+        /// <summary>
+        /// zipファイルクローズ
+        /// </summary>
         public void Close()
         {
             Sync();
@@ -70,7 +86,10 @@ namespace EPubMaker
             path = null;
         }
 
-        public void Sync()
+        /// <summary>
+        /// 同期
+        /// </summary>
+        private void Sync()
         {
             if (zip == null || dir == null || sh == null)
             {

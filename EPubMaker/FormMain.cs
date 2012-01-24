@@ -7,17 +7,23 @@ using System.Windows.Forms;
 
 namespace EPubMaker
 {
+    /// <summary>
+    /// メインフォーム
+    /// </summary>
     public partial class FormMain : Form
     {
-        private List<Page> pages;
-        private bool gridChanging;
-        private Page copy;
-        private MouseEventArgs start;
-        private MouseEventArgs end;
-        private int selectedIndex;
+        private List<Page> pages;       /// ページ
+        private bool gridChanging;      /// ページ一覧変更中フラグ
+        private Page copy;              /// ページ設定コピーバッファ
+        private MouseEventArgs start;   /// 画像範囲選択開始位置
+        private MouseEventArgs end;     /// 画像範囲選択終了位置
+        private int selectedIndex;      /// 選択中ページインデックス
 
-        private Setting setting;
+        private Setting setting;        /// アプリ設定
 
+        /// <summary>
+        /// フォームコンストラクタ
+        /// </summary>
         public FormMain()
         {
             InitializeComponent();
@@ -40,6 +46,11 @@ namespace EPubMaker
             EnabledButtonsAndMenuItems(false, false);
         }
 
+        /// <summary>
+        /// フォームがロードされた
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void FormMain_Load(object sender, EventArgs e)
         {
             if (setting.Width > 0)
@@ -48,11 +59,15 @@ namespace EPubMaker
                 this.Top = setting.Top;
                 this.Width = setting.Width;
                 this.Height = setting.Height;
-                splitContainer.SplitterDistance = setting.SrcWidth;
+                splitContainer.SplitterDistance = setting.Distance;
             }
-
         }
 
+        /// <summary>
+        /// フォームが閉じられそう
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (setting != null)
@@ -61,11 +76,16 @@ namespace EPubMaker
                 setting.Top = this.Top;
                 setting.Width = this.Width;
                 setting.Height = this.Height;
-                setting.SrcWidth = splitContainer.SplitterDistance;
+                setting.Distance = splitContainer.SplitterDistance;
                 setting.Save();
             }
         }
 
+        /// <summary>
+        /// フォームのクライアント領域のサイズが変わった
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void FormMain_ClientSizeChanged(object sender, EventArgs e)
         {
             splitContainer.Left = pageLabel.Left;
@@ -74,6 +94,11 @@ namespace EPubMaker
             splitContainer.Height = ClientRectangle.Bottom - splitContainer.Top;
         }
 
+        /// <summary>
+        /// 元データフォルダオープン
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void menuItemOpen_Click(object sender, EventArgs e)
         {
             if (!String.IsNullOrEmpty(setting.PrevSrc) && Directory.Exists(setting.PrevSrc))
@@ -116,7 +141,7 @@ namespace EPubMaker
                 return String.Compare(a.Name, b.Name, true);
             });
 
-            UpdatePageList();
+            SetupPagesGrid();
 
             string name = Path.GetFileNameWithoutExtension(folderBrowserDialog.SelectedPath);
             if (name.Contains('-'))
@@ -135,10 +160,15 @@ namespace EPubMaker
             selectedIndex = pages.Count > 0 ? 0 : -1;
             if (selectedIndex >= 0)
             {
-                RedrawImages(selectedIndex);
+                DrawImages(selectedIndex);
             }
         }
 
+        /// <summary>
+        /// 元データフォルダクローズ(別にフォルダを閉じるわけじゃないけど)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void menuItemClose_Click(object sender, EventArgs e)
         {
             pages.Clear();
@@ -155,11 +185,21 @@ namespace EPubMaker
             selectedIndex = -1;
         }
 
+        /// <summary>
+        /// 終了
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void menuItemExit_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
+        /// <summary>
+        /// ePub生成
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MenuItemGenerate_Click(object sender, EventArgs e)
         {
             saveFileDialog.FileName = Path.GetFileName(folderBrowserDialog.SelectedPath);
@@ -185,6 +225,11 @@ namespace EPubMaker
             formProgress.Dispose();
         }
 
+        /// <summary>
+        /// ページ設定コピー
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnCopy_Click(object sender, EventArgs e)
         {
             if (pagesGrid.SelectedRows.Count > 0)
@@ -194,6 +239,11 @@ namespace EPubMaker
             }
         }
 
+        /// <summary>
+        /// ページ設定貼り付け
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnPaste_Click(object sender, EventArgs e)
         {
             if (copy == null || pagesGrid.SelectedRows.Count <= 0)
@@ -214,81 +264,44 @@ namespace EPubMaker
                     pages[i].ClipBottom = copy.ClipBottom;
                 }
             }
-            RedrawImages(pagesGrid.SelectedRows[0].Index);
+            DrawImages(pagesGrid.SelectedRows[0].Index);
         }
 
+        /// <summary>
+        /// 全ページ選択
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnSelectAll_Click(object sender, EventArgs e)
         {
-            if (gridChanging)
-            {
-                return;
-            }
-
-            gridChanging = true;
-            for (int i = pagesGrid.Rows.Count - 1; i >= 0; --i)
-            {
-                if ((bool)pagesGrid.Rows[i].Cells[3].Value)
-                {
-                    pagesGrid.Rows[i].Selected = false;
-                }
-                else
-                {
-                    pagesGrid.Rows[i].Selected = true;
-                    //pagesGrid.CurrentCell = pagesGrid.Rows[i].Cells[2];
-                }
-            }
-            gridChanging = false;
-            pagesGrid_SelectionChanged(null, null);
+            SelectPages(delegate(int i) { return true; });
         }
 
+        /// <summary>
+        /// 奇数ページ選択(ページ番号が奇数ということはインデックスは偶数)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnSelectOdd_Click(object sender, EventArgs e)
         {
-            if (gridChanging)
-            {
-                return;
-            }
-
-            gridChanging = true;
-            for (int i = pagesGrid.Rows.Count - 1; i >= 0; --i)
-            {
-                if ((bool)pagesGrid.Rows[i].Cells[3].Value || i % 2 == 1)
-                {
-                    pagesGrid.Rows[i].Selected = false;
-                }
-                else
-                {
-                    pagesGrid.Rows[i].Selected = true;
-                    //pagesGrid.CurrentCell = pagesGrid.Rows[i].Cells[2];
-                }
-            }
-            gridChanging = false;
-            pagesGrid_SelectionChanged(null, null);
+            SelectPages(delegate(int i) { return i % 2 == 0; });
         }
 
+        /// <summary>
+        /// 偶数ページ選択(ページ番号が奇数ということはインデックスは奇数)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnSelectEven_Click(object sender, EventArgs e)
         {
-            if (gridChanging)
-            {
-                return;
-            }
-
-            gridChanging = true;
-            for (int i = pagesGrid.Rows.Count - 1; i >= 0; --i)
-            {
-                if ((bool)pagesGrid.Rows[i].Cells[3].Value || i % 2 == 0)
-                {
-                    pagesGrid.Rows[i].Selected = false;
-                }
-                else
-                {
-                    pagesGrid.Rows[i].Selected = true;
-                    //pagesGrid.CurrentCell = pagesGrid.Rows[i].Cells[2];
-                }
-            }
-            gridChanging = false;
-            pagesGrid_SelectionChanged(null, null);
+            SelectPages(delegate(int i) { return i % 2 == 1; });
         }
 
+        /// <summary>
+        /// ページ複製
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnDuplicate_Click(object sender, EventArgs e)
         {
             if (gridChanging || selectedIndex < 0)
@@ -299,7 +312,7 @@ namespace EPubMaker
             gridChanging = true;
             pages.Insert(selectedIndex + 1, (Page)pages[selectedIndex].Clone());
 
-            UpdatePageList();
+            SetupPagesGrid();
             pagesGrid.ClearSelection();
             pagesGrid.CurrentCell = pagesGrid.Rows[selectedIndex].Cells[2];
 
@@ -307,6 +320,11 @@ namespace EPubMaker
             pagesGrid_SelectionChanged(null, null);
         }
 
+        /// <summary>
+        /// ページ削除
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnErase_Click(object sender, EventArgs e)
         {
             if (gridChanging || selectedIndex < 0)
@@ -322,7 +340,7 @@ namespace EPubMaker
             }
             else
             {
-                UpdatePageList();
+                SetupPagesGrid();
                 if (selectedIndex >= pages.Count)
                 {
                     selectedIndex = pages.Count - 1;
@@ -334,6 +352,11 @@ namespace EPubMaker
             pagesGrid_SelectionChanged(null, null);
         }
 
+        /// <summary>
+        /// ページ追加
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnInsert_Click(object sender, EventArgs e)
         {
             if (gridChanging || selectedIndex < 0)
@@ -350,7 +373,7 @@ namespace EPubMaker
                 gridChanging = true;
                 pages.Insert(selectedIndex + 1, new Page(openFileDialog.FileName));
 
-                UpdatePageList();
+                SetupPagesGrid();
                 pagesGrid.ClearSelection();
                 pagesGrid.CurrentCell = pagesGrid.Rows[selectedIndex].Cells[2];
 
@@ -359,6 +382,11 @@ namespace EPubMaker
             }
         }
 
+        /// <summary>
+        /// ページ移動
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnMove_Click(object sender, EventArgs e)
         {
             if (gridChanging || selectedIndex < 0)
@@ -386,7 +414,7 @@ namespace EPubMaker
                 }
                 selectedIndex = move;
 
-                UpdatePageList();
+                SetupPagesGrid();
                 pagesGrid.ClearSelection();
                 pagesGrid.CurrentCell = pagesGrid.Rows[selectedIndex].Cells[2];
 
@@ -395,6 +423,11 @@ namespace EPubMaker
             }
         }
 
+        /// <summary>
+        /// 選択ページが変更された
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void pagesGrid_SelectionChanged(object sender, EventArgs e)
         {
             if (gridChanging)
@@ -414,7 +447,7 @@ namespace EPubMaker
             if (idx >= 0 && idx < pages.Count)
             {
                 EnabledButtonsAndMenuItems(true, true);
-                RedrawImages(idx);
+                DrawImages(idx);
 
                 selectedIndex = idx;
             }
@@ -427,230 +460,11 @@ namespace EPubMaker
             gridChanging = false;
         }
 
-        private void rotateCombo_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (rotateCombo.SelectedIndex < 0 || gridChanging)
-            {
-                return;
-            }
-
-            gridChanging = true;
-            int idx = -1;
-            foreach (DataGridViewRow row in pagesGrid.SelectedRows)
-            {
-                if (row.Index < pages.Count)
-                {
-                    pages[row.Index].Rotate = (Page.PageRotate)rotateCombo.SelectedIndex;
-                    if (row.Index < idx || idx < 0)
-                    {
-                        idx = row.Index;
-                    }
-                }
-            }
-
-            if (idx >= 0)
-            {
-                RedrawImages(idx);
-            }
-            gridChanging = false;
-        }
-
-        private void formatCombo_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (rotateCombo.SelectedIndex < 0 || gridChanging)
-            {
-                return;
-            }
-
-            gridChanging = true;
-            int idx = -1;
-            foreach (DataGridViewRow row in pagesGrid.SelectedRows)
-            {
-                if (row.Index < pages.Count)
-                {
-                    pages[row.Index].Format = (Page.PageFormat)formatCombo.SelectedIndex;
-                    if (row.Index < idx || idx < 0)
-                    {
-                        idx = row.Index;
-                    }
-                }
-            }
-
-            if (idx >= 0)
-            {
-                RedrawImages(idx);
-            }
-            gridChanging = false;
-        }
-
-        private void editClipLeft_ValueChanged(object sender, EventArgs e)
-        {
-            if (gridChanging)
-            {
-                return;
-            }
-
-            gridChanging = true;
-            int idx = -1;
-            foreach (DataGridViewRow row in pagesGrid.SelectedRows)
-            {
-                if (row.Index < pages.Count)
-                {
-                    pages[row.Index].ClipLeft = (int)editClipLeft.Value;
-                    if (row.Index < idx || idx < 0)
-                    {
-                        idx = row.Index;
-                    }
-                }
-            }
-
-            if (idx >= 0)
-            {
-                RedrawImages(idx);
-            }
-            gridChanging = false;
-        }
-
-        private void editClipTop_ValueChanged(object sender, EventArgs e)
-        {
-            if (gridChanging)
-            {
-                return;
-            }
-
-            gridChanging = true;
-            int idx = -1;
-            foreach (DataGridViewRow row in pagesGrid.SelectedRows)
-            {
-                if (row.Index < pages.Count)
-                {
-                    pages[row.Index].ClipTop = (int)editClipTop.Value;
-                    if (row.Index < idx || idx < 0)
-                    {
-                        idx = row.Index;
-                    }
-                }
-            }
-
-            if (idx >= 0)
-            {
-                RedrawImages(idx);
-            }
-            gridChanging = false;
-        }
-
-        private void editClipRight_ValueChanged(object sender, EventArgs e)
-        {
-            if (gridChanging)
-            {
-                return;
-            }
-
-            gridChanging = true;
-            int idx = -1;
-            foreach (DataGridViewRow row in pagesGrid.SelectedRows)
-            {
-                if (row.Index < pages.Count)
-                {
-                    pages[row.Index].ClipRight = (int)editClipRight.Value;
-                    if (row.Index < idx || idx < 0)
-                    {
-                        idx = row.Index;
-                    }
-                }
-            }
-
-            if (idx >= 0)
-            {
-                RedrawImages(idx);
-            }
-            gridChanging = false;
-        }
-
-        private void editClipBottom_ValueChanged(object sender, EventArgs e)
-        {
-            if (gridChanging)
-            {
-                return;
-            }
-
-            gridChanging = true;
-            int idx = -1;
-            foreach (DataGridViewRow row in pagesGrid.SelectedRows)
-            {
-                if (row.Index < pages.Count)
-                {
-                    pages[row.Index].ClipBottom = (int)editClipBottom.Value;
-                    if (row.Index < idx || idx < 0)
-                    {
-                        idx = row.Index;
-                    }
-                }
-            }
-
-            if (idx >= 0)
-            {
-                RedrawImages(idx);
-            }
-            gridChanging = false;
-        }
-
-        private void splitContainer_Panel1_ClientSizeChanged(object sender, EventArgs e)
-        {
-            srcPicture.Width = splitContainer.Panel1.ClientSize.Width;
-            srcPicture.Height = splitContainer.Panel1.ClientSize.Height - srcLabel.Height;
-        }
-
-        private void splitContainer_Panel2_ClientSizeChanged(object sender, EventArgs e)
-        {
-            previewPicture.Width = splitContainer.Panel2.ClientSize.Width;
-            previewPicture.Height = splitContainer.Panel2.ClientSize.Height - previewLabel.Height;
-        }
-
-        private void srcPicture_ClientSizeChanged(object sender, EventArgs e)
-        {
-            if (srcPicture.Image != null)
-            {
-                int zoom;
-                if (srcPicture.ClientRectangle.Width < srcPicture.Image.Width || srcPicture.ClientRectangle.Height < srcPicture.Image.Height)
-                {
-                    srcPicture.SizeMode = PictureBoxSizeMode.Zoom;
-                    double dw = (double)srcPicture.ClientRectangle.Width / srcPicture.Image.Width;
-                    double dh = (double)srcPicture.ClientRectangle.Height / srcPicture.Image.Height;
-                    zoom = (int)((dw < dh ? dw : dh) * 100);
-                }
-                else
-                {
-                    srcPicture.SizeMode = PictureBoxSizeMode.CenterImage;
-                    zoom = 100;
-                }
-
-                srcLabel.Text = String.Format("{0}x{1} ({2}%)", srcPicture.Image.Width, srcPicture.Image.Height, zoom);
-            }
-        }
-
-        private void previewPicture_ClientSizeChanged(object sender, EventArgs e)
-        {
-            if (previewPicture.Image != null)
-            {
-                int zoom;
-                if (previewPicture.ClientRectangle.Width < previewPicture.Image.Width || previewPicture.ClientRectangle.Height < previewPicture.Image.Height)
-                {
-                    previewPicture.SizeMode = PictureBoxSizeMode.Zoom;
-                    double dw = (double)previewPicture.ClientRectangle.Width / previewPicture.Image.Width;
-                    double dh = (double)previewPicture.ClientRectangle.Height / previewPicture.Image.Height;
-                    zoom = (int)((dw < dh ? dw : dh) * 100);
-                }
-                else
-                {
-                    previewPicture.SizeMode = PictureBoxSizeMode.CenterImage;
-                    zoom = 100;
-                }
-
-                previewLabel.Text = String.Format("{0}x{1} ({2}%)", previewPicture.Image.Width, previewPicture.Image.Height, zoom);
-            }
-        }
-
+        /// <summary>
+        /// ページ一覧のセルの値が変わった
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void pagesGrid_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             // 「目次」「ロック」のみ扱う
@@ -680,6 +494,113 @@ namespace EPubMaker
             gridChanging = false;
         }
 
+        /// <summary>
+        /// 回転コンボボックスが変更された
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void rotateCombo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ChangePageSettings(delegate(int idx) { pages[idx].Rotate = (Page.PageRotate)rotateCombo.SelectedIndex; });
+        }
+
+        /// <summary>
+        /// 形式コンボボックスが変更された
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void formatCombo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ChangePageSettings(delegate(int idx) { pages[idx].Format = (Page.PageFormat)formatCombo.SelectedIndex; });
+        }
+
+        /// <summary>
+        /// 切り抜き(左)が変更された
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void editClipLeft_ValueChanged(object sender, EventArgs e)
+        {
+            ChangePageSettings(delegate(int idx) { pages[idx].ClipLeft = (int)editClipLeft.Value; });
+        }
+
+        /// <summary>
+        /// 切り抜き(上)が変更された
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void editClipTop_ValueChanged(object sender, EventArgs e)
+        {
+            ChangePageSettings(delegate(int idx) { pages[idx].ClipTop = (int)editClipTop.Value; });
+        }
+
+        /// <summary>
+        /// 切り抜き(右)が変更された
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void editClipRight_ValueChanged(object sender, EventArgs e)
+        {
+            ChangePageSettings(delegate(int idx) { pages[idx].ClipRight = (int)editClipRight.Value; });
+        }
+
+        /// <summary>
+        /// 切り抜き(下)が変更された
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void editClipBottom_ValueChanged(object sender, EventArgs e)
+        {
+            ChangePageSettings(delegate(int idx) { pages[idx].ClipBottom = (int)editClipBottom.Value; });
+        }
+
+        /// <summary>
+        /// 画像表示領域左ペインのサイズが変わった
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void splitContainer_Panel1_ClientSizeChanged(object sender, EventArgs e)
+        {
+            srcPicture.Width = splitContainer.Panel1.ClientSize.Width;
+            srcPicture.Height = splitContainer.Panel1.ClientSize.Height - srcLabel.Height;
+        }
+
+        /// <summary>
+        /// 画像表示領域右ペインのサイズが変わった
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void splitContainer_Panel2_ClientSizeChanged(object sender, EventArgs e)
+        {
+            previewPicture.Width = splitContainer.Panel2.ClientSize.Width;
+            previewPicture.Height = splitContainer.Panel2.ClientSize.Height - previewLabel.Height;
+        }
+
+        /// <summary>
+        /// 元画像表示領域のサイズが変わった
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void srcPicture_ClientSizeChanged(object sender, EventArgs e)
+        {
+            PictureSizeChanged(srcPicture, srcLabel);
+        }
+
+        /// <summary>
+        /// プレビュー画像表示領域のサイズが変わった
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void previewPicture_ClientSizeChanged(object sender, EventArgs e)
+        {
+            PictureSizeChanged(previewPicture, previewLabel);
+        }
+
+        /// <summary>
+        /// 元画像表示領域でマウスボタンが押された
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void srcPicture_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left && srcPicture.Image != null)
@@ -689,6 +610,11 @@ namespace EPubMaker
             }
         }
 
+        /// <summary>
+        /// 元画像表示領域でマウスが動いた
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void srcPicture_MouseMove(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left && start != null && srcPicture.Image != null)
@@ -703,6 +629,11 @@ namespace EPubMaker
             }
         }
 
+        /// <summary>
+        /// 元画像表示領域でマウスボタンが離された
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void srcPicture_MouseUp(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left && start != null && srcPicture.Image != null)
@@ -753,11 +684,16 @@ namespace EPubMaker
                         pages[row.Index].ClipBottom = (top + height) * 100 / srcPicture.Image.Height;
                     }
                 }
-                RedrawImages(selectedIndex);
+                DrawImages(selectedIndex);
                 gridChanging = false;
             }
         }
 
+        /// <summary>
+        /// 元画像表示領域描画
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void srcPicture_Paint(object sender, PaintEventArgs e)
         {
             if (selectedIndex < 0 || srcPicture.Image == null || start != null)
@@ -788,7 +724,10 @@ namespace EPubMaker
             e.Graphics.DrawRectangle(pen, left, top, width, height);
         }
 
-        private void UpdatePageList()
+        /// <summary>
+        /// ページ一覧の中身設定
+        /// </summary>
+        private void SetupPagesGrid()
         {
             pagesGrid.Rows.Clear();
             for (int i = 0; i < pages.Count; ++i)
@@ -797,11 +736,105 @@ namespace EPubMaker
             }
         }
 
-        private void RedrawImages(int idx)
+        private delegate bool SelectCond(int idx);  // SelectPages用デリゲート(引数はページインデックス)
+
+        /// <summary>
+        /// ページ選択
+        /// </summary>
+        /// <param name="cond">ページ選択条件指定デリゲート</param>
+        private void SelectPages(SelectCond cond)
+        {
+            if (gridChanging)
+            {
+                return;
+            }
+
+            gridChanging = true;
+            for (int i = pagesGrid.Rows.Count - 1; i >= 0; --i)
+            {
+                if ((bool)pagesGrid.Rows[i].Cells[3].Value || !cond(i))
+                {
+                    pagesGrid.Rows[i].Selected = false;
+                }
+                else
+                {
+                    pagesGrid.Rows[i].Selected = true;
+                    //pagesGrid.CurrentCell = pagesGrid.Rows[i].Cells[2];
+                }
+            }
+            gridChanging = false;
+            pagesGrid_SelectionChanged(null, null);
+        }
+
+        private delegate void SetPageSettings(int idx); // ChangePageSettings用デリゲート(引数はページインデックス)
+
+        /// <summary>
+        /// ページ設定変更
+        /// </summary>
+        /// <param name="setter">設定変更デリゲート</param>
+        private void ChangePageSettings(SetPageSettings setter)
+        {
+            if (rotateCombo.SelectedIndex < 0 || gridChanging)
+            {
+                return;
+            }
+
+            gridChanging = true;
+            int idx = -1;
+            foreach (DataGridViewRow row in pagesGrid.SelectedRows)
+            {
+                if (row.Index < pages.Count)
+                {
+                    setter(row.Index);
+                    if (row.Index < idx || idx < 0)
+                    {
+                        idx = row.Index;
+                    }
+                }
+            }
+
+            if (idx >= 0)
+            {
+                DrawImages(idx);
+            }
+            gridChanging = false;
+        }
+
+        /// <summary>
+        /// 画像表示領域サイズ変更
+        /// </summary>
+        /// <param name="box">対象画像表示領域</param>
+        /// <param name="label">内容表示用ラベル</param>
+        private void PictureSizeChanged(PictureBox box, Label label)
+        {
+            if (box.Image != null)
+            {
+                int zoom;
+                if (box.ClientRectangle.Width < box.Image.Width || box.ClientRectangle.Height < box.Image.Height)
+                {
+                    box.SizeMode = PictureBoxSizeMode.Zoom;
+                    double dw = (double)box.ClientRectangle.Width / box.Image.Width;
+                    double dh = (double)box.ClientRectangle.Height / box.Image.Height;
+                    zoom = (int)((dw < dh ? dw : dh) * 100);
+                }
+                else
+                {
+                    box.SizeMode = PictureBoxSizeMode.CenterImage;
+                    zoom = 100;
+                }
+
+                label.Text = String.Format("{0}x{1} ({2}%)", box.Image.Width, box.Image.Height, zoom);
+            }
+        }
+
+        /// <summary>
+        /// 元画像およびプレビュー画像表示
+        /// </summary>
+        /// <param name="idx">対象ページのインデックス</param>
+        private void DrawImages(int idx)
         {
             Image src;
-            Image preview;
-            pages[idx].GenerateImages(out src, (int)editWidth.Value, (int)editHeight.Value, out preview);
+            Image preview = pages[idx].GenerateImages((int)editWidth.Value, (int)editHeight.Value, out src);
 
             srcPicture.Image = src;
             srcPicture_ClientSizeChanged(null, null);
@@ -827,6 +860,11 @@ namespace EPubMaker
             end = null;
         }
 
+        /// <summary>
+        /// ボタン等のコントロールの有効・無効状態設定
+        /// </summary>
+        /// <param name="opened">元データオープン済み？</param>
+        /// <param name="selected">選択ページがある？</param>
         private void EnabledButtonsAndMenuItems(bool opened, bool selected)
         {
             menuItemClose.Enabled = opened;

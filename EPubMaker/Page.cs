@@ -5,35 +5,47 @@ using System.IO;
 
 namespace EPubMaker
 {
+    /// <summary>
+    /// ページ
+    /// </summary>
     public class Page : ICloneable
     {
+        /// <summary>
+        /// 回転
+        /// </summary>
         public enum PageRotate
         {
-            Rotate0 = 0,
-            Rotate90 = 1,
-            Rotate180 = 2,
-            Rotate270 = 3
+            Rotate0 = 0,    /// 回転なし
+            Rotate90 = 1,   /// 90°回転
+            Rotate180 = 2,  /// 180°回転
+            Rotate270 = 3   /// 270°回転
         }
 
+        /// <summary>
+        /// 画像形式
+        /// </summary>
         public enum PageFormat
         {
-            Undefined = -1,
-            FullColor = 0,
-            Gray8bit = 1,
-            Gray4bit = 2,
-            Mono = 3
+            Undefined = -1, /// 未定義
+            FullColor = 0,  /// フルカラー
+            Gray8bit = 1,   /// 8bit
+            Gray4bit = 2,   /// 4bit
+            Mono = 3        /// 白黒
         }
 
-        private string path;
-        private string index;
-        private bool locked;
-        private PageRotate rotate;
-        private PageFormat format;
-        private int clipLeft;
-        private int clipTop;
-        private int clipRight;
-        private int clipBottom;
+        private string path;        /// 元データ画像パス
+        private string index;       /// 目次表示内容
+        private bool locked;        /// ロック状態
+        private PageRotate rotate;  /// 回転
+        private PageFormat format;  /// 画像形式
+        private int clipLeft;       /// 切り抜き(左)%
+        private int clipTop;        /// 切り抜き(上)%
+        private int clipRight;      /// 切り抜き(右)%
+        private int clipBottom;     /// 切り抜き(下)%
 
+        /// <summary>
+        /// 元データ画像パス
+        /// </summary>
         public string Path
         {
             get
@@ -42,6 +54,9 @@ namespace EPubMaker
             }
         }
 
+        /// <summary>
+        /// 元データ画像パスのファイル名部分
+        /// </summary>
         public string Name
         {
             get
@@ -51,6 +66,9 @@ namespace EPubMaker
             }
         }
 
+        /// <summary>
+        /// 目次表示内容
+        /// </summary>
         public string Index
         {
             set
@@ -63,6 +81,9 @@ namespace EPubMaker
             }
         }
 
+        /// <summary>
+        /// ロック状態
+        /// </summary>
         public bool Locked
         {
             set
@@ -75,6 +96,9 @@ namespace EPubMaker
             }
         }
 
+        /// <summary>
+        /// 回転
+        /// </summary>
         public PageRotate Rotate
         {
             set
@@ -87,6 +111,9 @@ namespace EPubMaker
             }
         }
 
+        /// <summary>
+        /// 画像形式
+        /// </summary>
         public PageFormat Format
         {
             set
@@ -99,6 +126,9 @@ namespace EPubMaker
             }
         }
 
+        /// <summary>
+        /// 切り抜き(左)%
+        /// </summary>
         public int ClipLeft
         {
             set
@@ -111,6 +141,9 @@ namespace EPubMaker
             }
         }
 
+        /// <summary>
+        /// 切り抜き(上)%
+        /// </summary>
         public int ClipTop
         {
             set
@@ -123,6 +156,9 @@ namespace EPubMaker
             }
         }
 
+        /// <summary>
+        /// 切り抜き(右)%
+        /// </summary>
         public int ClipRight
         {
             set
@@ -135,6 +171,9 @@ namespace EPubMaker
             }
         }
 
+        /// <summary>
+        /// 切り抜き(下)%
+        /// </summary>
         public int ClipBottom
         {
             set
@@ -147,6 +186,10 @@ namespace EPubMaker
             }
         }
 
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="path">元画像パス</param>
         public Page(string path)
         {
             this.path = path;
@@ -160,11 +203,19 @@ namespace EPubMaker
             clipBottom = 100;
         }
 
+        /// <summary>
+        /// 文字列化
+        /// </summary>
+        /// <returns>元画像ファイル名</returns>
         public override string ToString()
         {
             return Name;
         }
 
+        /// <summary>
+        /// 複製生成
+        /// </summary>
+        /// <returns>複製</returns>
         public object Clone()
         {
             Page newPage = new Page(path);
@@ -179,7 +230,14 @@ namespace EPubMaker
             return newPage;
         }
 
-        public void GenerateImages(out Image src, int width, int height, out Image preview)
+        /// <summary>
+        /// 画像データ生成
+        /// </summary>
+        /// <param name="width">出力幅</param>
+        /// <param name="height">出力高さ</param>
+        /// <param name="src">元画像データ出力バッファ</param>
+        /// <returns>結果画像</returns>
+        public Image GenerateImages(int width, int height, out Image src)
         {
             src = Image.FromFile(Path);
             switch (Rotate)
@@ -239,22 +297,29 @@ namespace EPubMaker
 
             if (width <= 0 || height <= 0)
             {
-                preview = null;
-                return;
+                return null;
             }
 
-            preview = new Bitmap(width, height);
-            Graphics g = Graphics.FromImage(preview);
+            Image target = new Bitmap(width, height);
+            Graphics g = Graphics.FromImage(target);
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
             g.DrawImage(src, new Rectangle(0, 0, width, height), src.Width * clipLeft / 100, src.Height * clipTop / 100, srcWidth, srcHeight, GraphicsUnit.Pixel);
             g.Dispose();
 
             if (Format > Page.PageFormat.FullColor)
             {
-                preview = ConvertFormat((Bitmap)preview, Format);
+                target = ConvertFormat((Bitmap)target, Format);
             }
+
+            return target;
         }
 
+        /// <summary>
+        /// 画像形式変換
+        /// </summary>
+        /// <param name="src">元画像データ</param>
+        /// <param name="format">出力形式</param>
+        /// <returns>変換結果画像</returns>
         private static unsafe Bitmap ConvertFormat(Bitmap src, Page.PageFormat format)
         {
             PixelFormat pf;

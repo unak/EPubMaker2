@@ -9,18 +9,31 @@ using System.Windows.Forms;
 
 namespace EPubMaker
 {
+    /// <summary>
+    /// ePub生成進捗表示ダイアログ
+    /// 実際の生成処理もこちら
+    /// </summary>
     public partial class FormProgress : Form
     {
         private struct WorkerArg
         {
-            public List<Page> pages;
-            public string title;
-            public string author;
-            public int width;
-            public int height;
-            public string path;
+            public List<Page> pages;    /// ページ
+            public string title;        /// 書籍タイトル
+            public string author;       /// 著者
+            public int width;           /// 出力幅
+            public int height;          /// 出力高さ
+            public string path;         /// 出力ファイルパス
         }
 
+        /// <summary>
+        /// フォームコンストラクタ
+        /// </summary>
+        /// <param name="pages">ページ</param>
+        /// <param name="title">書籍タイトル</param>
+        /// <param name="author">著者</param>
+        /// <param name="width">出力幅</param>
+        /// <param name="height">出力高さ</param>
+        /// <param name="path">出力ファイルパス</param>
         public FormProgress(List<Page> pages, string title, string author, int width, int height, string path)
         {
             InitializeComponent();
@@ -37,6 +50,11 @@ namespace EPubMaker
             backgroundWorker.RunWorkerAsync(arg);
         }
 
+        /// <summary>
+        /// フォームが閉じられそう
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void FormProgress_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (this.DialogResult == DialogResult.None)
@@ -46,11 +64,21 @@ namespace EPubMaker
             }
         }
 
+        /// <summary>
+        /// キャンセルボタン
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnClose_Click(object sender, EventArgs e)
         {
             backgroundWorker.CancelAsync();
         }
 
+        /// <summary>
+        /// バックグラウンド処理本体
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             backgroundWorker.ReportProgress(-1);    // 開始
@@ -112,8 +140,7 @@ namespace EPubMaker
                 }
 
                 Image src;
-                Image dst;
-                arg.pages[i].GenerateImages(out src, arg.width, arg.height, out dst);
+                Image dst = arg.pages[i].GenerateImages(arg.width, arg.height, out src);
                 src.Dispose();
 
                 string id = i.ToString("d4");
@@ -205,12 +232,11 @@ namespace EPubMaker
             e.Result = true;
         }
 
-        private static void WriteText(Stream st, string text)
-        {
-            byte[] bytes = Encoding.UTF8.GetBytes(text);
-            st.Write(bytes, 0, bytes.Length);
-        }
-
+        /// <summary>
+        /// バックグラウンド処理進捗報告
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void backgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             switch (e.ProgressPercentage)
@@ -238,6 +264,11 @@ namespace EPubMaker
             }
         }
 
+        /// <summary>
+        /// バックグラウンド処理完了報告
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (e.Cancelled)
@@ -255,6 +286,22 @@ namespace EPubMaker
             this.Close();
         }
 
+        /// <summary>
+        /// 文字列出力
+        /// </summary>
+        /// <param name="st">出力先ストリーム</param>
+        /// <param name="text">出力文字列</param>
+        private static void WriteText(Stream st, string text)
+        {
+            byte[] bytes = Encoding.UTF8.GetBytes(text);
+            st.Write(bytes, 0, bytes.Length);
+        }
+
+        /// <summary>
+        /// 文字列エスケープ(XML)
+        /// </summary>
+        /// <param name="str">対象文字列</param>
+        /// <returns>エスケープ結果</returns>
         public static string Escape(string str)
         {
             return str.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;").Replace("\"", "&quot;");
