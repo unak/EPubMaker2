@@ -34,6 +34,14 @@ namespace EPubMaker
             splitContainer_Panel1_ClientSizeChanged(null, null);
             splitContainer_Panel2_ClientSizeChanged(null, null);
 
+            editWidth.Value = setting.PageWidth;
+            editHeight.Value = setting.PageHeight;
+
+            EnabledButtonsAndMenuItems(false, false);
+        }
+
+        private void FormMain_Load(object sender, EventArgs e)
+        {
             if (setting.Width > 0)
             {
                 this.Left = setting.Left;
@@ -43,10 +51,6 @@ namespace EPubMaker
                 splitContainer.SplitterDistance = setting.SrcWidth;
             }
 
-            editWidth.Value = setting.PageWidth;
-            editHeight.Value = setting.PageHeight;
-
-            EnabledButtonsAndMenuItems(false, false);
         }
 
         private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -230,10 +234,11 @@ namespace EPubMaker
                 else
                 {
                     pagesGrid.Rows[i].Selected = true;
+                    //pagesGrid.CurrentCell = pagesGrid.Rows[i].Cells[2];
                 }
             }
             gridChanging = false;
-            pagesGrid_SelectionChanged(sender, e);
+            pagesGrid_SelectionChanged(null, null);
         }
 
         private void btnSelectOdd_Click(object sender, EventArgs e)
@@ -246,17 +251,18 @@ namespace EPubMaker
             gridChanging = true;
             for (int i = pagesGrid.Rows.Count - 1; i >= 0; --i)
             {
-                if ((bool)pagesGrid.Rows[i].Cells[3].Value)
+                if ((bool)pagesGrid.Rows[i].Cells[3].Value || i % 2 == 1)
                 {
                     pagesGrid.Rows[i].Selected = false;
                 }
                 else
                 {
-                    pagesGrid.Rows[i].Selected = i % 2 == 0;
+                    pagesGrid.Rows[i].Selected = true;
+                    //pagesGrid.CurrentCell = pagesGrid.Rows[i].Cells[2];
                 }
             }
             gridChanging = false;
-            pagesGrid_SelectionChanged(sender, e);
+            pagesGrid_SelectionChanged(null, null);
         }
 
         private void btnSelectEven_Click(object sender, EventArgs e)
@@ -269,17 +275,18 @@ namespace EPubMaker
             gridChanging = true;
             for (int i = pagesGrid.Rows.Count - 1; i >= 0; --i)
             {
-                if ((bool)pagesGrid.Rows[i].Cells[3].Value)
+                if ((bool)pagesGrid.Rows[i].Cells[3].Value || i % 2 == 0)
                 {
                     pagesGrid.Rows[i].Selected = false;
                 }
                 else
                 {
-                    pagesGrid.Rows[i].Selected = i % 2 != 0;
+                    pagesGrid.Rows[i].Selected = true;
+                    //pagesGrid.CurrentCell = pagesGrid.Rows[i].Cells[2];
                 }
             }
             gridChanging = false;
-            pagesGrid_SelectionChanged(sender, e);
+            pagesGrid_SelectionChanged(null, null);
         }
 
         private void btnDuplicate_Click(object sender, EventArgs e)
@@ -291,9 +298,13 @@ namespace EPubMaker
 
             gridChanging = true;
             pages.Insert(selectedIndex + 1, (Page)pages[selectedIndex].Clone());
+
             UpdatePageList();
-            RedrawImages(selectedIndex);
+            pagesGrid.ClearSelection();
+            pagesGrid.CurrentCell = pagesGrid.Rows[selectedIndex].Cells[2];
+
             gridChanging = false;
+            pagesGrid_SelectionChanged(null, null);
         }
 
         private void btnErase_Click(object sender, EventArgs e)
@@ -316,9 +327,11 @@ namespace EPubMaker
                 {
                     selectedIndex = pages.Count - 1;
                 }
-                RedrawImages(selectedIndex);
+                pagesGrid.ClearSelection();
+                pagesGrid.CurrentCell = pagesGrid.Rows[selectedIndex].Cells[2];
             }
             gridChanging = false;
+            pagesGrid_SelectionChanged(null, null);
         }
 
         private void btnInsert_Click(object sender, EventArgs e)
@@ -336,9 +349,13 @@ namespace EPubMaker
 
                 gridChanging = true;
                 pages.Insert(selectedIndex + 1, new Page(openFileDialog.FileName));
+
                 UpdatePageList();
-                RedrawImages(selectedIndex);
+                pagesGrid.ClearSelection();
+                pagesGrid.CurrentCell = pagesGrid.Rows[selectedIndex].Cells[2];
+
                 gridChanging = false;
+                pagesGrid_SelectionChanged(null, null);
             }
         }
 
@@ -370,9 +387,11 @@ namespace EPubMaker
                 selectedIndex = move;
 
                 UpdatePageList();
-                RedrawImages(selectedIndex);
+                pagesGrid.ClearSelection();
+                pagesGrid.CurrentCell = pagesGrid.Rows[selectedIndex].Cells[2];
 
                 gridChanging = false;
+                pagesGrid_SelectionChanged(null, null);
             }
         }
 
@@ -644,7 +663,14 @@ namespace EPubMaker
 
             if (e.ColumnIndex == 2)
             {
-                pages[e.RowIndex].Index = pagesGrid.Rows[e.RowIndex].Cells[2].Value.ToString();
+                if (pagesGrid.Rows[e.RowIndex].Cells[2].Value == null)
+                {
+                    pages[e.RowIndex].Index = "";
+                }
+                else
+                {
+                    pages[e.RowIndex].Index = pagesGrid.Rows[e.RowIndex].Cells[2].Value.ToString();
+                }
             }
             else if (e.ColumnIndex == 3)
             {
@@ -744,8 +770,8 @@ namespace EPubMaker
             pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
             int left = srcPicture.Image.Width * page.ClipLeft / 100 - 1;
             int top = srcPicture.Image.Height * page.ClipTop / 100 - 1;
-            int width = srcPicture.Image.Width * (page.ClipRight - page.ClipLeft) / 100 - 1;
-            int height = srcPicture.Image.Height * (page.ClipBottom - page.ClipTop) / 100 - 1;
+            int width = srcPicture.Image.Width * (page.ClipRight - page.ClipLeft) / 100;
+            int height = srcPicture.Image.Height * (page.ClipBottom - page.ClipTop) / 100;
             if (srcPicture.SizeMode == PictureBoxSizeMode.Zoom)
             {
                 double d = Math.Max((double)srcPicture.Image.Width / srcPicture.ClientSize.Width, (double)srcPicture.Image.Height / srcPicture.ClientSize.Height);

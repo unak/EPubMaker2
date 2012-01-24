@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.pagesPanel = new System.Windows.Forms.Panel();
             this.pagesGrid = new System.Windows.Forms.DataGridView();
@@ -44,6 +44,11 @@
             this.btnSelectAll = new System.Windows.Forms.ToolStripButton();
             this.btnSelectOdd = new System.Windows.Forms.ToolStripButton();
             this.btnSelectEven = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+            this.btnDuplicate = new System.Windows.Forms.ToolStripButton();
+            this.btnErase = new System.Windows.Forms.ToolStripButton();
+            this.btnInsert = new System.Windows.Forms.ToolStripButton();
+            this.btnMove = new System.Windows.Forms.ToolStripButton();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.menuItemFile = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemOpen = new System.Windows.Forms.ToolStripMenuItem();
@@ -58,6 +63,11 @@
             this.menuItemSelectAll = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemSelectOdd = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemSelectEven = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.menuItemDuplicate = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItemErase = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItemInsert = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItemMove = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemEPub = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemGenerate = new System.Windows.Forms.ToolStripMenuItem();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
@@ -88,16 +98,6 @@
             this.previewPicture = new System.Windows.Forms.PictureBox();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.pageLabel = new System.Windows.Forms.Label();
-            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-            this.menuItemDuplicate = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuItemErase = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuItemInsert = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuItemMove = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
-            this.btnDuplicate = new System.Windows.Forms.ToolStripButton();
-            this.btnErase = new System.Windows.Forms.ToolStripButton();
-            this.btnInsert = new System.Windows.Forms.ToolStripButton();
-            this.btnMove = new System.Windows.Forms.ToolStripButton();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.pagesPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pagesGrid)).BeginInit();
@@ -154,8 +154,8 @@
             // 
             // page
             // 
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
-            this.page.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            this.page.DefaultCellStyle = dataGridViewCellStyle1;
             this.page.HeaderText = "頁";
             this.page.Name = "page";
             this.page.ReadOnly = true;
@@ -279,6 +279,51 @@
             this.btnSelectEven.Text = "偶数ページを選択";
             this.btnSelectEven.Click += new System.EventHandler(this.btnSelectEven_Click);
             // 
+            // toolStripSeparator6
+            // 
+            this.toolStripSeparator6.Name = "toolStripSeparator6";
+            this.toolStripSeparator6.Size = new System.Drawing.Size(6, 30);
+            // 
+            // btnDuplicate
+            // 
+            this.btnDuplicate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnDuplicate.Image = ((System.Drawing.Image)(resources.GetObject("btnDuplicate.Image")));
+            this.btnDuplicate.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnDuplicate.Name = "btnDuplicate";
+            this.btnDuplicate.Size = new System.Drawing.Size(23, 27);
+            this.btnDuplicate.Text = "ページの複製";
+            this.btnDuplicate.Click += new System.EventHandler(this.btnDuplicate_Click);
+            // 
+            // btnErase
+            // 
+            this.btnErase.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnErase.Image = ((System.Drawing.Image)(resources.GetObject("btnErase.Image")));
+            this.btnErase.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnErase.Name = "btnErase";
+            this.btnErase.Size = new System.Drawing.Size(23, 27);
+            this.btnErase.Text = "ページの削除";
+            this.btnErase.Click += new System.EventHandler(this.btnErase_Click);
+            // 
+            // btnInsert
+            // 
+            this.btnInsert.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnInsert.Image = ((System.Drawing.Image)(resources.GetObject("btnInsert.Image")));
+            this.btnInsert.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnInsert.Name = "btnInsert";
+            this.btnInsert.Size = new System.Drawing.Size(23, 27);
+            this.btnInsert.Text = "ページの追加...";
+            this.btnInsert.Click += new System.EventHandler(this.btnInsert_Click);
+            // 
+            // btnMove
+            // 
+            this.btnMove.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnMove.Image = ((System.Drawing.Image)(resources.GetObject("btnMove.Image")));
+            this.btnMove.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnMove.Name = "btnMove";
+            this.btnMove.Size = new System.Drawing.Size(23, 27);
+            this.btnMove.Text = "ページの移動...";
+            this.btnMove.Click += new System.EventHandler(this.btnMove_Click);
+            // 
             // menuStrip
             // 
             this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -399,6 +444,43 @@
             this.menuItemSelectEven.Size = new System.Drawing.Size(239, 22);
             this.menuItemSelectEven.Text = "偶数ページを選択(&V)";
             this.menuItemSelectEven.Click += new System.EventHandler(this.btnSelectEven_Click);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(236, 6);
+            // 
+            // menuItemDuplicate
+            // 
+            this.menuItemDuplicate.Name = "menuItemDuplicate";
+            this.menuItemDuplicate.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.U)));
+            this.menuItemDuplicate.Size = new System.Drawing.Size(239, 22);
+            this.menuItemDuplicate.Text = "ページの複製(&D)";
+            this.menuItemDuplicate.Click += new System.EventHandler(this.btnDuplicate_Click);
+            // 
+            // menuItemErase
+            // 
+            this.menuItemErase.Name = "menuItemErase";
+            this.menuItemErase.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Delete)));
+            this.menuItemErase.Size = new System.Drawing.Size(239, 22);
+            this.menuItemErase.Text = "ページの削除(&E)";
+            this.menuItemErase.Click += new System.EventHandler(this.btnErase_Click);
+            // 
+            // menuItemInsert
+            // 
+            this.menuItemInsert.Name = "menuItemInsert";
+            this.menuItemInsert.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.I)));
+            this.menuItemInsert.Size = new System.Drawing.Size(239, 22);
+            this.menuItemInsert.Text = "ページの追加(&I)...";
+            this.menuItemInsert.Click += new System.EventHandler(this.btnInsert_Click);
+            // 
+            // menuItemMove
+            // 
+            this.menuItemMove.Name = "menuItemMove";
+            this.menuItemMove.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.M)));
+            this.menuItemMove.Size = new System.Drawing.Size(239, 22);
+            this.menuItemMove.Text = "ページの移動(&M)...";
+            this.menuItemMove.Click += new System.EventHandler(this.btnMove_Click);
             // 
             // menuItemEPub
             // 
@@ -716,88 +798,6 @@
             this.pageLabel.Size = new System.Drawing.Size(460, 16);
             this.pageLabel.TabIndex = 3;
             // 
-            // toolStripSeparator5
-            // 
-            this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(236, 6);
-            // 
-            // menuItemDuplicate
-            // 
-            this.menuItemDuplicate.Name = "menuItemDuplicate";
-            this.menuItemDuplicate.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.U)));
-            this.menuItemDuplicate.Size = new System.Drawing.Size(239, 22);
-            this.menuItemDuplicate.Text = "ページの複製(&D)";
-            this.menuItemDuplicate.Click += new System.EventHandler(this.btnDuplicate_Click);
-            // 
-            // menuItemErase
-            // 
-            this.menuItemErase.Name = "menuItemErase";
-            this.menuItemErase.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Delete)));
-            this.menuItemErase.Size = new System.Drawing.Size(239, 22);
-            this.menuItemErase.Text = "ページの削除(&E)";
-            this.menuItemErase.Click += new System.EventHandler(this.btnErase_Click);
-            // 
-            // menuItemInsert
-            // 
-            this.menuItemInsert.Name = "menuItemInsert";
-            this.menuItemInsert.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.I)));
-            this.menuItemInsert.Size = new System.Drawing.Size(239, 22);
-            this.menuItemInsert.Text = "ページの追加(&I)...";
-            this.menuItemInsert.Click += new System.EventHandler(this.btnInsert_Click);
-            // 
-            // menuItemMove
-            // 
-            this.menuItemMove.Name = "menuItemMove";
-            this.menuItemMove.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.M)));
-            this.menuItemMove.Size = new System.Drawing.Size(239, 22);
-            this.menuItemMove.Text = "ページの移動(&M)...";
-            this.menuItemMove.Click += new System.EventHandler(this.btnMove_Click);
-            // 
-            // toolStripSeparator6
-            // 
-            this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(6, 30);
-            // 
-            // btnDuplicate
-            // 
-            this.btnDuplicate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnDuplicate.Image = ((System.Drawing.Image)(resources.GetObject("btnDuplicate.Image")));
-            this.btnDuplicate.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnDuplicate.Name = "btnDuplicate";
-            this.btnDuplicate.Size = new System.Drawing.Size(23, 27);
-            this.btnDuplicate.Text = "ページの複製";
-            this.btnDuplicate.Click += new System.EventHandler(this.btnDuplicate_Click);
-            // 
-            // btnErase
-            // 
-            this.btnErase.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnErase.Image = ((System.Drawing.Image)(resources.GetObject("btnErase.Image")));
-            this.btnErase.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnErase.Name = "btnErase";
-            this.btnErase.Size = new System.Drawing.Size(23, 27);
-            this.btnErase.Text = "ページの削除";
-            this.btnErase.Click += new System.EventHandler(this.btnErase_Click);
-            // 
-            // btnInsert
-            // 
-            this.btnInsert.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnInsert.Image = ((System.Drawing.Image)(resources.GetObject("btnInsert.Image")));
-            this.btnInsert.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnInsert.Name = "btnInsert";
-            this.btnInsert.Size = new System.Drawing.Size(23, 27);
-            this.btnInsert.Text = "ページの追加...";
-            this.btnInsert.Click += new System.EventHandler(this.btnInsert_Click);
-            // 
-            // btnMove
-            // 
-            this.btnMove.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnMove.Image = ((System.Drawing.Image)(resources.GetObject("btnMove.Image")));
-            this.btnMove.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnMove.Name = "btnMove";
-            this.btnMove.Size = new System.Drawing.Size(23, 27);
-            this.btnMove.Text = "ページの移動...";
-            this.btnMove.Click += new System.EventHandler(this.btnMove_Click);
-            // 
             // openFileDialog
             // 
             this.openFileDialog.Filter = "画像ファイル|*.jpg;*.png;*.bmp|すべてのファイル|*";
@@ -816,6 +816,7 @@
             this.Name = "FormMain";
             this.Text = "ePubMaker";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
+            this.Load += new System.EventHandler(this.FormMain_Load);
             this.ClientSizeChanged += new System.EventHandler(this.FormMain_ClientSizeChanged);
             this.pagesPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pagesGrid)).EndInit();

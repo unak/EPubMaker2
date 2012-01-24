@@ -8,7 +8,7 @@
     <ProjectGuid>{10E017CE-5D99-4B56-9EA3-6BF21EB2899E}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ePubMaker</RootNamespace>
+    <RootNamespace>EPubMaker</RootNamespace>
     <AssemblyName>ePubMaker</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>

@@ -237,6 +237,12 @@ namespace EPubMaker
                 height = (int)(srcHeight / d);
             }
 
+            if (width <= 0 || height <= 0)
+            {
+                preview = null;
+                return;
+            }
+
             preview = new Bitmap(width, height);
             Graphics g = Graphics.FromImage(preview);
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
