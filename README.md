@@ -1,6 +1,8 @@
 ePubMaker
 =========
 
+こいつの出所は https://github.com/unak/EPubMaker2 です。
+
 はじめに
 --------
 ePubMakerは自炊データからePubファイルを生成するアプリケーションです。
