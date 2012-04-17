@@ -318,11 +318,12 @@ namespace EPubMaker
             }
 
             ImageAttributes attr = new ImageAttributes();
-            float[][] array = { new float[] {1+contrast, 0, 0, 0, 0},               // red
-                                new float[] {0, 1+contrast, 0, 0, 0},               // green
-                                new float[] {0, 0, 1+contrast, 0, 0},               // blue
-                                new float[] {0, 0, 0, 1, 0},                        // alpha
-                                new float[] {-contrast, -contrast, -contrast, 0, 1} // brightness
+            float contrast = this.contrast + 1.0f;
+            float[][] array = { new float[] {contrast, 0, 0, 0, 0},  // red
+                                new float[] {0, contrast, 0, 0, 0},  // green
+                                new float[] {0, 0, contrast, 0, 0},  // blue
+                                new float[] {0, 0, 0, 1, 0},    // alpha
+                                new float[] {(1.0f - contrast) * 0.5f, (1.0f - contrast) * 0.5f, (1.0f - contrast) * 0.5f, 0, 1}     // transform
                               };
             attr.SetColorMatrix(new ColorMatrix(array), ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
             attr.SetGamma(1.0f, ColorAdjustType.Bitmap);

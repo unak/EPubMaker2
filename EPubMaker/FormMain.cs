@@ -866,6 +866,8 @@ namespace EPubMaker
             editClipRight.Value = pages[idx].ClipRight;
             editClipBottom.Value = pages[idx].ClipBottom;
 
+            editContrast.Value = (decimal)pages[idx].Contrast;
+
             start = null;
             end = null;
         }
