@@ -91,7 +91,6 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 TODO
 ----
 * 選択がらみの挙動不審の修正
-* 濃度調整
 * 傾き補正
 * 選択ボタンのあたりの見栄えとか
 * その他現状手抜きなところ

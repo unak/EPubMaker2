@@ -42,6 +42,7 @@ namespace EPubMaker
         private int clipTop;        /// 切り抜き(上)%
         private int clipRight;      /// 切り抜き(右)%
         private int clipBottom;     /// 切り抜き(下)%
+        private float contrast;     /// コントラスト調整(-1.0～1.0)
 
         /// <summary>
         /// 元データ画像パス
@@ -187,6 +188,21 @@ namespace EPubMaker
         }
 
         /// <summary>
+        /// コントラスト
+        /// </summary>
+        public float Contrast
+        {
+            set
+            {
+                contrast = value;
+            }
+            get
+            {
+                return contrast;
+            }
+        }
+
+        /// <summary>
         /// コンストラクタ
         /// </summary>
         /// <param name="path">元画像パス</param>
@@ -201,6 +217,7 @@ namespace EPubMaker
             clipTop = 0;
             clipRight = 100;
             clipBottom = 100;
+            contrast = 0;
         }
 
         /// <summary>
@@ -300,10 +317,20 @@ namespace EPubMaker
                 return null;
             }
 
+            ImageAttributes attr = new ImageAttributes();
+            float[][] array = { new float[] {1+contrast, 0, 0, 0, 0},               // red
+                                new float[] {0, 1+contrast, 0, 0, 0},               // green
+                                new float[] {0, 0, 1+contrast, 0, 0},               // blue
+                                new float[] {0, 0, 0, 1, 0},                        // alpha
+                                new float[] {-contrast, -contrast, -contrast, 0, 1} // brightness
+                              };
+            attr.SetColorMatrix(new ColorMatrix(array), ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
+            attr.SetGamma(1.0f, ColorAdjustType.Bitmap);
+
             Image target = new Bitmap(width, height);
             Graphics g = Graphics.FromImage(target);
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-            g.DrawImage(src, new Rectangle(0, 0, width, height), src.Width * clipLeft / 100, src.Height * clipTop / 100, srcWidth, srcHeight, GraphicsUnit.Pixel);
+            g.DrawImage(src, new Rectangle(0, 0, width, height), src.Width * clipLeft / 100, src.Height * clipTop / 100, srcWidth, srcHeight, GraphicsUnit.Pixel, attr);
             g.Dispose();
 
             if (Format > Page.PageFormat.FullColor)

@@ -555,6 +555,16 @@ namespace EPubMaker
         }
 
         /// <summary>
+        /// コントラストが変更された
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void editContrast_ValueChanged(object sender, EventArgs e)
+        {
+            ChangePageSettings(delegate(int idx) { pages[idx].Contrast = (float)editContrast.Value; });
+        }
+
+        /// <summary>
         /// 画像表示領域左ペインのサイズが変わった
         /// </summary>
         /// <param name="sender"></param>
