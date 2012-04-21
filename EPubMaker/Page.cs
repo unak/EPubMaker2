@@ -244,6 +244,7 @@ namespace EPubMaker
             newPage.clipTop = clipTop;
             newPage.clipRight = clipRight;
             newPage.clipBottom = clipBottom;
+            newPage.contrast = contrast;
             return newPage;
         }
 
