@@ -262,6 +262,7 @@ namespace EPubMaker
                     pages[i].ClipTop = copy.ClipTop;
                     pages[i].ClipRight = copy.ClipRight;
                     pages[i].ClipBottom = copy.ClipBottom;
+                    pages[i].Contrast = copy.Contrast;
                 }
             }
             DrawImages(pagesGrid.SelectedRows[0].Index);
