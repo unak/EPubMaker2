@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace EPubMaker
 {
@@ -361,6 +362,9 @@ namespace EPubMaker
             return target;
         }
 
+        [DllImport("kernel32")]
+        public static unsafe extern void CopyMemory(void* dst, void* src, UIntPtr len);
+
         /// <summary>
         /// 画像形式変換
         /// </summary>
@@ -388,16 +392,9 @@ namespace EPubMaker
             Bitmap dst = new Bitmap(src.Width, src.Height, pf);
             BitmapData srcData = src.LockBits(new Rectangle(0, 0, src.Width, src.Height), ImageLockMode.ReadOnly, pf);
             BitmapData dstData = dst.LockBits(new Rectangle(0, 0, dst.Width, dst.Height), ImageLockMode.WriteOnly, pf);
-            for (int y = 0; y < srcData.Height; ++y)
-            {
-                byte* srcRow = (byte*)srcData.Scan0 + (y * srcData.Stride);
-                byte* dstRow = (byte*)dstData.Scan0 + (y * dstData.Stride);
-                
-                for (int i = 0; i < srcData.Stride; ++i)
-                {
-                    dstRow[i] = srcRow[i];
-                }
-            }
+            void* srcBuf = (void*)srcData.Scan0;
+            void* dstBuf = (void*)dstData.Scan0;
+            CopyMemory(dstBuf, srcBuf, (UIntPtr)(dstData.Stride * dstData.Height));
             dst.UnlockBits(dstData);
             src.UnlockBits(srcData);
 
