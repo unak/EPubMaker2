@@ -262,6 +262,7 @@ namespace EPubMaker
                     pages[i].ClipTop = copy.ClipTop;
                     pages[i].ClipRight = copy.ClipRight;
                     pages[i].ClipBottom = copy.ClipBottom;
+                    pages[i].Bold = copy.Bold;
                     pages[i].Contrast = copy.Contrast;
                 }
             }
@@ -553,6 +554,16 @@ namespace EPubMaker
         private void editClipBottom_ValueChanged(object sender, EventArgs e)
         {
             ChangePageSettings(delegate(int idx) { pages[idx].ClipBottom = (int)editClipBottom.Value; });
+        }
+
+        /// <summary>
+        /// 太字化率が変更された
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void editBold_ValueChanged(object sender, EventArgs e)
+        {
+            ChangePageSettings(delegate(int idx) { pages[idx].Bold = (float)editBold.Value; });
         }
 
         /// <summary>
@@ -867,6 +878,7 @@ namespace EPubMaker
             editClipRight.Value = pages[idx].ClipRight;
             editClipBottom.Value = pages[idx].ClipBottom;
 
+            editBold.Value = (decimal)pages[idx].Bold;
             editContrast.Value = (decimal)pages[idx].Contrast;
 
             start = null;
@@ -915,6 +927,9 @@ namespace EPubMaker
             editClipTop.Enabled = selected;
             editClipRight.Enabled = selected;
             editClipBottom.Enabled = selected;
+
+            editBold.Enabled = selected;
+            editContrast.Enabled = selected;
         }
     }
 }

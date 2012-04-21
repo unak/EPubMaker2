@@ -42,6 +42,7 @@ namespace EPubMaker
         private int clipTop;        /// 切り抜き(上)%
         private int clipRight;      /// 切り抜き(右)%
         private int clipBottom;     /// 切り抜き(下)%
+        private float bold;         /// 太字化(0.0～1.0) 
         private float contrast;     /// コントラスト調整(-1.0～1.0)
 
         /// <summary>
@@ -188,6 +189,21 @@ namespace EPubMaker
         }
 
         /// <summary>
+        /// 太字化
+        /// </summary>
+        public float Bold
+        {
+            set
+            {
+                bold = value;
+            }
+            get
+            {
+                return bold;
+            }
+        }
+
+        /// <summary>
         /// コントラスト
         /// </summary>
         public float Contrast
@@ -217,7 +233,8 @@ namespace EPubMaker
             clipTop = 0;
             clipRight = 100;
             clipBottom = 100;
-            contrast = 0;
+            bold = 0.0f;
+            contrast = 0.0f;
         }
 
         /// <summary>
@@ -244,6 +261,7 @@ namespace EPubMaker
             newPage.clipTop = clipTop;
             newPage.clipRight = clipRight;
             newPage.clipBottom = clipBottom;
+            newPage.bold = bold;
             newPage.contrast = contrast;
             return newPage;
         }
@@ -337,7 +355,7 @@ namespace EPubMaker
 
             if (Format > Page.PageFormat.FullColor)
             {
-                target = ConvertFormat((Bitmap)target, Format);
+                target = ConvertFormat(Boldize((Bitmap)target, this.bold), Format);
             }
 
             return target;
@@ -374,9 +392,70 @@ namespace EPubMaker
             {
                 byte* srcRow = (byte*)srcData.Scan0 + (y * srcData.Stride);
                 byte* dstRow = (byte*)dstData.Scan0 + (y * dstData.Stride);
+                
                 for (int i = 0; i < srcData.Stride; ++i)
                 {
                     dstRow[i] = srcRow[i];
+                }
+            }
+            dst.UnlockBits(dstData);
+            src.UnlockBits(srcData);
+
+            return dst;
+        }
+
+        /// <summary>
+        /// 太字化
+        /// </summary>
+        /// <param name="src">元画像</param>
+        /// <param name="value">太字化率(0～1.0)</param>
+        /// <returns>変換結果画像</returns>
+        private static unsafe Bitmap Boldize(Bitmap src, float value)
+        {
+            if (value <= 0.0f)
+            {
+                return src;
+            }
+            if (value > 1.0f)
+            {
+                value = 1.0f;
+            }
+
+            Bitmap dst = new Bitmap(src.Width, src.Height);
+            BitmapData srcData = src.LockBits(new Rectangle(0, 0, src.Width, src.Height), ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
+            BitmapData dstData = dst.LockBits(new Rectangle(0, 0, dst.Width, dst.Height), ImageLockMode.WriteOnly, PixelFormat.Format24bppRgb);
+
+            for (int y = 0; y < srcData.Height; ++y)
+            {
+                byte* srcRow = (byte*)srcData.Scan0 + (y * srcData.Stride);
+                byte* dstRow = (byte*)dstData.Scan0 + (y * dstData.Stride);
+
+                for (int i = 0; i < srcData.Stride; i += 3)
+                {
+                    if (i >= 3 && i < srcData.Stride - 3)
+                    {
+                        dstRow[i + 0] = (byte)Math.Max(0, srcRow[i + 0] - value * (510 - srcRow[i - 3] - srcRow[i + 3]) / 2);
+                        dstRow[i + 1] = (byte)Math.Max(0, srcRow[i + 1] - value * (510 - srcRow[i - 2] - srcRow[i + 4]) / 2);
+                        dstRow[i + 2] = (byte)Math.Max(0, srcRow[i + 2] - value * (510 - srcRow[i - 1] - srcRow[i + 5]) / 2);
+                    }
+                    else if (i >= 3)
+                    {
+                        dstRow[i + 0] = (byte)Math.Max(0, srcRow[i + 0] - value * (255 - srcRow[i - 3]));
+                        dstRow[i + 1] = (byte)Math.Max(0, srcRow[i + 1] - value * (255 - srcRow[i - 2]));
+                        dstRow[i + 2] = (byte)Math.Max(0, srcRow[i + 2] - value * (255 - srcRow[i - 1]));
+                    }
+                    else if (i < srcData.Stride - 3)
+                    {
+                        dstRow[i + 0] = (byte)Math.Max(0, srcRow[i + 0] - value * (255 - srcRow[i + 3]));
+                        dstRow[i + 1] = (byte)Math.Max(0, srcRow[i + 1] - value * (255 - srcRow[i + 4]));
+                        dstRow[i + 2] = (byte)Math.Max(0, srcRow[i + 2] - value * (255 - srcRow[i + 5]));
+                    }
+                    else
+                    {
+                        dstRow[i + 0] = srcRow[i + 0];
+                        dstRow[i + 1] = srcRow[i + 1];
+                        dstRow[i + 2] = srcRow[i + 2];
+                    }
                 }
             }
             dst.UnlockBits(dstData);

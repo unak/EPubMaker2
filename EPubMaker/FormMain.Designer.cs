@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.pagesPanel = new System.Windows.Forms.Panel();
             this.pagesGrid = new System.Windows.Forms.DataGridView();
@@ -72,6 +72,8 @@
             this.menuItemGenerate = new System.Windows.Forms.ToolStripMenuItem();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.editContrast = new System.Windows.Forms.NumericUpDown();
+            this.label10 = new System.Windows.Forms.Label();
             this.editClipRight = new System.Windows.Forms.NumericUpDown();
             this.editClipLeft = new System.Windows.Forms.NumericUpDown();
             this.editClipBottom = new System.Windows.Forms.NumericUpDown();
@@ -99,8 +101,8 @@
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.pageLabel = new System.Windows.Forms.Label();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.editContrast = new System.Windows.Forms.NumericUpDown();
-            this.label10 = new System.Windows.Forms.Label();
+            this.editBold = new System.Windows.Forms.NumericUpDown();
+            this.label11 = new System.Windows.Forms.Label();
             this.pagesPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pagesGrid)).BeginInit();
             this.toolStripContainer.ContentPanel.SuspendLayout();
@@ -108,6 +110,7 @@
             this.toolButtons.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.editContrast)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.editClipRight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.editClipLeft)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.editClipBottom)).BeginInit();
@@ -120,7 +123,7 @@
             this.splitContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.srcPicture)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.previewPicture)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.editContrast)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.editBold)).BeginInit();
             this.SuspendLayout();
             // 
             // pagesPanel
@@ -157,8 +160,8 @@
             // 
             // page
             // 
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
-            this.page.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            this.page.DefaultCellStyle = dataGridViewCellStyle3;
             this.page.HeaderText = "頁";
             this.page.Name = "page";
             this.page.ReadOnly = true;
@@ -507,6 +510,8 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.editBold);
+            this.panel1.Controls.Add(this.label11);
             this.panel1.Controls.Add(this.editContrast);
             this.panel1.Controls.Add(this.label10);
             this.panel1.Controls.Add(this.editClipRight);
@@ -533,6 +538,39 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(151, 479);
             this.panel1.TabIndex = 2;
+            // 
+            // editContrast
+            // 
+            this.editContrast.DecimalPlaces = 1;
+            this.editContrast.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.editContrast.Location = new System.Drawing.Point(75, 298);
+            this.editContrast.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            65536});
+            this.editContrast.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            -2147418112});
+            this.editContrast.Name = "editContrast";
+            this.editContrast.Size = new System.Drawing.Size(68, 19);
+            this.editContrast.TabIndex = 13;
+            this.editContrast.ValueChanged += new System.EventHandler(this.editContrast_ValueChanged);
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(10, 300);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(55, 12);
+            this.label10.TabIndex = 17;
+            this.label10.Text = "コントラスト";
             // 
             // editClipRight
             // 
@@ -807,38 +845,33 @@
             // 
             this.openFileDialog.Filter = "画像ファイル|*.jpg;*.png;*.bmp|すべてのファイル|*";
             // 
-            // editContrast
+            // editBold
             // 
-            this.editContrast.DecimalPlaces = 1;
-            this.editContrast.Increment = new decimal(new int[] {
+            this.editBold.DecimalPlaces = 1;
+            this.editBold.Increment = new decimal(new int[] {
             1,
             0,
             0,
             65536});
-            this.editContrast.Location = new System.Drawing.Point(74, 270);
-            this.editContrast.Maximum = new decimal(new int[] {
+            this.editBold.Location = new System.Drawing.Point(75, 273);
+            this.editBold.Maximum = new decimal(new int[] {
             10,
             0,
             0,
             65536});
-            this.editContrast.Minimum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            -2147418112});
-            this.editContrast.Name = "editContrast";
-            this.editContrast.Size = new System.Drawing.Size(68, 19);
-            this.editContrast.TabIndex = 16;
-            this.editContrast.ValueChanged += new System.EventHandler(this.editContrast_ValueChanged);
+            this.editBold.Name = "editBold";
+            this.editBold.Size = new System.Drawing.Size(68, 19);
+            this.editBold.TabIndex = 12;
+            this.editBold.ValueChanged += new System.EventHandler(this.editBold_ValueChanged);
             // 
-            // label10
+            // label11
             // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(9, 272);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(55, 12);
-            this.label10.TabIndex = 17;
-            this.label10.Text = "コントラスト";
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(10, 275);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(41, 12);
+            this.label11.TabIndex = 19;
+            this.label11.Text = "太字化";
             // 
             // FormMain
             // 
@@ -868,6 +901,7 @@
             this.menuStrip.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.editContrast)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.editClipRight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.editClipLeft)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.editClipBottom)).EndInit();
@@ -880,7 +914,7 @@
             this.splitContainer.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.srcPicture)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.previewPicture)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.editContrast)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.editBold)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -959,6 +993,8 @@
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.NumericUpDown editContrast;
         private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.NumericUpDown editBold;
+        private System.Windows.Forms.Label label11;
     }
 }
 
