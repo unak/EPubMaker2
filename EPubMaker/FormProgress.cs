@@ -143,20 +143,33 @@ namespace EPubMaker
                 Image dst = arg.pages[i].GenerateImages(arg.width, arg.height, out src);
                 src.Dispose();
 
-                string id = i.ToString("d4");
-                string file = String.Format(id + ".png");
-                string full = Path.Combine(contents, "data", file);
-                dst.Save(full, ImageFormat.Png);
-                dst.Dispose();
+                if (src != null)
+                {
+                    string id = i.ToString("d4");
+                    string file = String.Format(id + ".png");
+                    string full = Path.Combine(contents, "data", file);
+                    dst.Save(full, ImageFormat.Png);
+                    dst.Dispose();
 
-                WriteText(fs, "<item id=\"" + id + "\" href=\"data/" + file + "\" media-type=\"image/png\" fallback=\"" + id + "f\"/>\n");
-                WriteText(fs, "<item id=\"" + id + "f\" href=\"data/" + id + "f.xhtml\" media-type=\"application/xhtml+xml\"/>\n");
+                    WriteText(fs, "<item id=\"" + id + "\" href=\"data/" + file + "\" media-type=\"image/png\" fallback=\"" + id + "f\"/>\n");
+                    WriteText(fs, "<item id=\"" + id + "f\" href=\"data/" + id + "f.xhtml\" media-type=\"application/xhtml+xml\"/>\n");
 
-                FileStream xhtml = File.OpenWrite(Path.Combine(contents, "data", id + "f.xhtml"));
-                WriteText(xhtml, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"ja\" lang=\"ja\">\n<head>\n<title>-</title>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>\n</head>\n<body>\n<img src=\"./");
-                WriteText(xhtml, file);
-                WriteText(xhtml, "\" />\n</body>\n</html>\n");
-                xhtml.Close();
+                    FileStream xhtml = File.OpenWrite(Path.Combine(contents, "data", id + "f.xhtml"));
+                    WriteText(xhtml, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"ja\" lang=\"ja\">\n<head>\n<title>-</title>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>\n</head>\n<body>\n<img src=\"./");
+                    WriteText(xhtml, file);
+                    WriteText(xhtml, "\" />\n</body>\n</html>\n");
+                    xhtml.Close();
+                }
+                else
+                {
+                    DialogResult ret = MessageBox.Show("何らかの理由でページ " + i + " の画像を生成できませんでした。\n処理を継続しますか?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+                    if (ret != DialogResult.Yes)
+                    {
+                        fs.Close();
+                        e.Cancel = true;
+                        return;
+                    }
+                }
 
                 backgroundWorker.ReportProgress(i, arg.pages.Count);
             }
