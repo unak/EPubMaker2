@@ -873,10 +873,10 @@ namespace EPubMaker
             rotateCombo.SelectedIndex = (int)pages[idx].Rotate;
             formatCombo.SelectedIndex = (int)pages[idx].Format;
 
-            editClipLeft.Value = pages[idx].ClipLeft;
-            editClipTop.Value = pages[idx].ClipTop;
-            editClipRight.Value = pages[idx].ClipRight;
-            editClipBottom.Value = pages[idx].ClipBottom;
+            editClipLeft.Value = Math.Max(0, pages[idx].ClipLeft);
+            editClipTop.Value = Math.Max(0, pages[idx].ClipTop);
+            editClipRight.Value = Math.Min(100, pages[idx].ClipRight);
+            editClipBottom.Value = Math.Min(100, pages[idx].ClipBottom);
 
             editBold.Value = (decimal)pages[idx].Bold;
             editContrast.Value = (decimal)pages[idx].Contrast;
