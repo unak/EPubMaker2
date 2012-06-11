@@ -9,6 +9,7 @@ namespace EPubMaker
     /// <summary>
     /// ページ
     /// </summary>
+    [Serializable]
     public class Page : ICloneable
     {
         /// <summary>
@@ -51,6 +52,10 @@ namespace EPubMaker
         /// </summary>
         public string Path
         {
+            set
+            {
+                path = value;
+            }
             get
             {
                 return path;
@@ -220,12 +225,11 @@ namespace EPubMaker
         }
 
         /// <summary>
-        /// コンストラクタ
+        /// デフォルトコンストラクタ(Serialize用)
         /// </summary>
-        /// <param name="path">元画像パス</param>
-        public Page(string path)
+        private Page()
         {
-            this.path = path;
+            path = null;
             index = "";
             locked = false;
             rotate = PageRotate.Rotate0;
@@ -236,6 +240,15 @@ namespace EPubMaker
             clipBottom = 100;
             bold = 0.0f;
             contrast = 0.0f;
+        }
+
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="path">元画像パス</param>
+        public Page(string path) : this()
+        {
+            this.path = path;
         }
 
         /// <summary>

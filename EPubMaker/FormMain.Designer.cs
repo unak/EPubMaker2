@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.pagesPanel = new System.Windows.Forms.Panel();
             this.pagesGrid = new System.Windows.Forms.DataGridView();
@@ -72,6 +72,8 @@
             this.menuItemGenerate = new System.Windows.Forms.ToolStripMenuItem();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.editBold = new System.Windows.Forms.NumericUpDown();
+            this.label11 = new System.Windows.Forms.Label();
             this.editContrast = new System.Windows.Forms.NumericUpDown();
             this.label10 = new System.Windows.Forms.Label();
             this.editClipRight = new System.Windows.Forms.NumericUpDown();
@@ -101,8 +103,9 @@
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.pageLabel = new System.Windows.Forms.Label();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.editBold = new System.Windows.Forms.NumericUpDown();
-            this.label11 = new System.Windows.Forms.Label();
+            this.menuItemOpenProject = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
+            this.menuItemSave = new System.Windows.Forms.ToolStripMenuItem();
             this.pagesPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pagesGrid)).BeginInit();
             this.toolStripContainer.ContentPanel.SuspendLayout();
@@ -110,6 +113,7 @@
             this.toolButtons.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.editBold)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.editContrast)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.editClipRight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.editClipLeft)).BeginInit();
@@ -123,7 +127,6 @@
             this.splitContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.srcPicture)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.previewPicture)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.editBold)).BeginInit();
             this.SuspendLayout();
             // 
             // pagesPanel
@@ -160,8 +163,8 @@
             // 
             // page
             // 
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
-            this.page.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            this.page.DefaultCellStyle = dataGridViewCellStyle1;
             this.page.HeaderText = "頁";
             this.page.Name = "page";
             this.page.ReadOnly = true;
@@ -345,10 +348,13 @@
             // menuItemFile
             // 
             this.menuItemFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuItemOpenProject,
             this.menuItemOpen,
             this.toolStripSeparator1,
             this.menuItemClose,
             this.toolStripSeparator2,
+            this.menuItemSave,
+            this.toolStripSeparator7,
             this.menuItemExit});
             this.menuItemFile.Name = "menuItemFile";
             this.menuItemFile.Size = new System.Drawing.Size(85, 22);
@@ -358,33 +364,33 @@
             // 
             this.menuItemOpen.Name = "menuItemOpen";
             this.menuItemOpen.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.menuItemOpen.Size = new System.Drawing.Size(287, 22);
+            this.menuItemOpen.Size = new System.Drawing.Size(298, 22);
             this.menuItemOpen.Text = "元データフォルダを開く...(&O)";
             this.menuItemOpen.Click += new System.EventHandler(this.menuItemOpen_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(284, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(295, 6);
             // 
             // menuItemClose
             // 
             this.menuItemClose.Name = "menuItemClose";
             this.menuItemClose.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F4)));
-            this.menuItemClose.Size = new System.Drawing.Size(287, 22);
+            this.menuItemClose.Size = new System.Drawing.Size(298, 22);
             this.menuItemClose.Text = "閉じる(&C)";
             this.menuItemClose.Click += new System.EventHandler(this.menuItemClose_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(284, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(295, 6);
             // 
             // menuItemExit
             // 
             this.menuItemExit.Name = "menuItemExit";
             this.menuItemExit.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-            this.menuItemExit.Size = new System.Drawing.Size(287, 22);
+            this.menuItemExit.Size = new System.Drawing.Size(298, 22);
             this.menuItemExit.Text = "終了(&X)";
             this.menuItemExit.Click += new System.EventHandler(this.menuItemExit_Click);
             // 
@@ -538,6 +544,34 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(151, 479);
             this.panel1.TabIndex = 2;
+            // 
+            // editBold
+            // 
+            this.editBold.DecimalPlaces = 1;
+            this.editBold.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.editBold.Location = new System.Drawing.Point(75, 273);
+            this.editBold.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            65536});
+            this.editBold.Name = "editBold";
+            this.editBold.Size = new System.Drawing.Size(68, 19);
+            this.editBold.TabIndex = 12;
+            this.editBold.ValueChanged += new System.EventHandler(this.editBold_ValueChanged);
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(10, 275);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(41, 12);
+            this.label11.TabIndex = 19;
+            this.label11.Text = "太字化";
             // 
             // editContrast
             // 
@@ -845,33 +879,27 @@
             // 
             this.openFileDialog.Filter = "画像ファイル|*.jpg;*.png;*.bmp|すべてのファイル|*";
             // 
-            // editBold
+            // menuItemOpenProject
             // 
-            this.editBold.DecimalPlaces = 1;
-            this.editBold.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.editBold.Location = new System.Drawing.Point(75, 273);
-            this.editBold.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            65536});
-            this.editBold.Name = "editBold";
-            this.editBold.Size = new System.Drawing.Size(68, 19);
-            this.editBold.TabIndex = 12;
-            this.editBold.ValueChanged += new System.EventHandler(this.editBold_ValueChanged);
+            this.menuItemOpenProject.Name = "menuItemOpenProject";
+            this.menuItemOpenProject.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.O)));
+            this.menuItemOpenProject.Size = new System.Drawing.Size(298, 22);
+            this.menuItemOpenProject.Text = "プロジェクトを開く...(&P)";
+            this.menuItemOpenProject.Click += new System.EventHandler(this.menuItemOpenProject_Click);
             // 
-            // label11
+            // toolStripSeparator7
             // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(10, 275);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(41, 12);
-            this.label11.TabIndex = 19;
-            this.label11.Text = "太字化";
+            this.toolStripSeparator7.Name = "toolStripSeparator7";
+            this.toolStripSeparator7.Size = new System.Drawing.Size(295, 6);
+            // 
+            // menuItemSave
+            // 
+            this.menuItemSave.Name = "menuItemSave";
+            this.menuItemSave.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.menuItemSave.Size = new System.Drawing.Size(298, 22);
+            this.menuItemSave.Text = "プロジェクトの保存...(&S)";
+            this.menuItemSave.Click += new System.EventHandler(this.menuItemSave_Click);
             // 
             // FormMain
             // 
@@ -901,6 +929,7 @@
             this.menuStrip.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.editBold)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.editContrast)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.editClipRight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.editClipLeft)).EndInit();
@@ -914,7 +943,6 @@
             this.splitContainer.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.srcPicture)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.previewPicture)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.editBold)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -995,6 +1023,9 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.NumericUpDown editBold;
         private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.ToolStripMenuItem menuItemOpenProject;
+        private System.Windows.Forms.ToolStripMenuItem menuItemSave;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
     }
 }
 
