@@ -88,20 +88,10 @@ namespace EPubMaker
         /// <param name="e"></param>
         private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (!saved)
+            if (!CheckSaved())
             {
-                DialogResult result = MessageBox.Show("プロジェクトが保存されていません。保存しますか?", Application.ProductName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-                switch (result)
-                {
-                    case DialogResult.OK:
-                        menuItemSave_Click(null, null);
-                        break;
-                    case DialogResult.No:
-                        break;
-                    default:
-                        e.Cancel = true;
-                        return;
-                }
+                e.Cancel = true;
+                return;
             }
 
             if (setting != null)
@@ -135,6 +125,11 @@ namespace EPubMaker
         /// <param name="e"></param>
         private void menuItemOpenProject_Click(object sender, EventArgs e)
         {
+            if (!CheckSaved())
+            {
+                return;
+            }
+
             openFileDialog.DefaultExt = "epmd";
             openFileDialog.Filter = "EPubMakerプロジェクトデータ|*.epmd";
             if (!string.IsNullOrEmpty(folderBrowserDialog.SelectedPath) && Directory.Exists(folderBrowserDialog.SelectedPath))
@@ -257,19 +252,9 @@ namespace EPubMaker
         /// <param name="e"></param>
         private void menuItemClose_Click(object sender, EventArgs e)
         {
-            if (!saved)
+            if (!CheckSaved())
             {
-                DialogResult result = MessageBox.Show("プロジェクトが保存されていません。保存しますか?", Application.ProductName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-                switch (result)
-                {
-                    case DialogResult.OK:
-                        menuItemSave_Click(null, null);
-                        break;
-                    case DialogResult.No:
-                        break;
-                    default:
-                        return;
-                }
+                return;
             }
 
             pages.Clear();
@@ -1095,6 +1080,28 @@ namespace EPubMaker
 
             editBold.Enabled = selected;
             editContrast.Enabled = selected;
+        }
+
+        /// <summary>
+        /// セーブ確認
+        /// </summary>
+        private bool CheckSaved()
+        {
+            if (!saved)
+            {
+                DialogResult result = MessageBox.Show("プロジェクトが保存されていません。保存しますか?", Application.ProductName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                switch (result)
+                {
+                    case DialogResult.OK:
+                        menuItemSave_Click(null, null);
+                        break;
+                    case DialogResult.No:
+                        break;
+                    default:
+                        return false;
+                }
+            }
+            return true;
         }
     }
 }
