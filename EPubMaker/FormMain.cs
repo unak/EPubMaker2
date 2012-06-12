@@ -1004,6 +1004,11 @@ namespace EPubMaker
         /// <param name="idx">対象ページのインデックス</param>
         private void DrawImages(int idx)
         {
+            if (idx < 0 || pages == null || idx >= pages.Count())
+            {
+                return;
+            }
+
             Image src;
             Image preview = pages[idx].GenerateImages((int)editWidth.Value, (int)editHeight.Value, out src);
 
@@ -1058,6 +1063,14 @@ namespace EPubMaker
 
             menuItemGenerate.Enabled = opened;
 
+            menuItemCopy2.Enabled = selected;
+            menuItemPaste2.Enabled = copy != null;
+
+            menuItemDuplicate2.Enabled = selected;
+            menuItemErase2.Enabled = selected;
+            menuItemInsert2.Enabled = selected;
+            menuItemMove2.Enabled = selected;
+
             btnCopy.Enabled = selected;
             btnPaste.Enabled = copy != null;
 
@@ -1102,6 +1115,16 @@ namespace EPubMaker
                 }
             }
             return true;
+        }
+
+        private void pagesGrid_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right && e.RowIndex >= 0 && pages != null && e.RowIndex < pages.Count())
+            {
+                SelectPages(delegate(int i){return false;});
+                pagesGrid.Rows[e.RowIndex].Selected = true;
+                menuPagesGrid.Show(Cursor.Position);
+            }
         }
     }
 }

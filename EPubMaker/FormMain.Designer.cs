@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.pagesPanel = new System.Windows.Forms.Panel();
@@ -51,10 +52,13 @@
             this.btnMove = new System.Windows.Forms.ToolStripButton();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.menuItemFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItemOpenProject = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemOpen = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.menuItemClose = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.menuItemSave = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.menuItemExit = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemEdit = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemCopy = new System.Windows.Forms.ToolStripMenuItem();
@@ -103,9 +107,14 @@
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.pageLabel = new System.Windows.Forms.Label();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.menuItemOpenProject = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
-            this.menuItemSave = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuPagesGrid = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.menuItemCopy2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItemPaste2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
+            this.menuItemDuplicate2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItemErase2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItemInsert2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItemMove2 = new System.Windows.Forms.ToolStripMenuItem();
             this.pagesPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pagesGrid)).BeginInit();
             this.toolStripContainer.ContentPanel.SuspendLayout();
@@ -127,6 +136,7 @@
             this.splitContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.srcPicture)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.previewPicture)).BeginInit();
+            this.menuPagesGrid.SuspendLayout();
             this.SuspendLayout();
             // 
             // pagesPanel
@@ -158,6 +168,7 @@
             this.pagesGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.pagesGrid.Size = new System.Drawing.Size(291, 449);
             this.pagesGrid.TabIndex = 1;
+            this.pagesGrid.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.pagesGrid_CellMouseClick);
             this.pagesGrid.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.pagesGrid_CellValueChanged);
             this.pagesGrid.SelectionChanged += new System.EventHandler(this.pagesGrid_SelectionChanged);
             // 
@@ -360,6 +371,15 @@
             this.menuItemFile.Size = new System.Drawing.Size(85, 22);
             this.menuItemFile.Text = "ファイル(&F)";
             // 
+            // menuItemOpenProject
+            // 
+            this.menuItemOpenProject.Name = "menuItemOpenProject";
+            this.menuItemOpenProject.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.O)));
+            this.menuItemOpenProject.Size = new System.Drawing.Size(298, 22);
+            this.menuItemOpenProject.Text = "プロジェクトを開く...(&P)";
+            this.menuItemOpenProject.Click += new System.EventHandler(this.menuItemOpenProject_Click);
+            // 
             // menuItemOpen
             // 
             this.menuItemOpen.Name = "menuItemOpen";
@@ -385,6 +405,19 @@
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(295, 6);
+            // 
+            // menuItemSave
+            // 
+            this.menuItemSave.Name = "menuItemSave";
+            this.menuItemSave.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.menuItemSave.Size = new System.Drawing.Size(298, 22);
+            this.menuItemSave.Text = "プロジェクトの保存...(&S)";
+            this.menuItemSave.Click += new System.EventHandler(this.menuItemSave_Click);
+            // 
+            // toolStripSeparator7
+            // 
+            this.toolStripSeparator7.Name = "toolStripSeparator7";
+            this.toolStripSeparator7.Size = new System.Drawing.Size(295, 6);
             // 
             // menuItemExit
             // 
@@ -879,27 +912,71 @@
             // 
             this.openFileDialog.Filter = "画像ファイル|*.jpg;*.png;*.bmp|すべてのファイル|*";
             // 
-            // menuItemOpenProject
+            // menuPagesGrid
             // 
-            this.menuItemOpenProject.Name = "menuItemOpenProject";
-            this.menuItemOpenProject.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.O)));
-            this.menuItemOpenProject.Size = new System.Drawing.Size(298, 22);
-            this.menuItemOpenProject.Text = "プロジェクトを開く...(&P)";
-            this.menuItemOpenProject.Click += new System.EventHandler(this.menuItemOpenProject_Click);
+            this.menuPagesGrid.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuItemCopy2,
+            this.menuItemPaste2,
+            this.toolStripSeparator8,
+            this.menuItemDuplicate2,
+            this.menuItemErase2,
+            this.menuItemInsert2,
+            this.menuItemMove2});
+            this.menuPagesGrid.Name = "menuPagesGrid";
+            this.menuPagesGrid.Size = new System.Drawing.Size(214, 142);
             // 
-            // toolStripSeparator7
+            // menuItemCopy2
             // 
-            this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(295, 6);
+            this.menuItemCopy2.Name = "menuItemCopy2";
+            this.menuItemCopy2.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
+            this.menuItemCopy2.Size = new System.Drawing.Size(213, 22);
+            this.menuItemCopy2.Text = "設定をコピー(&C)";
+            this.menuItemCopy2.Click += new System.EventHandler(this.btnCopy_Click);
             // 
-            // menuItemSave
+            // menuItemPaste2
             // 
-            this.menuItemSave.Name = "menuItemSave";
-            this.menuItemSave.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.menuItemSave.Size = new System.Drawing.Size(298, 22);
-            this.menuItemSave.Text = "プロジェクトの保存...(&S)";
-            this.menuItemSave.Click += new System.EventHandler(this.menuItemSave_Click);
+            this.menuItemPaste2.Name = "menuItemPaste2";
+            this.menuItemPaste2.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
+            this.menuItemPaste2.Size = new System.Drawing.Size(239, 22);
+            this.menuItemPaste2.Text = "設定を貼り付け(&P)";
+            this.menuItemPaste2.Click += new System.EventHandler(this.btnPaste_Click);
+            // 
+            // toolStripSeparator8
+            // 
+            this.toolStripSeparator8.Name = "toolStripSeparator8";
+            this.toolStripSeparator8.Size = new System.Drawing.Size(236, 6);
+            // 
+            // menuItemDuplicate2
+            // 
+            this.menuItemDuplicate2.Name = "menuItemDuplicate2";
+            this.menuItemDuplicate2.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.U)));
+            this.menuItemDuplicate2.Size = new System.Drawing.Size(239, 22);
+            this.menuItemDuplicate2.Text = "ページの複製(&D)";
+            this.menuItemDuplicate2.Click += new System.EventHandler(this.btnDuplicate_Click);
+            // 
+            // menuItemErase2
+            // 
+            this.menuItemErase2.Name = "menuItemErase2";
+            this.menuItemErase2.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Delete)));
+            this.menuItemErase2.Size = new System.Drawing.Size(239, 22);
+            this.menuItemErase2.Text = "ページの削除(&E)";
+            this.menuItemErase2.Click += new System.EventHandler(this.btnErase_Click);
+            // 
+            // menuItemInsert2
+            // 
+            this.menuItemInsert2.Name = "menuItemInsert2";
+            this.menuItemInsert2.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.I)));
+            this.menuItemInsert2.Size = new System.Drawing.Size(239, 22);
+            this.menuItemInsert2.Text = "ページの追加(&I)...";
+            this.menuItemInsert2.Click += new System.EventHandler(this.btnInsert_Click);
+            // 
+            // menuItemMove2
+            // 
+            this.menuItemMove2.Name = "menuItemMove2";
+            this.menuItemMove2.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.M)));
+            this.menuItemMove2.Size = new System.Drawing.Size(239, 22);
+            this.menuItemMove2.Text = "ページの移動(&M)...";
+            this.menuItemMove2.Click += new System.EventHandler(this.btnMove_Click);
             // 
             // FormMain
             // 
@@ -943,6 +1020,7 @@
             this.splitContainer.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.srcPicture)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.previewPicture)).EndInit();
+            this.menuPagesGrid.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1026,6 +1104,14 @@
         private System.Windows.Forms.ToolStripMenuItem menuItemOpenProject;
         private System.Windows.Forms.ToolStripMenuItem menuItemSave;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
+        private System.Windows.Forms.ContextMenuStrip menuPagesGrid;
+        private System.Windows.Forms.ToolStripMenuItem menuItemCopy2;
+        private System.Windows.Forms.ToolStripMenuItem menuItemPaste2;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
+        private System.Windows.Forms.ToolStripMenuItem menuItemDuplicate2;
+        private System.Windows.Forms.ToolStripMenuItem menuItemErase2;
+        private System.Windows.Forms.ToolStripMenuItem menuItemInsert2;
+        private System.Windows.Forms.ToolStripMenuItem menuItemMove2;
     }
 }
 
