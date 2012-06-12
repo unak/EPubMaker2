@@ -1092,7 +1092,7 @@ namespace EPubMaker
                 DialogResult result = MessageBox.Show("プロジェクトが保存されていません。保存しますか?", Application.ProductName, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                 switch (result)
                 {
-                    case DialogResult.OK:
+                    case DialogResult.Yes:
                         menuItemSave_Click(null, null);
                         break;
                     case DialogResult.No:
