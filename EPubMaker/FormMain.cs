@@ -21,12 +21,12 @@ namespace EPubMaker
         [Serializable]
         public struct EPubMakerData
         {
-            public string Path;
-            public string Title;
-            public string Author;
-            public int Width;
-            public int Height;
-            public List<Page> Pages;
+            public string Path;         /// パス
+            public string Title;        /// タイトル
+            public string Author;       /// 著者
+            public int Width;           /// 出力幅
+            public int Height;          /// 出力高さ
+            public List<Page> Pages;    /// 各ページ
         }
         #endregion
 
@@ -794,7 +794,7 @@ namespace EPubMaker
         /// </summary>
         /// <param name="box">対象画像表示領域</param>
         /// <param name="label">内容表示用ラベル</param>
-        private void PictureSizeChanged(PictureBox box, Label label)
+        private static void PictureSizeChanged(PictureBox box, Label label)
         {
             if (box.Image != null)
             {

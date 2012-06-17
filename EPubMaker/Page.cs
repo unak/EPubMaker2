@@ -323,23 +323,23 @@ namespace EPubMaker
                 switch (src.PixelFormat)
                 {
                     default:
-                        /* フルカラー */
+                        // フルカラー
                         Format = Page.PageFormat.FullColor;
                         break;
                     case PixelFormat.Format8bppIndexed:
-                        /* 8bitグレイスケール */
+                        // 8bitグレイスケール
                         Format = Page.PageFormat.Gray8bit;
                         break;
                     case PixelFormat.Format16bppGrayScale:
-                        /* 8bitグレイスケール */
+                        // 8bitグレイスケールにしちゃう
                         Format = Page.PageFormat.Gray8bit;
                         break;
                     case PixelFormat.Format4bppIndexed:
-                        /* 4bitグレイスケール */
+                        // 4bitグレイスケール
                         Format = Page.PageFormat.Gray4bit;
                         break;
                     case PixelFormat.Format1bppIndexed:
-                        /* 白黒 */
+                        // 白黒
                         Format = Page.PageFormat.Mono;
                         break;
                 }
@@ -363,6 +363,7 @@ namespace EPubMaker
                 return null;
             }
 
+            // コントラスト指定
             ImageAttributes attr = new ImageAttributes();
             float contrast = this.contrast + 1.0f;
             float[][] array = { new float[] {contrast, 0, 0, 0, 0},  // red
@@ -374,6 +375,7 @@ namespace EPubMaker
             attr.SetColorMatrix(new ColorMatrix(array), ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
             attr.SetGamma(1.0f, ColorAdjustType.Bitmap);
 
+            // ビットマップ生成
             Image target = new Bitmap(width, height);
             Graphics g = Graphics.FromImage(target);
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
@@ -382,6 +384,7 @@ namespace EPubMaker
 
             if (Format > Page.PageFormat.FullColor)
             {
+                // 太字化はこの段階で反映
                 target = ConvertFormat(Boldize((Bitmap)target, this.bold), Format);
             }
 
@@ -433,7 +436,7 @@ namespace EPubMaker
         /// 太字化
         /// </summary>
         /// <param name="src">元画像</param>
-        /// <param name="value">太字化率(0～1.0)</param>
+        /// <param name="value">太字化率(0.0～1.0)</param>
         /// <returns>変換結果画像</returns>
         private static unsafe Bitmap Boldize(Bitmap src, float value)
         {
