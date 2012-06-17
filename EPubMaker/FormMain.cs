@@ -138,130 +138,17 @@ namespace EPubMaker
             if (e.Control && !e.Shift && !e.Alt)
             {
                 // Ctrl+カーソル -> 画像選択範囲をその方向に広げる
-                int v;
-                switch (e.KeyCode)
-                {
-                    case Keys.Right:
-                        v = (int)editClipRight.Value;
-                        if (++v <= 100)
-                        {
-                            editClipRight.Value = v;
-                        }
-                        e.Handled = true;
-                        break;
-                    case Keys.Left:
-                        v = (int)editClipLeft.Value;
-                        if (--v >= 0)
-                        {
-                            editClipLeft.Value = v;
-                        }
-                        e.Handled = true;
-                        break;
-                    case Keys.Up:
-                        v = (int)editClipTop.Value;
-                        if (--v >= 0)
-                        {
-                            editClipTop.Value = v;
-                        }
-                        e.Handled = true;
-                        break;
-                    case Keys.Down:
-                        v = (int)editClipBottom.Value;
-                        if (++v <= 100)
-                        {
-                            editClipBottom.Value = v;
-                        }
-                        e.Handled = true;
-                        break;
-                }
+                e.Handled = EnlargeClip(e.KeyCode);
             }
             else if (e.Control && e.Shift && !e.Alt)
             {
                 // Ctrl+Shift+カーソル -> 画像選択範囲をその方向に縮める
-                int v;
-                switch (e.KeyCode)
-                {
-                    case Keys.Right:
-                        v = (int)editClipLeft.Value;
-                        if (++v <= 100)
-                        {
-                            editClipLeft.Value = v;
-                        }
-                        e.Handled = true;
-                        break;
-                    case Keys.Left:
-                        v = (int)editClipRight.Value;
-                        if (--v >= 0)
-                        {
-                            editClipRight.Value = v;
-                        }
-                        e.Handled = true;
-                        break;
-                    case Keys.Up:
-                        v = (int)editClipBottom.Value;
-                        if (--v >= 0)
-                        {
-                            editClipBottom.Value = v;
-                        }
-                        e.Handled = true;
-                        break;
-                    case Keys.Down:
-                        v = (int)editClipTop.Value;
-                        if (++v <= 100)
-                        {
-                            editClipTop.Value = v;
-                        }
-                        e.Handled = true;
-                        break;
-                }
+                e.Handled = ReduceClip(e.KeyCode);
             }
             else if (e.Control && !e.Shift && e.Alt)
             {
                 // Ctrl+Alt+カーソル -> 画像選択範囲をその方向に移動する
-                int v1, v2;
-                switch (e.KeyCode)
-                {
-                    case Keys.Right:
-                        v1 = (int)editClipLeft.Value;
-                        v2 = (int)editClipRight.Value;
-                        if (++v1 <= 100 && ++v2 <= 100)
-                        {
-                            editClipLeft.Value = v1;
-                            editClipRight.Value = v2;
-                        }
-                        e.Handled = true;
-                        break;
-                    case Keys.Left:
-                        v1 = (int)editClipLeft.Value;
-                        v2 = (int)editClipRight.Value;
-                        if (--v1 >= 0 && --v2 >= 0)
-                        {
-                            editClipLeft.Value = v1;
-                            editClipRight.Value = v2;
-                        }
-                        e.Handled = true;
-                        break;
-                    case Keys.Up:
-                        v1 = (int)editClipTop.Value;
-                        v2 = (int)editClipBottom.Value;
-                        if (--v1 >= 0 && --v2 >= 0)
-                        {
-                            editClipTop.Value = v1;
-                            editClipBottom.Value = v2;
-                        }
-                        e.Handled = true;
-                        break;
-                    case Keys.Down:
-                        v1 = (int)editClipTop.Value;
-                        v2 = (int)editClipBottom.Value;
-                        if (++v1 <= 100 && ++v2 <= 100)
-                        {
-                            editClipTop.Value = v1;
-                            editClipBottom.Value = v2;
-                        }
-                        e.Handled = true;
-                        break;
-                }
+                e.Handled = MoveClip(e.KeyCode);
             }
         }
         #endregion
@@ -771,54 +658,7 @@ namespace EPubMaker
                 end = e;
                 DrawClippingRectangle();
 
-                int left = Math.Min(start.X, end.X);
-                int top = Math.Min(start.Y, end.Y);
-                int width = Math.Abs(end.X - start.X);
-                int height = Math.Abs(end.Y - start.Y);
-                if (srcPicture.SizeMode == PictureBoxSizeMode.Zoom)
-                {
-                    double d = Math.Max((double)srcPicture.Image.Width / srcPicture.ClientSize.Width, (double)srcPicture.Image.Height / srcPicture.ClientSize.Height);
-                    left = (int)(left * d - (srcPicture.ClientSize.Width * d - srcPicture.Image.Width) / 2);
-                    top = (int)(top * d - (srcPicture.ClientSize.Height * d - srcPicture.Image.Height) / 2);
-                    width = (int)(width * d);
-                    height = (int)(height * d);
-                }
-                else
-                {
-                    left -= (srcPicture.ClientSize.Width - srcPicture.Image.Width) / 2;
-                    top -= (srcPicture.ClientSize.Height - srcPicture.Image.Height) / 2;
-                }
-                if (left < 0)
-                {
-                    width += left;
-                    left = 0;
-                }
-                width = Math.Min(width, srcPicture.Image.Width);
-                if (top < 0)
-                {
-                    height += top;
-                    top = 0;
-                }
-                height = Math.Min(height, srcPicture.Image.Height);
-
-                start = null;
-                end = null;
-
-                gridChanging = true;
-                foreach (DataGridViewRow row in pagesGrid.SelectedRows)
-                {
-                    if (row.Index < pages.Count)
-                    {
-                        pages[row.Index].ClipLeft = left * 100 / srcPicture.Image.Width;
-                        pages[row.Index].ClipTop = top * 100 / srcPicture.Image.Height;
-                        pages[row.Index].ClipRight = (left + width) * 100 / srcPicture.Image.Width;
-                        pages[row.Index].ClipBottom = (top + height) * 100 / srcPicture.Image.Height;
-                    }
-                }
-                DrawImages(selectedIndex);
-                gridChanging = false;
-
-                saved = false;
+                PickupClip();
             }
         }
 
@@ -880,7 +720,7 @@ namespace EPubMaker
             pagesGrid.Rows.Clear();
             for (int i = 0; i < pages.Count; ++i)
             {
-                int idx = pagesGrid.Rows.Add(i + 1, pages[i].Name, pages[i].Index, pages[i].Locked);
+                pagesGrid.Rows.Add(i + 1, pages[i].Name, pages[i].Index, pages[i].Locked);
             }
         }
 
@@ -907,7 +747,6 @@ namespace EPubMaker
                 else
                 {
                     pagesGrid.Rows[i].Selected = true;
-                    //pagesGrid.CurrentCell = pagesGrid.Rows[i].Cells[2];
                 }
             }
             gridChanging = false;
@@ -1196,8 +1035,7 @@ namespace EPubMaker
             {
                 if (String.Compare(file.Extension, ".jpg", true) == 0 || String.Compare(file.Extension, ".png", true) == 0 || String.Compare(file.Extension, ".bmp", true) == 0)
                 {
-                    Page page = new Page(file.FullName);
-                    pages.Add(page);
+                    pages.Add(new Page(file.FullName));
                 }
             }
             if (pages.Count <= 0)
@@ -1357,6 +1195,202 @@ namespace EPubMaker
             srcPicture.Refresh();
             g.DrawRectangle(pen, Math.Min(start.X, end.X), Math.Min(start.Y, end.Y), Math.Abs(end.X - start.X), Math.Abs(end.Y - start.Y));
             g.Dispose();
+        }
+
+        /// <summary>
+        /// 切り抜き領域拡大
+        /// </summary>
+        /// <param name="keyCode">拡大方向を示すキーコード</param>
+        /// <returns>ハンドリングしたか(true=した、false=してない)</returns>
+        private bool EnlargeClip(Keys keyCode)
+        {
+            int v;
+            switch (keyCode)
+            {
+                case Keys.Right:
+                    v = (int)editClipRight.Value;
+                    if (++v <= 100)
+                    {
+                        editClipRight.Value = v;
+                    }
+                    return true;
+                case Keys.Left:
+                    v = (int)editClipLeft.Value;
+                    if (--v >= 0)
+                    {
+                        editClipLeft.Value = v;
+                    }
+                    return true;
+                case Keys.Up:
+                    v = (int)editClipTop.Value;
+                    if (--v >= 0)
+                    {
+                        editClipTop.Value = v;
+                    }
+                    return true;
+                case Keys.Down:
+                    v = (int)editClipBottom.Value;
+                    if (++v <= 100)
+                    {
+                        editClipBottom.Value = v;
+                    }
+                    return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 切り抜き領域縮小
+        /// </summary>
+        /// <param name="keyCode">縮小方向を示すキーコード</param>
+        /// <returns>ハンドリングしたか(true=した、false=してない)</returns>
+        private bool ReduceClip(Keys keyCode)
+        {
+            int v;
+            switch (keyCode)
+            {
+                case Keys.Right:
+                    v = (int)editClipLeft.Value;
+                    if (++v <= 100)
+                    {
+                        editClipLeft.Value = v;
+                    }
+                    return true;
+                case Keys.Left:
+                    v = (int)editClipRight.Value;
+                    if (--v >= 0)
+                    {
+                        editClipRight.Value = v;
+                    }
+                    return true;
+                case Keys.Up:
+                    v = (int)editClipBottom.Value;
+                    if (--v >= 0)
+                    {
+                        editClipBottom.Value = v;
+                    }
+                    return true;
+                case Keys.Down:
+                    v = (int)editClipTop.Value;
+                    if (++v <= 100)
+                    {
+                        editClipTop.Value = v;
+                    }
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// 切り抜き領域移動
+        /// </summary>
+        /// <param name="keyCode">移動方向を示すキーコード</param>
+        /// <returns>ハンドリングしたか(true=した、false=してない)</returns>
+        private bool MoveClip(Keys keyCode)
+        {
+            int v1, v2;
+            switch (keyCode)
+            {
+                case Keys.Right:
+                    v1 = (int)editClipLeft.Value;
+                    v2 = (int)editClipRight.Value;
+                    if (++v1 <= 100 && ++v2 <= 100)
+                    {
+                        editClipLeft.Value = v1;
+                        editClipRight.Value = v2;
+                    }
+                    return true;
+                case Keys.Left:
+                    v1 = (int)editClipLeft.Value;
+                    v2 = (int)editClipRight.Value;
+                    if (--v1 >= 0 && --v2 >= 0)
+                    {
+                        editClipLeft.Value = v1;
+                        editClipRight.Value = v2;
+                    }
+                    return true;
+                case Keys.Up:
+                    v1 = (int)editClipTop.Value;
+                    v2 = (int)editClipBottom.Value;
+                    if (--v1 >= 0 && --v2 >= 0)
+                    {
+                        editClipTop.Value = v1;
+                        editClipBottom.Value = v2;
+                    }
+                    return true;
+                case Keys.Down:
+                    v1 = (int)editClipTop.Value;
+                    v2 = (int)editClipBottom.Value;
+                    if (++v1 <= 100 && ++v2 <= 100)
+                    {
+                        editClipTop.Value = v1;
+                        editClipBottom.Value = v2;
+                    }
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// マウス選択による切り抜き範囲抽出
+        /// </summary>
+        private void PickupClip()
+        {
+            int left = Math.Min(start.X, end.X);
+            int top = Math.Min(start.Y, end.Y);
+            int width = Math.Abs(end.X - start.X);
+            int height = Math.Abs(end.Y - start.Y);
+            if (srcPicture.SizeMode == PictureBoxSizeMode.Zoom)
+            {
+                double d = Math.Max((double)srcPicture.Image.Width / srcPicture.ClientSize.Width, (double)srcPicture.Image.Height / srcPicture.ClientSize.Height);
+                left = (int)(left * d - (srcPicture.ClientSize.Width * d - srcPicture.Image.Width) / 2);
+                top = (int)(top * d - (srcPicture.ClientSize.Height * d - srcPicture.Image.Height) / 2);
+                width = (int)(width * d);
+                height = (int)(height * d);
+            }
+            else
+            {
+                left -= (srcPicture.ClientSize.Width - srcPicture.Image.Width) / 2;
+                top -= (srcPicture.ClientSize.Height - srcPicture.Image.Height) / 2;
+            }
+            if (left < 0)
+            {
+                width += left;
+                left = 0;
+            }
+            width = Math.Min(width, srcPicture.Image.Width);
+            if (top < 0)
+            {
+                height += top;
+                top = 0;
+            }
+            height = Math.Min(height, srcPicture.Image.Height);
+
+            start = null;
+            end = null;
+
+            left = left * 100 / srcPicture.Image.Width;
+            top = top * 100 / srcPicture.Image.Height;
+            int right = (left + width) * 100 / srcPicture.Image.Width;
+            int bottom = (top + height) * 100 / srcPicture.Image.Height;
+
+            gridChanging = true;
+            foreach (DataGridViewRow row in pagesGrid.SelectedRows)
+            {
+                if (row.Index < pages.Count)
+                {
+                    pages[row.Index].ClipLeft = left;
+                    pages[row.Index].ClipTop = top;
+                    pages[row.Index].ClipRight = right;
+                    pages[row.Index].ClipBottom = bottom;
+                }
+            }
+            DrawImages(selectedIndex);
+            gridChanging = false;
+
+            saved = false;
         }
         #endregion
     }
