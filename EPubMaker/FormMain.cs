@@ -274,52 +274,7 @@ namespace EPubMaker
         /// <param name="e"></param>
         private void menuItemOpenProject_Click(object sender, EventArgs e)
         {
-            if (!CheckSaved())
-            {
-                return;
-            }
-
-            openFileDialog.DefaultExt = "epmd";
-            openFileDialog.Filter = "EPubMakerプロジェクトデータ|*.epmd";
-            if (!string.IsNullOrEmpty(folderBrowserDialog.SelectedPath) && Directory.Exists(folderBrowserDialog.SelectedPath))
-            {
-                openFileDialog.InitialDirectory = folderBrowserDialog.SelectedPath;
-            }
-            else if (!String.IsNullOrEmpty(setting.PrevSrc) && Directory.Exists(setting.PrevSrc))
-            {
-                openFileDialog.InitialDirectory = setting.PrevSrc;
-            }
-            else
-            {
-                openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            }
-            if (openFileDialog.ShowDialog() != DialogResult.OK)
-            {
-                return;
-            }
-
-            // 読み込み
-            XmlSerializer serializer = new XmlSerializer(typeof(EPubMakerData));
-            StreamReader reader = new StreamReader(openFileDialog.FileName, new UTF8Encoding());
-            EPubMakerData data = (EPubMakerData)serializer.Deserialize(reader);
-            reader.Close();
-
-            folderBrowserDialog.SelectedPath = data.Path;
-            editTitle.Text = data.Title;
-            editAuthor.Text = data.Author;
-            editWidth.Value = data.Width;
-            editHeight.Value = data.Height;
-            pages = data.Pages;
-            saved = true;
-
-            SetupPagesGrid();
-            EnabledButtonsAndMenuItems(true, pages.Count > 0);
-
-            selectedIndex = pages.Count > 0 ? 0 : -1;
-            if (selectedIndex >= 0)
-            {
-                DrawImages(selectedIndex);
-            }
+            OpenProject();
         }
 
         /// <summary>
@@ -329,70 +284,7 @@ namespace EPubMaker
         /// <param name="e"></param>
         private void menuItemOpen_Click(object sender, EventArgs e)
         {
-          retry:
-            if (!String.IsNullOrEmpty(setting.PrevSrc) && Directory.Exists(setting.PrevSrc))
-            {
-                folderBrowserDialog.SelectedPath = setting.PrevSrc;
-            }
-            else
-            {
-                folderBrowserDialog.SelectedPath = null;
-            }
-            if (folderBrowserDialog.ShowDialog() != DialogResult.OK)
-            {
-                return;
-            }
-            setting.PrevSrc = folderBrowserDialog.SelectedPath;
-            setting.Save();
-
-            if (pages == null)
-            {
-                pages = new List<Page>();
-            }
-            menuItemClose_Click(null, null);
-
-            DirectoryInfo dir = new DirectoryInfo(folderBrowserDialog.SelectedPath);
-            foreach (FileInfo file in dir.GetFiles())
-            {
-                if (String.Compare(file.Extension, ".jpg", true) == 0 || String.Compare(file.Extension, ".png", true) == 0 || String.Compare(file.Extension, ".bmp", true) == 0)
-                {
-                    Page page = new Page(file.FullName);
-                    pages.Add(page);
-                }
-            }
-            if (pages.Count <= 0)
-            {
-                EnabledButtonsAndMenuItems(false, false);
-                goto retry;
-            }
-            pages.Sort(delegate(Page a, Page b)
-            {
-                return String.Compare(a.Name, b.Name, true);
-            });
-
-            SetupPagesGrid();
-
-            string name = Path.GetFileNameWithoutExtension(folderBrowserDialog.SelectedPath);
-            if (name.Contains('-'))
-            {
-                string[] ary = name.Split("-".ToCharArray(), 2);
-                editTitle.Text = ary[0].Replace('_', ' ');
-                editAuthor.Text = ary[1].Replace('_', ' ');
-            }
-            else
-            {
-                editTitle.Text = name;
-            }
-
-            EnabledButtonsAndMenuItems(true, pages.Count > 0);
-
-            selectedIndex = pages.Count > 0 ? 0 : -1;
-            if (selectedIndex >= 0)
-            {
-                DrawImages(selectedIndex);
-            }
-
-            saved = false;
+            OpenFolder();
         }
 
         /// <summary>
@@ -402,24 +294,7 @@ namespace EPubMaker
         /// <param name="e"></param>
         private void menuItemClose_Click(object sender, EventArgs e)
         {
-            if (!CheckSaved())
-            {
-                return;
-            }
-
-            pages.Clear();
-            pagesGrid.Rows.Clear();
-
-            pageLabel.Text = "";
-            srcPicture.Image = null;
-            previewPicture.Image = null;
-            srcLabel.Text = "";
-            previewLabel.Text = "";
-
-            EnabledButtonsAndMenuItems(false, false);
-
-            selectedIndex = -1;
-            saved = true;
+            CloseFolder();
         }
 
         /// <summary>
@@ -429,29 +304,7 @@ namespace EPubMaker
         /// <param name="e"></param>
         private void menuItemSave_Click(object sender, EventArgs e)
         {
-            saveFileDialog.DefaultExt = "epmd";
-            saveFileDialog.Filter = "EPubMakerプロジェクトデータ|*.epmd";
-            saveFileDialog.FileName = Path.GetFileName(folderBrowserDialog.SelectedPath);
-            saveFileDialog.InitialDirectory = folderBrowserDialog.SelectedPath;
-            if (saveFileDialog.ShowDialog() != DialogResult.OK)
-            {
-                return;
-            }
-
-            // 保存
-            EPubMakerData data = new EPubMakerData();
-            data.Path = folderBrowserDialog.SelectedPath;
-            data.Title = editTitle.Text;
-            data.Author = editAuthor.Text;
-            data.Width = (int)editWidth.Value;
-            data.Height = (int)editHeight.Value;
-            data.Pages = pages;
-            XmlSerializer serializer = new XmlSerializer(typeof(EPubMakerData));
-            StreamWriter writer = new StreamWriter(saveFileDialog.FileName, false, new UTF8Encoding());
-            serializer.Serialize(writer, data);
-            writer.Close();
-
-            saved = true;
+            SaveProject();
         }
 
         /// <summary>
@@ -461,7 +314,7 @@ namespace EPubMaker
         /// <param name="e"></param>
         private void menuItemExit_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         /// <summary>
@@ -471,29 +324,7 @@ namespace EPubMaker
         /// <param name="e"></param>
         private void menuItemGenerate_Click(object sender, EventArgs e)
         {
-            saveFileDialog.DefaultExt = "epub";
-            saveFileDialog.Filter = "ePub|*.epub|すべてのファイル|*";
-            saveFileDialog.FileName = Path.GetFileName(folderBrowserDialog.SelectedPath);
-            if (!String.IsNullOrEmpty(setting.OutPath) && Directory.Exists(setting.OutPath))
-            {
-                saveFileDialog.InitialDirectory = setting.OutPath;
-            }
-            else
-            {
-                saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            }
-            if (saveFileDialog.ShowDialog() != DialogResult.OK)
-            {
-                return;
-            }
-            setting.OutPath = Path.GetDirectoryName(saveFileDialog.FileName);
-            setting.PageWidth = (int)editWidth.Value;
-            setting.PageHeight = (int)editHeight.Value;
-            setting.Save();
-
-            FormProgress formProgress = new FormProgress(pages, editTitle.Text, editAuthor.Text, (int)editWidth.Value, (int)editHeight.Value, saveFileDialog.FileName);
-            formProgress.ShowDialog(this);
-            formProgress.Dispose();
+            GenerateEPub();
         }
         #endregion
 
@@ -549,7 +380,7 @@ namespace EPubMaker
         /// <param name="e"></param>
         private void btnSelectAll_Click(object sender, EventArgs e)
         {
-            SelectPages(delegate(int i) { return true; });
+            SelectPages(i => true);
         }
 
         /// <summary>
@@ -559,7 +390,7 @@ namespace EPubMaker
         /// <param name="e"></param>
         private void btnSelectOdd_Click(object sender, EventArgs e)
         {
-            SelectPages(delegate(int i) { return i % 2 == 0; });
+            SelectPages(i => i % 2 == 0);
         }
 
         /// <summary>
@@ -569,7 +400,7 @@ namespace EPubMaker
         /// <param name="e"></param>
         private void btnSelectEven_Click(object sender, EventArgs e)
         {
-            SelectPages(delegate(int i) { return i % 2 == 1; });
+            SelectPages(i => i % 2 == 1);
         }
 
         /// <summary>
@@ -592,7 +423,7 @@ namespace EPubMaker
             pagesGrid.CurrentCell = pagesGrid.Rows[selectedIndex].Cells[2];
 
             gridChanging = false;
-            pagesGrid_SelectionChanged(null, null);
+            PageSelectionChanged();
 
             saved = false;
         }
@@ -613,7 +444,7 @@ namespace EPubMaker
             pages.RemoveAt(selectedIndex);
             if (pages.Count <= 0)
             {
-                menuItemClose_Click(null, null);
+                CloseFolder();
             }
             else
             {
@@ -626,7 +457,7 @@ namespace EPubMaker
                 pagesGrid.CurrentCell = pagesGrid.Rows[selectedIndex].Cells[2];
             }
             gridChanging = false;
-            pagesGrid_SelectionChanged(null, null);
+            PageSelectionChanged();
 
             saved = false;
         }
@@ -659,7 +490,7 @@ namespace EPubMaker
                 pagesGrid.CurrentCell = pagesGrid.Rows[selectedIndex].Cells[2];
 
                 gridChanging = false;
-                pagesGrid_SelectionChanged(null, null);
+                PageSelectionChanged();
 
                 saved = false;
             }
@@ -702,7 +533,7 @@ namespace EPubMaker
                 pagesGrid.CurrentCell = pagesGrid.Rows[selectedIndex].Cells[2];
 
                 gridChanging = false;
-                pagesGrid_SelectionChanged(null, null);
+                PageSelectionChanged();
 
                 saved = false;
             }
@@ -717,34 +548,7 @@ namespace EPubMaker
         /// <param name="e"></param>
         private void pagesGrid_SelectionChanged(object sender, EventArgs e)
         {
-            if (gridChanging)
-            {
-                return;
-            }
-
-            gridChanging = true;
-            int idx = -1;
-            foreach (DataGridViewRow row in pagesGrid.SelectedRows)
-            {
-                if (/*row.Index < idx ||*/ idx < 0)
-                {
-                    idx = row.Index;
-                }
-            }
-            if (idx >= 0 && idx < pages.Count)
-            {
-                EnabledButtonsAndMenuItems(true, true);
-                DrawImages(idx);
-
-                selectedIndex = idx;
-            }
-            else
-            {
-                EnabledButtonsAndMenuItems(true, false);
-
-                selectedIndex = -1;
-            }
-            gridChanging = false;
+            PageSelectionChanged();
         }
 
         /// <summary>
@@ -793,7 +597,7 @@ namespace EPubMaker
             // 右クリックのみハンドルし、コンテクストメニューを表示する
             if (e.Button == MouseButtons.Right && e.RowIndex >= 0 && pages != null && e.RowIndex < pages.Count())
             {
-                SelectPages(delegate(int i) { return false; });
+                SelectPages(i => false);
                 pagesGrid.Rows[e.RowIndex].Selected = true;
                 menuPagesGrid.Show(Cursor.Position);
             }
@@ -808,7 +612,7 @@ namespace EPubMaker
         /// <param name="e"></param>
         private void rotateCombo_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ChangePageSettings(delegate(int idx) { pages[idx].Rotate = (Page.PageRotate)rotateCombo.SelectedIndex; });
+            ChangePageSettings(idx => pages[idx].Rotate = (Page.PageRotate)rotateCombo.SelectedIndex);
         }
         #endregion
 
@@ -820,9 +624,7 @@ namespace EPubMaker
         /// <param name="e"></param>
         private void formatCombo_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ChangePageSettings(delegate(int idx) { pages[idx].Format = (Page.PageFormat)formatCombo.SelectedIndex; });
-
-            saved = false;
+            ChangePageSettings(idx => pages[idx].Format = (Page.PageFormat)formatCombo.SelectedIndex);
         }
         #endregion
 
@@ -834,9 +636,7 @@ namespace EPubMaker
         /// <param name="e"></param>
         private void editClipLeft_ValueChanged(object sender, EventArgs e)
         {
-            ChangePageSettings(delegate(int idx) { pages[idx].ClipLeft = (int)editClipLeft.Value; });
-
-            saved = false;
+            ChangePageSettings(idx => pages[idx].ClipLeft = (int)editClipLeft.Value);
         }
 
         /// <summary>
@@ -846,9 +646,7 @@ namespace EPubMaker
         /// <param name="e"></param>
         private void editClipTop_ValueChanged(object sender, EventArgs e)
         {
-            ChangePageSettings(delegate(int idx) { pages[idx].ClipTop = (int)editClipTop.Value; });
-            
-            saved = false;
+            ChangePageSettings(idx => pages[idx].ClipTop = (int)editClipTop.Value);
         }
 
         /// <summary>
@@ -858,9 +656,7 @@ namespace EPubMaker
         /// <param name="e"></param>
         private void editClipRight_ValueChanged(object sender, EventArgs e)
         {
-            ChangePageSettings(delegate(int idx) { pages[idx].ClipRight = (int)editClipRight.Value; });
-
-            saved = false;
+            ChangePageSettings(idx => pages[idx].ClipRight = (int)editClipRight.Value);
         }
 
         /// <summary>
@@ -870,9 +666,7 @@ namespace EPubMaker
         /// <param name="e"></param>
         private void editClipBottom_ValueChanged(object sender, EventArgs e)
         {
-            ChangePageSettings(delegate(int idx) { pages[idx].ClipBottom = (int)editClipBottom.Value; });
-
-            saved = false;
+            ChangePageSettings(idx => pages[idx].ClipBottom = (int)editClipBottom.Value);
         }
         #endregion
 
@@ -884,9 +678,7 @@ namespace EPubMaker
         /// <param name="e"></param>
         private void editBold_ValueChanged(object sender, EventArgs e)
         {
-            ChangePageSettings(delegate(int idx) { pages[idx].Bold = (float)editBold.Value; });
-
-            saved = false;
+            ChangePageSettings(idx => pages[idx].Bold = (float)editBold.Value);
         }
         #endregion
 
@@ -898,9 +690,7 @@ namespace EPubMaker
         /// <param name="e"></param>
         private void editContrast_ValueChanged(object sender, EventArgs e)
         {
-            ChangePageSettings(delegate(int idx) { pages[idx].Contrast = (float)editContrast.Value; });
-
-            saved = false;
+            ChangePageSettings(idx => pages[idx].Contrast = (float)editContrast.Value);
         }
         #endregion
 
@@ -964,13 +754,8 @@ namespace EPubMaker
         {
             if (e.Button == MouseButtons.Left && start != null && srcPicture.Image != null)
             {
-                Graphics g = srcPicture.CreateGraphics();
-                Pen pen = new Pen(Color.Red, 2);
-                pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
-                srcPicture.Refresh();
                 end = e;
-                g.DrawRectangle(pen, Math.Min(start.X, end.X), Math.Min(start.Y, end.Y), Math.Abs(end.X - start.X), Math.Abs(end.Y - start.Y));
-                g.Dispose();
+                DrawClippingRectangle();
             }
         }
 
@@ -983,7 +768,8 @@ namespace EPubMaker
         {
             if (e.Button == MouseButtons.Left && start != null && srcPicture.Image != null)
             {
-                srcPicture_MouseMove(null, e);
+                end = e;
+                DrawClippingRectangle();
 
                 int left = Math.Min(start.X, end.X);
                 int top = Math.Min(start.Y, end.Y);
@@ -1125,7 +911,7 @@ namespace EPubMaker
                 }
             }
             gridChanging = false;
-            pagesGrid_SelectionChanged(null, null);
+            PageSelectionChanged();
         }
 
         private delegate void SetPageSettings(int idx); // ChangePageSettings用デリゲート(引数はページインデックス)
@@ -1160,6 +946,8 @@ namespace EPubMaker
                 DrawImages(idx);
             }
             gridChanging = false;
+
+            saved = false;
         }
 
         /// <summary>
@@ -1287,8 +1075,194 @@ namespace EPubMaker
         }
 
         /// <summary>
+        /// プロジェクトオープン
+        /// </summary>
+        /// <returns>オープン結果(true=した、false=してない)</returns>
+        private bool OpenProject()
+        {
+            if (!CheckSaved())
+            {
+                return false;
+            }
+
+            openFileDialog.DefaultExt = "epmd";
+            openFileDialog.Filter = "EPubMakerプロジェクトデータ|*.epmd";
+            if (!string.IsNullOrEmpty(folderBrowserDialog.SelectedPath) && Directory.Exists(folderBrowserDialog.SelectedPath))
+            {
+                openFileDialog.InitialDirectory = folderBrowserDialog.SelectedPath;
+            }
+            else if (!String.IsNullOrEmpty(setting.PrevSrc) && Directory.Exists(setting.PrevSrc))
+            {
+                openFileDialog.InitialDirectory = setting.PrevSrc;
+            }
+            else
+            {
+                openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            }
+            if (openFileDialog.ShowDialog() != DialogResult.OK)
+            {
+                return false;
+            }
+
+            // 読み込み
+            XmlSerializer serializer = new XmlSerializer(typeof(EPubMakerData));
+            StreamReader reader = new StreamReader(openFileDialog.FileName, new UTF8Encoding());
+            EPubMakerData data = (EPubMakerData)serializer.Deserialize(reader);
+            reader.Close();
+
+            folderBrowserDialog.SelectedPath = data.Path;
+            editTitle.Text = data.Title;
+            editAuthor.Text = data.Author;
+            editWidth.Value = data.Width;
+            editHeight.Value = data.Height;
+            pages = data.Pages;
+            saved = true;
+
+            SetupPagesGrid();
+            EnabledButtonsAndMenuItems(true, pages.Count > 0);
+
+            selectedIndex = pages.Count > 0 ? 0 : -1;
+            if (selectedIndex >= 0)
+            {
+                DrawImages(selectedIndex);
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// プロジェクト保存
+        /// </summary>
+        /// <returns>セーブ結果(true=した、false=してない)</returns>
+        private bool SaveProject()
+        {
+            saveFileDialog.DefaultExt = "epmd";
+            saveFileDialog.Filter = "EPubMakerプロジェクトデータ|*.epmd";
+            saveFileDialog.FileName = Path.GetFileName(folderBrowserDialog.SelectedPath);
+            saveFileDialog.InitialDirectory = folderBrowserDialog.SelectedPath;
+            if (saveFileDialog.ShowDialog() != DialogResult.OK)
+            {
+                return false;
+            }
+
+            // 保存
+            EPubMakerData data = new EPubMakerData();
+            data.Path = folderBrowserDialog.SelectedPath;
+            data.Title = editTitle.Text;
+            data.Author = editAuthor.Text;
+            data.Width = (int)editWidth.Value;
+            data.Height = (int)editHeight.Value;
+            data.Pages = pages;
+            XmlSerializer serializer = new XmlSerializer(typeof(EPubMakerData));
+            StreamWriter writer = new StreamWriter(saveFileDialog.FileName, false, new UTF8Encoding());
+            serializer.Serialize(writer, data);
+            writer.Close();
+
+            saved = true;
+
+            return true;
+        }
+
+        /// <summary>
+        /// 元データフォルダオープン
+        /// </summary>
+        /// <returns>オープン結果(true=した、false=してない)</returns>
+        private bool OpenFolder()
+        {
+        retry:
+            if (!String.IsNullOrEmpty(setting.PrevSrc) && Directory.Exists(setting.PrevSrc))
+            {
+                folderBrowserDialog.SelectedPath = setting.PrevSrc;
+            }
+            else
+            {
+                folderBrowserDialog.SelectedPath = null;
+            }
+            if (folderBrowserDialog.ShowDialog() != DialogResult.OK)
+            {
+                return false;
+            }
+            setting.PrevSrc = folderBrowserDialog.SelectedPath;
+            setting.Save();
+
+            if (pages == null)
+            {
+                pages = new List<Page>();
+            }
+            CloseFolder();
+
+            DirectoryInfo dir = new DirectoryInfo(folderBrowserDialog.SelectedPath);
+            foreach (FileInfo file in dir.GetFiles())
+            {
+                if (String.Compare(file.Extension, ".jpg", true) == 0 || String.Compare(file.Extension, ".png", true) == 0 || String.Compare(file.Extension, ".bmp", true) == 0)
+                {
+                    Page page = new Page(file.FullName);
+                    pages.Add(page);
+                }
+            }
+            if (pages.Count <= 0)
+            {
+                EnabledButtonsAndMenuItems(false, false);
+                goto retry;
+            }
+            pages.Sort((a, b) => String.Compare(a.Name, b.Name, true));
+
+            SetupPagesGrid();
+
+            string name = Path.GetFileNameWithoutExtension(folderBrowserDialog.SelectedPath);
+            if (name.Contains('-'))
+            {
+                string[] ary = name.Split("-".ToCharArray(), 2);
+                editTitle.Text = ary[0].Replace('_', ' ');
+                editAuthor.Text = ary[1].Replace('_', ' ');
+            }
+            else
+            {
+                editTitle.Text = name;
+            }
+
+            EnabledButtonsAndMenuItems(true, pages.Count > 0);
+
+            selectedIndex = pages.Count > 0 ? 0 : -1;
+            if (selectedIndex >= 0)
+            {
+                DrawImages(selectedIndex);
+            }
+
+            saved = false;
+
+            return true;
+        }
+
+        /// <summary>
+        /// 元データフォルダクローズ(別にフォルダを閉じるわけじゃないけど)
+        /// </summary>
+        private void CloseFolder()
+        {
+            if (!CheckSaved())
+            {
+                return;
+            }
+
+            pages.Clear();
+            pagesGrid.Rows.Clear();
+
+            pageLabel.Text = "";
+            srcPicture.Image = null;
+            previewPicture.Image = null;
+            srcLabel.Text = "";
+            previewLabel.Text = "";
+
+            EnabledButtonsAndMenuItems(false, false);
+
+            selectedIndex = -1;
+            saved = true;
+        }
+
+        /// <summary>
         /// セーブ確認
         /// </summary>
+        /// <returns>続行意思(true=続行、false=中断)</returns>
         private bool CheckSaved()
         {
             if (!saved)
@@ -1297,15 +1271,92 @@ namespace EPubMaker
                 switch (result)
                 {
                     case DialogResult.Yes:
-                        menuItemSave_Click(null, null);
-                        break;
+                        return SaveProject();
                     case DialogResult.No:
-                        break;
+                        return true;
                     default:
                         return false;
                 }
             }
             return true;
+        }
+
+        /// <summary>
+        /// ePub生成
+        /// </summary>
+        private void GenerateEPub()
+        {
+            saveFileDialog.DefaultExt = "epub";
+            saveFileDialog.Filter = "ePub|*.epub|すべてのファイル|*";
+            saveFileDialog.FileName = Path.GetFileName(folderBrowserDialog.SelectedPath);
+            if (!String.IsNullOrEmpty(setting.OutPath) && Directory.Exists(setting.OutPath))
+            {
+                saveFileDialog.InitialDirectory = setting.OutPath;
+            }
+            else
+            {
+                saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            }
+            if (saveFileDialog.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+            setting.OutPath = Path.GetDirectoryName(saveFileDialog.FileName);
+            setting.PageWidth = (int)editWidth.Value;
+            setting.PageHeight = (int)editHeight.Value;
+            setting.Save();
+
+            FormProgress formProgress = new FormProgress(pages, editTitle.Text, editAuthor.Text, (int)editWidth.Value, (int)editHeight.Value, saveFileDialog.FileName);
+            formProgress.ShowDialog(this);
+            formProgress.Dispose();
+        }
+
+        /// <summary>
+        /// ページ選択変更対応
+        /// </summary>
+        private void PageSelectionChanged()
+        {
+            if (gridChanging)
+            {
+                return;
+            }
+
+            gridChanging = true;
+            int idx = -1;
+            foreach (DataGridViewRow row in pagesGrid.SelectedRows)
+            {
+                if (/*row.Index < idx ||*/ idx < 0)
+                {
+                    idx = row.Index;
+                }
+            }
+            if (idx >= 0 && idx < pages.Count)
+            {
+                EnabledButtonsAndMenuItems(true, true);
+                DrawImages(idx);
+
+                selectedIndex = idx;
+            }
+            else
+            {
+                EnabledButtonsAndMenuItems(true, false);
+
+                selectedIndex = -1;
+            }
+            gridChanging = false;
+        }
+
+        /// <summary>
+        /// 元画像切り抜き矩形描画
+        /// </summary>
+        private void DrawClippingRectangle()
+        {
+            Graphics g = srcPicture.CreateGraphics();
+            Pen pen = new Pen(Color.Red, 2);
+            pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
+            srcPicture.Refresh();
+            g.DrawRectangle(pen, Math.Min(start.X, end.X), Math.Min(start.Y, end.Y), Math.Abs(end.X - start.X), Math.Abs(end.Y - start.Y));
+            g.Dispose();
         }
         #endregion
     }
