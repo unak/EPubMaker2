@@ -12,6 +12,7 @@ namespace EPubMaker
     [Serializable]
     public class Page : ICloneable
     {
+        #region 列挙体定義
         /// <summary>
         /// 回転
         /// </summary>
@@ -34,7 +35,9 @@ namespace EPubMaker
             Gray4bit = 2,   /// 4bit
             Mono = 3        /// 白黒
         }
+        #endregion
 
+        #region メンバ変数
         private string path;        /// 元データ画像パス
         private string index;       /// 目次表示内容
         private bool locked;        /// ロック状態
@@ -46,7 +49,9 @@ namespace EPubMaker
         private int clipBottom;     /// 切り抜き(下)%
         private float bold;         /// 太字化(0.0～1.0) 
         private float contrast;     /// コントラスト調整(-1.0～1.0)
+        #endregion
 
+        #region プロパティ
         /// <summary>
         /// 元データ画像パス
         /// </summary>
@@ -223,7 +228,9 @@ namespace EPubMaker
                 return contrast;
             }
         }
+        #endregion
 
+        #region コンストラクタ
         /// <summary>
         /// デフォルトコンストラクタ(Serialize用)
         /// </summary>
@@ -250,7 +257,9 @@ namespace EPubMaker
         {
             this.path = path;
         }
+        #endregion
 
+        #region オーバーライド
         /// <summary>
         /// 文字列化
         /// </summary>
@@ -259,7 +268,9 @@ namespace EPubMaker
         {
             return Name;
         }
+        #endregion
 
+        #region ICroneable実装
         /// <summary>
         /// 複製生成
         /// </summary>
@@ -279,7 +290,9 @@ namespace EPubMaker
             newPage.contrast = contrast;
             return newPage;
         }
+        #endregion
 
+        #region パブリックメソッド
         /// <summary>
         /// 画像データ生成
         /// </summary>
@@ -374,7 +387,9 @@ namespace EPubMaker
 
             return target;
         }
+        #endregion
 
+        #region プライベートメソッド
         [DllImport("kernel32")]
         public static unsafe extern void CopyMemory(void* dst, void* src, UIntPtr len);
 
@@ -473,5 +488,6 @@ namespace EPubMaker
 
             return dst;
         }
+        #endregion
     }
 }

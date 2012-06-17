@@ -15,6 +15,7 @@ namespace EPubMaker
     /// </summary>
     public partial class FormProgress : Form
     {
+        #region 内部構造体
         private struct WorkerArg
         {
             public List<Page> pages;    /// ページ
@@ -24,7 +25,9 @@ namespace EPubMaker
             public int height;          /// 出力高さ
             public string path;         /// 出力ファイルパス
         }
+        #endregion
 
+        #region コンストラクタ
         /// <summary>
         /// フォームコンストラクタ
         /// </summary>
@@ -49,7 +52,10 @@ namespace EPubMaker
             this.DialogResult = DialogResult.None;
             backgroundWorker.RunWorkerAsync(arg);
         }
+        #endregion
 
+        #region イベント
+        #region フォーム
         /// <summary>
         /// フォームが閉じられそう
         /// </summary>
@@ -63,7 +69,9 @@ namespace EPubMaker
                 backgroundWorker.CancelAsync();
             }
         }
+        #endregion
 
+        #region ボタン
         /// <summary>
         /// キャンセルボタン
         /// </summary>
@@ -73,7 +81,9 @@ namespace EPubMaker
         {
             backgroundWorker.CancelAsync();
         }
+        #endregion
 
+        #region バックグラウンド処理
         /// <summary>
         /// バックグラウンド処理本体
         /// </summary>
@@ -298,7 +308,10 @@ namespace EPubMaker
             }
             this.Close();
         }
+        #endregion
+        #endregion
 
+        #region プライベートメソッド
         /// <summary>
         /// 文字列出力
         /// </summary>
@@ -315,9 +328,10 @@ namespace EPubMaker
         /// </summary>
         /// <param name="str">対象文字列</param>
         /// <returns>エスケープ結果</returns>
-        public static string Escape(string str)
+        private static string Escape(string str)
         {
             return str.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;").Replace("\"", "&quot;");
         }
+        #endregion
     }
 }

@@ -12,8 +12,28 @@ namespace EPubMaker
     /// </summary>
     public class Setting
     {
+        #region メンバ変数
         static private Setting instance = null; /// 設定のインスタンス
 
+        private bool changed;   /// 変更されてる？
+
+        // 表示位置
+        private int left;       /// メインフォーム左端
+        private int top;        /// メインフォーム上端
+        private int width;      /// メインフォーム幅
+        private int height;     /// メインフォーム高さ
+        private int distance;   /// 画像表示領域分離幅(=元画像領域幅)
+
+        // ePub関連設定
+        private int pageWidth;      /// 出力幅
+        private int pageHeight;     /// 出力高さ
+
+        // パス関係
+        private string prevSrc;     /// 前回の元データフォルダ
+        private string outPath;     /// 出力先フォルダ
+        #endregion
+
+        #region プロパティ
         /// <summary>
         /// インスタンス取得
         /// </summary>
@@ -28,15 +48,6 @@ namespace EPubMaker
                 return instance;
             }
         }
-
-        private bool changed;   /// 変更されてる？
-
-        // 表示位置
-        private int left;       /// メインフォーム左端
-        private int top;        /// メインフォーム上端
-        private int width;      /// メインフォーム幅
-        private int height;     /// メインフォーム高さ
-        private int distance;   /// 画像表示領域分離幅(=元画像領域幅)
 
         /// <summary>
         /// メインフォーム左端
@@ -117,10 +128,6 @@ namespace EPubMaker
                 return distance;
             }
         }
-
-        // ePub関連設定
-        private int pageWidth;      /// 出力幅
-        private int pageHeight;     /// 出力高さ
         
         /// <summary>
         /// 出力幅
@@ -154,10 +161,6 @@ namespace EPubMaker
             }
         }
 
-        // パス関係
-        private string prevSrc;     /// 前回の元データフォルダ
-        private string outPath;     /// 出力先フォルダ
-
         /// <summary>
         /// 前回の元データフォルダ
         /// </summary>
@@ -189,7 +192,9 @@ namespace EPubMaker
                 return outPath;
             }
         }
+        #endregion
 
+        #region コンストラクタ
         /// <summary>
         /// コンストラクタ(シングルトンなのでprivate)
         /// </summary>
@@ -208,7 +213,9 @@ namespace EPubMaker
             prevSrc = null;
             outPath = null;
         }
+        #endregion
 
+        #region パブリックメソッド
         /// <summary>
         /// 設定ロード
         /// </summary>
@@ -271,7 +278,9 @@ namespace EPubMaker
                 changed = false;
             }
         }
+        #endregion
 
+        #region プライベートメソッド
         /// <summary>
         /// レジストリキー取得
         /// 本当は Application.UserAppDataRegistry でいいと思うのだが、なぜかバージョン番号をビルド番号まで含めたものを渡しやがるので自力で生成
@@ -281,5 +290,6 @@ namespace EPubMaker
         {
             return Registry.CurrentUser.CreateSubKey(String.Format(@"Software\{0}\{1}", Application.CompanyName, Application.ProductName));
         }
+        #endregion
     }
 }
