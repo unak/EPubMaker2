@@ -329,6 +329,7 @@ namespace EPubMaker
         /// <param name="e"></param>
         private void menuItemOpen_Click(object sender, EventArgs e)
         {
+          retry:
             if (!String.IsNullOrEmpty(setting.PrevSrc) && Directory.Exists(setting.PrevSrc))
             {
                 folderBrowserDialog.SelectedPath = setting.PrevSrc;
@@ -362,7 +363,7 @@ namespace EPubMaker
             if (pages.Count <= 0)
             {
                 EnabledButtonsAndMenuItems(false, false);
-                return;
+                goto retry;
             }
             pages.Sort(delegate(Page a, Page b)
             {
