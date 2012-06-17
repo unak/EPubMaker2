@@ -125,6 +125,145 @@ namespace EPubMaker
             splitContainer.Top = pageLabel.Bottom;
             splitContainer.Height = ClientRectangle.Bottom - splitContainer.Top;
         }
+
+        /// <summary>
+        /// キー押下
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void FormMain_KeyDown(object sender, KeyEventArgs e)
+        {
+            e.Handled = false;
+
+            if (e.Control && !e.Shift && !e.Alt)
+            {
+                // Ctrl+カーソル -> 画像選択範囲をその方向に広げる
+                int v;
+                switch (e.KeyCode)
+                {
+                    case Keys.Right:
+                        v = (int)editClipRight.Value;
+                        if (++v <= 100)
+                        {
+                            editClipRight.Value = v;
+                        }
+                        e.Handled = true;
+                        break;
+                    case Keys.Left:
+                        v = (int)editClipLeft.Value;
+                        if (--v >= 0)
+                        {
+                            editClipLeft.Value = v;
+                        }
+                        e.Handled = true;
+                        break;
+                    case Keys.Up:
+                        v = (int)editClipTop.Value;
+                        if (--v >= 0)
+                        {
+                            editClipTop.Value = v;
+                        }
+                        e.Handled = true;
+                        break;
+                    case Keys.Down:
+                        v = (int)editClipBottom.Value;
+                        if (++v <= 100)
+                        {
+                            editClipBottom.Value = v;
+                        }
+                        e.Handled = true;
+                        break;
+                }
+            }
+            else if (e.Control && e.Shift && !e.Alt)
+            {
+                // Ctrl+Shift+カーソル -> 画像選択範囲をその方向に縮める
+                int v;
+                switch (e.KeyCode)
+                {
+                    case Keys.Right:
+                        v = (int)editClipLeft.Value;
+                        if (++v <= 100)
+                        {
+                            editClipLeft.Value = v;
+                        }
+                        e.Handled = true;
+                        break;
+                    case Keys.Left:
+                        v = (int)editClipRight.Value;
+                        if (--v >= 0)
+                        {
+                            editClipRight.Value = v;
+                        }
+                        e.Handled = true;
+                        break;
+                    case Keys.Up:
+                        v = (int)editClipBottom.Value;
+                        if (--v >= 0)
+                        {
+                            editClipBottom.Value = v;
+                        }
+                        e.Handled = true;
+                        break;
+                    case Keys.Down:
+                        v = (int)editClipTop.Value;
+                        if (++v <= 100)
+                        {
+                            editClipTop.Value = v;
+                        }
+                        e.Handled = true;
+                        break;
+                }
+            }
+            else if (e.Control && !e.Shift && e.Alt)
+            {
+                // Ctrl+Alt+カーソル -> 画像選択範囲をその方向に移動する
+                int v1, v2;
+                switch (e.KeyCode)
+                {
+                    case Keys.Right:
+                        v1 = (int)editClipLeft.Value;
+                        v2 = (int)editClipRight.Value;
+                        if (++v1 <= 100 && ++v2 <= 100)
+                        {
+                            editClipLeft.Value = v1;
+                            editClipRight.Value = v2;
+                        }
+                        e.Handled = true;
+                        break;
+                    case Keys.Left:
+                        v1 = (int)editClipLeft.Value;
+                        v2 = (int)editClipRight.Value;
+                        if (--v1 >= 0 && --v2 >= 0)
+                        {
+                            editClipLeft.Value = v1;
+                            editClipRight.Value = v2;
+                        }
+                        e.Handled = true;
+                        break;
+                    case Keys.Up:
+                        v1 = (int)editClipTop.Value;
+                        v2 = (int)editClipBottom.Value;
+                        if (--v1 >= 0 && --v2 >= 0)
+                        {
+                            editClipTop.Value = v1;
+                            editClipBottom.Value = v2;
+                        }
+                        e.Handled = true;
+                        break;
+                    case Keys.Down:
+                        v1 = (int)editClipTop.Value;
+                        v2 = (int)editClipBottom.Value;
+                        if (++v1 <= 100 && ++v2 <= 100)
+                        {
+                            editClipTop.Value = v1;
+                            editClipBottom.Value = v2;
+                        }
+                        e.Handled = true;
+                        break;
+                }
+            }
+        }
         #endregion
 
         #region メニュー

@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.pagesPanel = new System.Windows.Forms.Panel();
             this.pagesGrid = new System.Windows.Forms.DataGridView();
@@ -174,8 +174,8 @@
             // 
             // page
             // 
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
-            this.page.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            this.page.DefaultCellStyle = dataGridViewCellStyle2;
             this.page.HeaderText = "頁";
             this.page.Name = "page";
             this.page.ReadOnly = true;
@@ -988,12 +988,14 @@
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.pagesPanel);
             this.Controls.Add(this.menuStrip);
+            this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip;
             this.Name = "FormMain";
             this.Text = "ePubMaker";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
             this.Load += new System.EventHandler(this.FormMain_Load);
             this.ClientSizeChanged += new System.EventHandler(this.FormMain_ClientSizeChanged);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormMain_KeyDown);
             this.pagesPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pagesGrid)).EndInit();
             this.toolStripContainer.ContentPanel.ResumeLayout(false);
