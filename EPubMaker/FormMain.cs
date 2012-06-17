@@ -14,6 +14,7 @@ namespace EPubMaker
     /// </summary>
     public partial class FormMain : Form
     {
+        #region 内部構造体
         /// <summary>
         /// プロジェクト保存データ
         /// </summary>
@@ -27,7 +28,9 @@ namespace EPubMaker
             public int Height;
             public List<Page> Pages;
         }
+        #endregion
 
+        #region メンバ変数
         private List<Page> pages;       /// ページ
         private bool gridChanging;      /// ページ一覧変更中フラグ
         private Page copy;              /// ページ設定コピーバッファ
@@ -37,7 +40,9 @@ namespace EPubMaker
         private bool saved;             /// プロジェクト保存済み?
 
         private Setting setting;        /// アプリ設定
+        #endregion
 
+        #region コンストラクタ
         /// <summary>
         /// フォームコンストラクタ
         /// </summary>
@@ -63,7 +68,10 @@ namespace EPubMaker
 
             EnabledButtonsAndMenuItems(false, false);
         }
+        #endregion
 
+        #region イベント
+        #region フォーム
         /// <summary>
         /// フォームがロードされた
         /// </summary>
@@ -117,7 +125,9 @@ namespace EPubMaker
             splitContainer.Top = pageLabel.Bottom;
             splitContainer.Height = ClientRectangle.Bottom - splitContainer.Top;
         }
+        #endregion
 
+        #region メニュー
         /// <summary>
         /// プロジェクトオープン
         /// </summary>
@@ -319,7 +329,7 @@ namespace EPubMaker
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void MenuItemGenerate_Click(object sender, EventArgs e)
+        private void menuItemGenerate_Click(object sender, EventArgs e)
         {
             saveFileDialog.DefaultExt = "epub";
             saveFileDialog.Filter = "ePub|*.epub|すべてのファイル|*";
@@ -345,7 +355,9 @@ namespace EPubMaker
             formProgress.ShowDialog(this);
             formProgress.Dispose();
         }
+        #endregion
 
+        #region ツールボタン
         /// <summary>
         /// ページ設定コピー
         /// </summary>
@@ -555,7 +567,9 @@ namespace EPubMaker
                 saved = false;
             }
         }
+        #endregion
 
+        #region ページグリッド
         /// <summary>
         /// 選択ページが変更された
         /// </summary>
@@ -630,6 +644,24 @@ namespace EPubMaker
         }
 
         /// <summary>
+        /// セルがクリックされた
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void pagesGrid_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            // 右クリックのみハンドルし、コンテクストメニューを表示する
+            if (e.Button == MouseButtons.Right && e.RowIndex >= 0 && pages != null && e.RowIndex < pages.Count())
+            {
+                SelectPages(delegate(int i) { return false; });
+                pagesGrid.Rows[e.RowIndex].Selected = true;
+                menuPagesGrid.Show(Cursor.Position);
+            }
+        }
+        #endregion
+
+        #region 回転コンボボックス
+        /// <summary>
         /// 回転コンボボックスが変更された
         /// </summary>
         /// <param name="sender"></param>
@@ -638,7 +670,9 @@ namespace EPubMaker
         {
             ChangePageSettings(delegate(int idx) { pages[idx].Rotate = (Page.PageRotate)rotateCombo.SelectedIndex; });
         }
+        #endregion
 
+        #region 形式コンボボックス
         /// <summary>
         /// 形式コンボボックスが変更された
         /// </summary>
@@ -650,7 +684,9 @@ namespace EPubMaker
 
             saved = false;
         }
+        #endregion
 
+        #region 切り抜きテキストボックス
         /// <summary>
         /// 切り抜き(左)が変更された
         /// </summary>
@@ -698,7 +734,9 @@ namespace EPubMaker
 
             saved = false;
         }
+        #endregion
 
+        #region 太字化率テキストボックス
         /// <summary>
         /// 太字化率が変更された
         /// </summary>
@@ -710,7 +748,9 @@ namespace EPubMaker
 
             saved = false;
         }
+        #endregion
 
+        #region コントラストテキストボックス
         /// <summary>
         /// コントラストが変更された
         /// </summary>
@@ -722,9 +762,11 @@ namespace EPubMaker
 
             saved = false;
         }
+        #endregion
 
+        #region 元画像表示パネル
         /// <summary>
-        /// 画像表示領域左ペインのサイズが変わった
+        /// 元画像表示パネルのサイズが変わった
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -733,9 +775,11 @@ namespace EPubMaker
             srcPicture.Width = splitContainer.Panel1.ClientSize.Width;
             srcPicture.Height = splitContainer.Panel1.ClientSize.Height - srcLabel.Height;
         }
+        #endregion
 
+        #region プレビュー画像表示パネル
         /// <summary>
-        /// 画像表示領域右ペインのサイズが変わった
+        /// プレビュー画像表示パネルのサイズが変わった
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -744,9 +788,11 @@ namespace EPubMaker
             previewPicture.Width = splitContainer.Panel2.ClientSize.Width;
             previewPicture.Height = splitContainer.Panel2.ClientSize.Height - previewLabel.Height;
         }
+        #endregion
 
+        #region 元画像ピクチャーボックス
         /// <summary>
-        /// 元画像表示領域のサイズが変わった
+        /// 元画像ピクチャーボックスのサイズが変わった
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -756,17 +802,7 @@ namespace EPubMaker
         }
 
         /// <summary>
-        /// プレビュー画像表示領域のサイズが変わった
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void previewPicture_ClientSizeChanged(object sender, EventArgs e)
-        {
-            PictureSizeChanged(previewPicture, previewLabel);
-        }
-
-        /// <summary>
-        /// 元画像表示領域でマウスボタンが押された
+        /// 元画像ピクチャーボックスでマウスボタンが押された
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -780,7 +816,7 @@ namespace EPubMaker
         }
 
         /// <summary>
-        /// 元画像表示領域でマウスが動いた
+        /// 元画像ピクチャーボックスでマウスが動いた
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -799,7 +835,7 @@ namespace EPubMaker
         }
 
         /// <summary>
-        /// 元画像表示領域でマウスボタンが離された
+        /// 元画像ピクチャーボックスでマウスボタンが離された
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -861,7 +897,7 @@ namespace EPubMaker
         }
 
         /// <summary>
-        /// 元画像表示領域描画
+        /// 元画像ピクチャーボックス描画
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -894,7 +930,22 @@ namespace EPubMaker
             }
             e.Graphics.DrawRectangle(pen, left, top, width, height);
         }
+        #endregion
 
+        #region プレビュー画像ピクチャーボックス
+        /// <summary>
+        /// プレビュー画像ピクチャーボックスのサイズが変わった
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void previewPicture_ClientSizeChanged(object sender, EventArgs e)
+        {
+            PictureSizeChanged(previewPicture, previewLabel);
+        }
+        #endregion
+        #endregion
+
+        #region プライベートメソッド
         /// <summary>
         /// ページ一覧の中身設定
         /// </summary>
@@ -1116,15 +1167,6 @@ namespace EPubMaker
             }
             return true;
         }
-
-        private void pagesGrid_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right && e.RowIndex >= 0 && pages != null && e.RowIndex < pages.Count())
-            {
-                SelectPages(delegate(int i){return false;});
-                pagesGrid.Rows[e.RowIndex].Selected = true;
-                menuPagesGrid.Show(Cursor.Position);
-            }
-        }
+        #endregion
     }
 }

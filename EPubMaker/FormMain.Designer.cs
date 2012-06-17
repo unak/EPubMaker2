@@ -541,7 +541,7 @@
             this.menuItemGenerate.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G)));
             this.menuItemGenerate.Size = new System.Drawing.Size(179, 22);
             this.menuItemGenerate.Text = "生成...(&G)";
-            this.menuItemGenerate.Click += new System.EventHandler(this.MenuItemGenerate_Click);
+            this.menuItemGenerate.Click += new System.EventHandler(this.menuItemGenerate_Click);
             // 
             // folderBrowserDialog
             // 
