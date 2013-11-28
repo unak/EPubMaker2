@@ -23,6 +23,7 @@ namespace EPubMaker
             public string author;       /// 著者
             public int width;           /// 出力幅
             public int height;          /// 出力高さ
+            public bool rtl;            /// ページ送り
             public string path;         /// 出力ファイルパス
         }
         #endregion
@@ -46,8 +47,9 @@ namespace EPubMaker
         /// <param name="author">著者</param>
         /// <param name="width">出力幅</param>
         /// <param name="height">出力高さ</param>
+        /// <param name="rtl">ページ送り</param>
         /// <param name="path">出力ファイルパス</param>
-        public FormProgress(List<Page> pages, string title, string author, int width, int height, string path)
+        public FormProgress(List<Page> pages, string title, string author, int width, int height, bool rtl, string path)
         {
             InitializeComponent();
 
@@ -57,6 +59,7 @@ namespace EPubMaker
             arg.author = author.Trim();
             arg.width = width;
             arg.height = height;
+            arg.rtl = rtl;
             arg.path = path;
 
             this.DialogResult = DialogResult.None;
@@ -110,7 +113,7 @@ namespace EPubMaker
             string bookid = Guid.NewGuid().ToString();
 
             // まずメタデータを生成する
-            FileStream fs = GenerateMetadata(bookid, arg.title, arg.author, tmpdir, mime, meta, contents);
+            FileStream fs = GenerateMetadata(bookid, arg.title, arg.author, arg.rtl, tmpdir, mime, meta, contents);
 
             // 画像を変換しPNGを出力する
             if (!ConvertPictures(arg.pages, arg.width, arg.height, Path.Combine(contents, "data"), fs))
@@ -121,7 +124,7 @@ namespace EPubMaker
             }
 
             // 目次を生成する
-            if (!GenerateToc(arg.pages, bookid, arg.title, arg.author, contents, fs))
+            if (!GenerateToc(arg.pages, bookid, arg.title, arg.author, arg.rtl, contents, fs))
             {
                 fs.Close();
                 e.Cancel = true;
@@ -220,12 +223,13 @@ namespace EPubMaker
         /// <param name="bookid">ブックID</param>
         /// <param name="title">タイトル</param>
         /// <param name="author">著者</param>
+        /// <param name="rtl">ページ送り</param>
         /// <param name="tmpdir">作業ディレクトリ</param>
         /// <param name="mimefile">MIMEファイル</param>
         /// <param name="metadir">METAディレクトリ</param>
         /// <param name="contentsdir">コンテンツディレクトリ</param>
         /// <returns>OPFファイルストリーム</returns>
-        private FileStream GenerateMetadata(string bookid, string title, string author, string tmpdir, string mimefile, string metadir, string contentsdir)
+        private FileStream GenerateMetadata(string bookid, string title, string author, bool rtl, string tmpdir, string mimefile, string metadir, string contentsdir)
         {
             backgroundWorker.ReportProgress((int)State.METADATA);
 
@@ -269,6 +273,7 @@ namespace EPubMaker
                 WriteText(fs, "<meta refines=\"#creator\" property=\"role\" scheme=\"marc:relators\">aut</meta>\n");
             }
             WriteText(fs, "<meta property=\"dcterms:modified\">" + DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ") + "</meta>\n");
+            WriteText(fs, "<meta property=\"page-progression-direction\">" + (rtl ? "rtl" : "ltr") + "</meta>\n");
             WriteText(fs, "</metadata>\n");
             WriteText(fs, "<manifest>\n");
             WriteText(fs, "<item id=\"nav\" href=\"nav.html\" media-type=\"application/xhtml+xml\" properties=\"nav\"/>\n");
@@ -347,14 +352,15 @@ namespace EPubMaker
         /// <param name="bookid">ブックID</param>
         /// <param name="title">タイトル</param>
         /// <param name="author">著者</param>
+        /// <param name="rtl">ページ送り</param>
         /// <param name="contentsdir">出力先ディレクトリ</param>
         /// <param name="opf">OPFファイルストリーム</param>
         /// <returns>正常終了?</returns>
-        private bool GenerateToc(List<Page> pages, string bookid, string title, string author, string contentsdir, FileStream opf)
+        private bool GenerateToc(List<Page> pages, string bookid, string title, string author, bool rtl, string contentsdir, FileStream opf)
         {
             backgroundWorker.ReportProgress((int)State.TOC);
             WriteText(opf, "</manifest>\n");
-            WriteText(opf, "<spine toc=\"ncx\" page-progression-direction=\"rtl\">\n");
+            WriteText(opf, "<spine toc=\"ncx\" page-progression-direction=\"" + (rtl ? "rtl" : "ltr") + "\">\n");
             for (int i = 0; i < pages.Count; ++i)
             {
                 if (backgroundWorker.CancellationPending)

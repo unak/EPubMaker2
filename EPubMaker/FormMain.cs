@@ -21,13 +21,19 @@ namespace EPubMaker
         [Serializable]
         public struct EPubMakerData
         {
+            public int Version;         /// フォーマットバージョン
             public string Path;         /// パス
             public string Title;        /// タイトル
             public string Author;       /// 著者
             public int Width;           /// 出力幅
             public int Height;          /// 出力高さ
+            public bool RtoL;           /// ページ送り方向
             public List<Page> Pages;    /// 各ページ
         }
+
+        private const int DATA_FORMAT_VERSION = 1;  /// フォーマットバージョン
+        // 0: 最初のバージョン
+        // 1: フォーマットバージョンおよびページ送り方向を追加
         #endregion
 
         #region メンバ変数
@@ -65,6 +71,8 @@ namespace EPubMaker
 
             editWidth.Value = setting.PageWidth;
             editHeight.Value = setting.PageHeight;
+            rdbRtl.Checked = setting.RtoL;
+            rdbLtr.Checked = !setting.RtoL;
 
             EnabledButtonsAndMenuItems(false, false);
         }
@@ -954,6 +962,16 @@ namespace EPubMaker
             editAuthor.Text = data.Author;
             editWidth.Value = data.Width;
             editHeight.Value = data.Height;
+            if (data.Version > 0)
+            {
+                rdbRtl.Checked = data.RtoL;
+                rdbLtr.Checked = !data.RtoL;
+            }
+            else
+            {
+                rdbRtl.Checked = true;
+                rdbLtr.Checked = false;
+            }
             pages = data.Pages;
             saved = true;
 
@@ -986,11 +1004,13 @@ namespace EPubMaker
 
             // 保存
             EPubMakerData data = new EPubMakerData();
+            data.Version = DATA_FORMAT_VERSION;
             data.Path = folderBrowserDialog.SelectedPath;
             data.Title = editTitle.Text;
             data.Author = editAuthor.Text;
             data.Width = (int)editWidth.Value;
             data.Height = (int)editHeight.Value;
+            data.RtoL = rdbRtl.Checked;
             data.Pages = pages;
             XmlSerializer serializer = new XmlSerializer(typeof(EPubMakerData));
             StreamWriter writer = new StreamWriter(saveFileDialog.FileName, false, new UTF8Encoding());
@@ -1142,9 +1162,10 @@ namespace EPubMaker
             setting.OutPath = Path.GetDirectoryName(saveFileDialog.FileName);
             setting.PageWidth = (int)editWidth.Value;
             setting.PageHeight = (int)editHeight.Value;
+            setting.RtoL = rdbRtl.Checked;
             setting.Save();
 
-            FormProgress formProgress = new FormProgress(pages, editTitle.Text, editAuthor.Text, (int)editWidth.Value, (int)editHeight.Value, saveFileDialog.FileName);
+            FormProgress formProgress = new FormProgress(pages, editTitle.Text, editAuthor.Text, (int)editWidth.Value, (int)editHeight.Value, rdbRtl.Checked, saveFileDialog.FileName);
             formProgress.ShowDialog(this);
             formProgress.Dispose();
         }

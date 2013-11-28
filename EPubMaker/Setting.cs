@@ -27,6 +27,7 @@ namespace EPubMaker
         // ePub関連設定
         private int pageWidth;      /// 出力幅
         private int pageHeight;     /// 出力高さ
+        private bool pageRtoL;      /// ページ送り
 
         // パス関係
         private string prevSrc;     /// 前回の元データフォルダ
@@ -162,6 +163,22 @@ namespace EPubMaker
         }
 
         /// <summary>
+        /// ページ送り
+        /// </summary>
+        public bool RtoL
+        {
+            set
+            {
+                pageRtoL = value;
+                changed = true;
+            }
+            get
+            {
+                return pageRtoL;
+            }
+        }
+
+        /// <summary>
         /// 前回の元データフォルダ
         /// </summary>
         public string PrevSrc
@@ -210,6 +227,8 @@ namespace EPubMaker
             pageWidth = 480;
             pageHeight = 800;
 
+            pageRtoL = true;
+
             prevSrc = null;
             outPath = null;
         }
@@ -237,6 +256,8 @@ namespace EPubMaker
 
             instance.pageWidth = (int)reg.GetValue("pageWidth", 480);
             instance.pageHeight = (int)reg.GetValue("pageHeight", 800);
+
+            instance.pageRtoL = (bool)reg.GetValue("pageRtoL", true);
 
             instance.prevSrc = (string)reg.GetValue("prevSrc", null);
             instance.outPath = (string)reg.GetValue("outPath", null);

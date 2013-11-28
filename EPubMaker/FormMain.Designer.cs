@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.pagesPanel = new System.Windows.Forms.Panel();
             this.pagesGrid = new System.Windows.Forms.DataGridView();
@@ -115,6 +115,10 @@
             this.menuItemErase2 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemInsert2 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemMove2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.label12 = new System.Windows.Forms.Label();
+            this.rdbRtl = new System.Windows.Forms.RadioButton();
+            this.rdbLtr = new System.Windows.Forms.RadioButton();
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.pagesPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pagesGrid)).BeginInit();
             this.toolStripContainer.ContentPanel.SuspendLayout();
@@ -174,8 +178,8 @@
             // 
             // page
             // 
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
-            this.page.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            this.page.DefaultCellStyle = dataGridViewCellStyle1;
             this.page.HeaderText = "頁";
             this.page.Name = "page";
             this.page.ReadOnly = true;
@@ -236,7 +240,8 @@
             this.btnDuplicate,
             this.btnErase,
             this.btnInsert,
-            this.btnMove});
+            this.btnMove,
+            this.toolStripButton1});
             this.toolButtons.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.toolButtons.Location = new System.Drawing.Point(0, 0);
             this.toolButtons.Name = "toolButtons";
@@ -549,6 +554,9 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.rdbLtr);
+            this.panel1.Controls.Add(this.rdbRtl);
+            this.panel1.Controls.Add(this.label12);
             this.panel1.Controls.Add(this.editBold);
             this.panel1.Controls.Add(this.label11);
             this.panel1.Controls.Add(this.editContrast);
@@ -586,7 +594,7 @@
             0,
             0,
             65536});
-            this.editBold.Location = new System.Drawing.Point(75, 273);
+            this.editBold.Location = new System.Drawing.Point(75, 310);
             this.editBold.Maximum = new decimal(new int[] {
             10,
             0,
@@ -594,13 +602,13 @@
             65536});
             this.editBold.Name = "editBold";
             this.editBold.Size = new System.Drawing.Size(68, 19);
-            this.editBold.TabIndex = 12;
+            this.editBold.TabIndex = 14;
             this.editBold.ValueChanged += new System.EventHandler(this.editBold_ValueChanged);
             // 
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(10, 275);
+            this.label11.Location = new System.Drawing.Point(10, 312);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(41, 12);
             this.label11.TabIndex = 19;
@@ -614,7 +622,7 @@
             0,
             0,
             65536});
-            this.editContrast.Location = new System.Drawing.Point(75, 298);
+            this.editContrast.Location = new System.Drawing.Point(75, 335);
             this.editContrast.Maximum = new decimal(new int[] {
             10,
             0,
@@ -627,13 +635,13 @@
             -2147418112});
             this.editContrast.Name = "editContrast";
             this.editContrast.Size = new System.Drawing.Size(68, 19);
-            this.editContrast.TabIndex = 13;
+            this.editContrast.TabIndex = 15;
             this.editContrast.ValueChanged += new System.EventHandler(this.editContrast_ValueChanged);
             // 
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(10, 300);
+            this.label10.Location = new System.Drawing.Point(10, 337);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(55, 12);
             this.label10.TabIndex = 17;
@@ -641,10 +649,10 @@
             // 
             // editClipRight
             // 
-            this.editClipRight.Location = new System.Drawing.Point(95, 214);
+            this.editClipRight.Location = new System.Drawing.Point(95, 251);
             this.editClipRight.Name = "editClipRight";
             this.editClipRight.Size = new System.Drawing.Size(47, 19);
-            this.editClipRight.TabIndex = 10;
+            this.editClipRight.TabIndex = 12;
             this.editClipRight.Value = new decimal(new int[] {
             100,
             0,
@@ -654,18 +662,18 @@
             // 
             // editClipLeft
             // 
-            this.editClipLeft.Location = new System.Drawing.Point(43, 214);
+            this.editClipLeft.Location = new System.Drawing.Point(43, 251);
             this.editClipLeft.Name = "editClipLeft";
             this.editClipLeft.Size = new System.Drawing.Size(47, 19);
-            this.editClipLeft.TabIndex = 8;
+            this.editClipLeft.TabIndex = 10;
             this.editClipLeft.ValueChanged += new System.EventHandler(this.editClipLeft_ValueChanged);
             // 
             // editClipBottom
             // 
-            this.editClipBottom.Location = new System.Drawing.Point(73, 239);
+            this.editClipBottom.Location = new System.Drawing.Point(73, 276);
             this.editClipBottom.Name = "editClipBottom";
             this.editClipBottom.Size = new System.Drawing.Size(47, 19);
-            this.editClipBottom.TabIndex = 11;
+            this.editClipBottom.TabIndex = 13;
             this.editClipBottom.Value = new decimal(new int[] {
             100,
             0,
@@ -675,16 +683,16 @@
             // 
             // editClipTop
             // 
-            this.editClipTop.Location = new System.Drawing.Point(73, 189);
+            this.editClipTop.Location = new System.Drawing.Point(73, 226);
             this.editClipTop.Name = "editClipTop";
             this.editClipTop.Size = new System.Drawing.Size(47, 19);
-            this.editClipTop.TabIndex = 9;
+            this.editClipTop.TabIndex = 11;
             this.editClipTop.ValueChanged += new System.EventHandler(this.editClipTop_ValueChanged);
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(8, 191);
+            this.label8.Location = new System.Drawing.Point(8, 228);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(60, 12);
             this.label8.TabIndex = 15;
@@ -693,7 +701,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(9, 158);
+            this.label9.Location = new System.Drawing.Point(9, 195);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(29, 12);
             this.label9.TabIndex = 14;
@@ -707,10 +715,10 @@
             "8bitグレイスケール",
             "4bitグレイスケール",
             "白黒"});
-            this.formatCombo.Location = new System.Drawing.Point(48, 155);
+            this.formatCombo.Location = new System.Drawing.Point(48, 192);
             this.formatCombo.Name = "formatCombo";
             this.formatCombo.Size = new System.Drawing.Size(95, 20);
-            this.formatCombo.TabIndex = 7;
+            this.formatCombo.TabIndex = 9;
             this.formatCombo.SelectedIndexChanged += new System.EventHandler(this.formatCombo_SelectedIndexChanged);
             // 
             // editHeight
@@ -800,7 +808,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 138);
+            this.label2.Location = new System.Drawing.Point(9, 175);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(29, 12);
             this.label2.TabIndex = 2;
@@ -814,17 +822,17 @@
             "右90°",
             "180°",
             "左90°"});
-            this.rotateCombo.Location = new System.Drawing.Point(48, 135);
+            this.rotateCombo.Location = new System.Drawing.Point(48, 172);
             this.rotateCombo.Name = "rotateCombo";
             this.rotateCombo.Size = new System.Drawing.Size(95, 20);
-            this.rotateCombo.TabIndex = 6;
+            this.rotateCombo.TabIndex = 8;
             this.rotateCombo.SelectedIndexChanged += new System.EventHandler(this.rotateCombo_SelectedIndexChanged);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label1.Location = new System.Drawing.Point(4, 118);
+            this.label1.Location = new System.Drawing.Point(4, 155);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(57, 12);
             this.label1.TabIndex = 0;
@@ -923,13 +931,13 @@
             this.menuItemInsert2,
             this.menuItemMove2});
             this.menuPagesGrid.Name = "menuPagesGrid";
-            this.menuPagesGrid.Size = new System.Drawing.Size(214, 142);
+            this.menuPagesGrid.Size = new System.Drawing.Size(230, 142);
             // 
             // menuItemCopy2
             // 
             this.menuItemCopy2.Name = "menuItemCopy2";
             this.menuItemCopy2.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.menuItemCopy2.Size = new System.Drawing.Size(213, 22);
+            this.menuItemCopy2.Size = new System.Drawing.Size(229, 22);
             this.menuItemCopy2.Text = "設定をコピー(&C)";
             this.menuItemCopy2.Click += new System.EventHandler(this.btnCopy_Click);
             // 
@@ -937,20 +945,20 @@
             // 
             this.menuItemPaste2.Name = "menuItemPaste2";
             this.menuItemPaste2.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-            this.menuItemPaste2.Size = new System.Drawing.Size(239, 22);
+            this.menuItemPaste2.Size = new System.Drawing.Size(229, 22);
             this.menuItemPaste2.Text = "設定を貼り付け(&P)";
             this.menuItemPaste2.Click += new System.EventHandler(this.btnPaste_Click);
             // 
             // toolStripSeparator8
             // 
             this.toolStripSeparator8.Name = "toolStripSeparator8";
-            this.toolStripSeparator8.Size = new System.Drawing.Size(236, 6);
+            this.toolStripSeparator8.Size = new System.Drawing.Size(226, 6);
             // 
             // menuItemDuplicate2
             // 
             this.menuItemDuplicate2.Name = "menuItemDuplicate2";
             this.menuItemDuplicate2.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.U)));
-            this.menuItemDuplicate2.Size = new System.Drawing.Size(239, 22);
+            this.menuItemDuplicate2.Size = new System.Drawing.Size(229, 22);
             this.menuItemDuplicate2.Text = "ページの複製(&D)";
             this.menuItemDuplicate2.Click += new System.EventHandler(this.btnDuplicate_Click);
             // 
@@ -958,7 +966,7 @@
             // 
             this.menuItemErase2.Name = "menuItemErase2";
             this.menuItemErase2.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Delete)));
-            this.menuItemErase2.Size = new System.Drawing.Size(239, 22);
+            this.menuItemErase2.Size = new System.Drawing.Size(229, 22);
             this.menuItemErase2.Text = "ページの削除(&E)";
             this.menuItemErase2.Click += new System.EventHandler(this.btnErase_Click);
             // 
@@ -966,7 +974,7 @@
             // 
             this.menuItemInsert2.Name = "menuItemInsert2";
             this.menuItemInsert2.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.I)));
-            this.menuItemInsert2.Size = new System.Drawing.Size(239, 22);
+            this.menuItemInsert2.Size = new System.Drawing.Size(229, 22);
             this.menuItemInsert2.Text = "ページの追加(&I)...";
             this.menuItemInsert2.Click += new System.EventHandler(this.btnInsert_Click);
             // 
@@ -974,9 +982,49 @@
             // 
             this.menuItemMove2.Name = "menuItemMove2";
             this.menuItemMove2.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.M)));
-            this.menuItemMove2.Size = new System.Drawing.Size(239, 22);
+            this.menuItemMove2.Size = new System.Drawing.Size(229, 22);
             this.menuItemMove2.Text = "ページの移動(&M)...";
             this.menuItemMove2.Click += new System.EventHandler(this.btnMove_Click);
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(9, 109);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(55, 12);
+            this.label12.TabIndex = 20;
+            this.label12.Text = "ページ送り";
+            // 
+            // rdbRtl
+            // 
+            this.rdbRtl.AutoSize = true;
+            this.rdbRtl.Location = new System.Drawing.Point(80, 107);
+            this.rdbRtl.Name = "rdbRtl";
+            this.rdbRtl.Size = new System.Drawing.Size(59, 16);
+            this.rdbRtl.TabIndex = 6;
+            this.rdbRtl.TabStop = true;
+            this.rdbRtl.Text = "右→左";
+            this.rdbRtl.UseVisualStyleBackColor = true;
+            // 
+            // rdbLtr
+            // 
+            this.rdbLtr.AutoSize = true;
+            this.rdbLtr.Location = new System.Drawing.Point(80, 129);
+            this.rdbLtr.Name = "rdbLtr";
+            this.rdbLtr.Size = new System.Drawing.Size(59, 16);
+            this.rdbLtr.TabIndex = 7;
+            this.rdbLtr.TabStop = true;
+            this.rdbLtr.Text = "左→右";
+            this.rdbLtr.UseVisualStyleBackColor = true;
+            // 
+            // toolStripButton1
+            // 
+            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
+            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton1.Name = "toolStripButton1";
+            this.toolStripButton1.Size = new System.Drawing.Size(23, 27);
+            this.toolStripButton1.Text = "toolStripButton1";
             // 
             // FormMain
             // 
@@ -1114,6 +1162,10 @@
         private System.Windows.Forms.ToolStripMenuItem menuItemErase2;
         private System.Windows.Forms.ToolStripMenuItem menuItemInsert2;
         private System.Windows.Forms.ToolStripMenuItem menuItemMove2;
+        private System.Windows.Forms.ToolStripButton toolStripButton1;
+        private System.Windows.Forms.RadioButton rdbLtr;
+        private System.Windows.Forms.RadioButton rdbRtl;
+        private System.Windows.Forms.Label label12;
     }
 }
 
