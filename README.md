@@ -69,7 +69,7 @@ ePubファイルの目次(toc)に出力されます。
 ライセンス以外に、Microsoftさんの言うことも考慮する必要があるんじゃないかと
 思います。
 
-Copyright (c) 2012  NAKAMURA Usaku <usa@garbagecollect.jp>
+Copyright (c) 2012,2013  NAKAMURA Usaku <usa@garbagecollect.jp>
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions

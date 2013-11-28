@@ -246,7 +246,7 @@ namespace EPubMaker
             WriteText(fs, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
             WriteText(fs, "<container version=\"1.0\" xmlns=\"urn:oasis:names:tc:opendocument:xmlns:container\">\n");
             WriteText(fs, "<rootfiles>\n");
-            WriteText(fs, "<rootfile media-type=\"application/oebps-package+xml\" full-path=\"OEBPS/content.opf\" />\n");
+            WriteText(fs, "<rootfile media-type=\"application/oebps-package+xml\" full-path=\"OEBPS/content.opf\"/>\n");
             WriteText(fs, "</rootfiles>\n");
             WriteText(fs, "</container>\n");
             fs.Close();
@@ -257,18 +257,22 @@ namespace EPubMaker
 
             fs = File.OpenWrite(Path.Combine(contentsdir, "content.opf"));
             WriteText(fs, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n");
-            WriteText(fs, "<package xmlns=\"http://www.idpf.org/2007/opf\" version=\"3.0\" unique-identifier=\"BookId\" xml:lang=\"ja\">\n");
+            WriteText(fs, "<package xmlns=\"http://www.idpf.org/2007/opf\" version=\"3.0\" unique-identifier=\"pub-id\" xml:lang=\"ja\">\n");
             WriteText(fs, "<metadata xmlns:dc=\"http://purl.org/dc/elements/1.1/\">\n");
-            WriteText(fs, "<dc:identifier id=\"BookId\" opf:scheme=\"UUID\">" + Escape(bookid) + "</dc:identifier>\n");
+            WriteText(fs, "<dc:identifier id=\"pub-id\">urn:uuid:" + Escape(bookid) + "</dc:identifier>\n");
+            WriteText(fs, "<meta refines=\"#pub-id\" property=\"identifier-type\" scheme=\"xsd:string\">uuid</meta>\n");
+            WriteText(fs, "<dc:language>ja</dc:language>\n");
             WriteText(fs, "<dc:title>" + Escape(title) + "</dc:title>\n");
             if (!string.IsNullOrEmpty(author))
             {
-                WriteText(fs, "<dc:creator opf:file-as=\"" + Escape(author) + "\" opf:role=\"aut\">" + Escape(author) + "</dc:creator>\n");
+                WriteText(fs, "<dc:creator id=\"creator\">" + Escape(author) + "</dc:creator>\n");
+                WriteText(fs, "<meta refines=\"#creator\" property=\"role\" scheme=\"marc:relators\">aut</meta>\n");
             }
-            WriteText(fs, "<dc:language>ja</dc:language>\n");
+            WriteText(fs, "<meta property=\"dcterms:modified\">" + DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ") + "</meta>\n");
             WriteText(fs, "</metadata>\n");
             WriteText(fs, "<manifest>\n");
-            WriteText(fs, "<item id=\"ncx\" href=\"toc.ncx\" media-type=\"application/x-dtbncx+xml\" />\n");
+            WriteText(fs, "<item id=\"nav\" href=\"nav.html\" media-type=\"application/xhtml+xml\" properties=\"nav\"/>\n");
+            WriteText(fs, "<item id=\"ncx\" href=\"toc.ncx\" media-type=\"application/x-dtbncx+xml\"/>\n");
             backgroundWorker.ReportProgress(100, 100);
 
             return fs;
@@ -305,16 +309,15 @@ namespace EPubMaker
                     dst.Save(full, ImageFormat.Png);
                     dst.Dispose();
 
-                    WriteText(opf, "<item id=\"" + id + "\" href=\"data/" + file + "\" media-type=\"image/png\" fallback=\"" + id + "f\"/>\n");
-                    WriteText(opf, "<item id=\"" + id + "f\" href=\"data/" + id + "f.xhtml\" media-type=\"application/xhtml+xml\"/>\n");
+                    WriteText(opf, "<item id=\"r" + id + "\" href=\"data/" + file + "\" media-type=\"image/png\" fallback=\"p" + id + "\"/>\n");
+                    WriteText(opf, "<item id=\"p" + id + "\" href=\"data/" + id + ".html\" media-type=\"application/xhtml+xml\"/>\n");
 
-                    FileStream xhtml = File.OpenWrite(Path.Combine(datadir, id + "f.xhtml"));
+                    FileStream xhtml = File.OpenWrite(Path.Combine(datadir, id + ".html"));
                     WriteText(xhtml, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-                    WriteText(xhtml, "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n");
+                    WriteText(xhtml, "<!DOCTYPE html>\n");
                     WriteText(xhtml, "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"ja\" lang=\"ja\">\n");
                     WriteText(xhtml, "<head>\n");
                     WriteText(xhtml, "<title>-</title>\n");
-                    WriteText(xhtml, "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>\n");
                     WriteText(xhtml, "</head>\n");
                     WriteText(xhtml, "<body>\n");
                     WriteText(xhtml, "<img src=\"./" + file + "\" />\n");
@@ -360,18 +363,50 @@ namespace EPubMaker
                 }
 
                 string id = i.ToString("d4");
-                WriteText(opf, "<itemref idref=\"" + id + "f\"/>\n");
+                WriteText(opf, "<itemref idref=\"p" + id + "\"/>\n");
 
                 backgroundWorker.ReportProgress(i, pages.Count * 2);
             }
             WriteText(opf, "</spine>\n</package>\n");
 
+            FileStream nav = File.OpenWrite(Path.Combine(contentsdir, "nav.html"));
+            WriteText(nav, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+            WriteText(nav, "<!DOCTYPE html>\n");
+            WriteText(nav, "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"ja\" lang=\"ja\">\n");
+            WriteText(nav, "<head>\n");
+            WriteText(nav, "<title>-</title>\n");
+            WriteText(nav, "</head>\n");
+            WriteText(nav, "<body>\n");
+            WriteText(nav, "<nav epub:type=\"toc\" id=\"toc\"/>\n");
+            WriteText(nav, "<h1>目次</h1>\n");
+            WriteText(nav, "<ol>\n");
+            for (int i = 0; i < pages.Count; ++i)
+            {
+                if (backgroundWorker.CancellationPending)
+                {
+                    nav.Close();
+                    return false;
+                }
+
+                string id = i.ToString("d4");
+                if (!String.IsNullOrEmpty(pages[i].Index))
+                {
+                    WriteText(nav, "<li><a href=\"data/\"" + id + ".html\">" + Escape(pages[i].Index) + "</a></li>\n");
+                }
+
+                backgroundWorker.ReportProgress(i + pages.Count, pages.Count * 2);
+            }
+            WriteText(nav, "</ol>\n");
+            WriteText(nav, "</nav>\n");
+            WriteText(nav, "</body>\n");
+            WriteText(nav, "</html>\n");
+            nav.Close();
+
             FileStream toc = File.OpenWrite(Path.Combine(contentsdir, "toc.ncx"));
             WriteText(toc, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-            WriteText(toc, "<!DOCTYPE ncx PUBLIC \"-//NISO//DTD ncx 2005-1//EN\" \"http://www.daisy.org/z3986/2005/ncx-2005-1.dtd\">\n");
             WriteText(toc, "<ncx version=\"2005-1\" xmlns=\"http://www.daisy.org/z3986/2005/ncx/\" xml:lang=\"ja\">\n");
             WriteText(toc, "<head>\n");
-            WriteText(toc, "<meta name=\"dtb:uid\" content=\"" + Escape(bookid) + "\"/>\n");
+            WriteText(toc, "<meta name=\"dtb:uid\" content=\"urn:uuid:" + Escape(bookid) + "\"/>\n");
             WriteText(toc, "<meta name=\"dtb:depth\" content=\"1\"/>\n");
             WriteText(toc, "<meta name=\"dtb:totalPageCount\" content=\"0\"/>\n");
             WriteText(toc, "<meta name=\"dtb:maxPageNumber\" content=\"0\"/>\n");
@@ -390,9 +425,9 @@ namespace EPubMaker
                 string id = i.ToString("d4");
                 if (!String.IsNullOrEmpty(pages[i].Index))
                 {
-                    WriteText(toc, "<navPoint id=\"" + id + "f\" playOrder=\"" + (++idx).ToString() + "\">\n");
+                    WriteText(toc, "<navPoint id=\"p" + id + "\" playOrder=\"" + (++idx).ToString() + "\">\n");
                     WriteText(toc, "<navLabel><text>" + Escape(pages[i].Index) + "</text></navLabel>\n");
-                    WriteText(toc, "<content src=\"data/" + id + "f.xhtml\"/>\n");
+                    WriteText(toc, "<content src=\"data/" + id + ".html\"/>\n");
                     WriteText(toc, "</navPoint>\n");
                 }
 
